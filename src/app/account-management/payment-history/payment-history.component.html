@@ -1,0 +1,275 @@
+
+<!---history HEADER-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-2 font-20">
+            <div class="card-header"><strong>Payment Transactions</strong>
+            </div>
+        </div>
+    </div>
+</div>
+<!---Date-->
+<div class="row mt-1">
+    <div class="col-md-12">
+       <div class="row m-1">
+            <div class="col-md-4 pr-2 form-group">
+                <div class="d-flex">
+                    <label for="sel1" class="mr-2 pt-2 mt-1" style="width: 90px;">Start Date:<span class="text-danger">*</span></label>
+                    <input type="date" (change)="dateValid1()"
+                        class="form-control"
+                        [(ngModel)]="formData.startDate">
+                </div>
+                <div *ngIf="dobflag1" class="help-box text-center"> Please select start date</div>
+            </div>
+            <div class=" col-md-4 pr-2 form-group">
+                <div class="d-flex">
+                    <label for="sel1" class="mr-2 pt-2 mt-1" style="width: 90px;">End Date:<span class="text-danger">*</span></label>
+                    <input type="date" (change)="dateValid2();compareDate()"
+                        class="form-control"
+                        [(ngModel)]="formData.endDate">
+                </div>
+                <div *ngIf="dobflag2" class="help-box text-center"> Please select end date</div>
+                <div *ngIf="dateFlag" class="help-box text-center">
+                    Start date should be less than end date
+                </div>
+            </div>
+            <div class="col-md-2 pt-1 d-flex">
+                <div class="pr-1">
+                    <button type="submit" class="btn btn-info btn-md" (click)="filterDate()"> <strong>Apply</strong></button>
+                </div>
+                <div class=" pr-1">
+                    <button type="submit" class="btn btn-danger btn-md" (click)="reset()"> <strong>Reset</strong></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive mt-4">
+    <table class="table table-hover table-bordered mt-2 tacho-table">
+        <thead class="bg-dark thead">
+            <tr>
+                <th class="th text-center" [class.active]="order === 'dimProduct.productName'"
+                    (click)="setOrder('dimProduct.productName')">Plan Name<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th class="th text-center" [class.active]="order === 'createdAt'"
+                    (click)="setOrder('createdAt')">Date of Payment<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th class="th text-center" [class.active]="order === 'amount'"
+                    (click)="setOrder('amount')">Amount<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th style="text-align: center;">Status</th>
+                <th style="text-align: center;">Invoice</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of transactionDetails   | orderBy: order :reverse | paginate: { itemsPerPage: showData.rowsPerPage, currentPage: p } ; let i = index ">
+                <td class="text-center">
+                    <span *ngIf="data.dimProduct==null ">AddOn</span>
+                    <span *ngIf="data.dimProduct!=null && data.dimProduct.subProduct=='MAIN' ">{{data.dimProduct.productName}}</span>
+                    <span *ngIf="data.dimProduct!=null && data.dimProduct.subProduct!='MAIN' ">{{data.dimProduct.subProduct}}</span>
+                </td>
+                <td class="text-center">{{data.createdAt | date:"dd-MMM-yyyy, h:mm a"}}</td>
+                <td class="text-center">{{data.currency | uppercase}}&nbsp;{{data.amount |currency:'':''}}</td>
+                <td class="text-center">
+                    <span *ngIf="data.captured=='true'">Success</span>
+                    <span *ngIf="data.captured!='true'">Failed</span>
+                </td>
+                <td class="text-center"><i aria-hidden="true" class="fa fa-download " title="Download" (click)="getBill(data)"
+                data-toggle="modal" data-target="#myModal2" data-backdrop="false" ></i></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--Pagination-->
+<div class="row mt-2 col-xs-2">
+    <!--Show Records-->
+    <div class="col-md-4 mt-2">
+        <div class="show-rows ">
+            <span>Show Records</span><input class="rowsPerPage ml-2" type="number" min="1"
+                [(ngModel)]="showData.rowsPerPage" name="rowsPerPage" #rowsPerPage="ngModel" pattern="^[1-9][0-9]*$"
+                placeholder="Rows">
+        </div>
+        <div *ngIf="rowsPerPage.invalid || rowsPerPage.touched">
+            <p *ngIf="rowsPerPage.errors?.pattern" class="help-bpx" class="help-bpx" style="color: red;">
+                Please enter value greater than 0.</p>
+        </div>
+    </div>
+    <div class="col-md-8 ">
+        <div class="float-right mt-2">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+    </div>
+</div>
+
+
+    <div class="modal" id="myModal2" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+                <!-- Modal body -->
+                <div class="modal-body bg-light" id="table" #pdfTable>
+                    <div class="row ">
+                        <div class="col-md-7">
+                            <span>
+                                <img src="assets/images/Markzil-1 Cut.png" 
+                                class="img-rounded logoDesign ml-20"   alt="Emanzo" width="55%">
+                            </span>
+                            <div class=" text-left">
+                                <div class="textField mg-t-5 col-md-12">
+                                    <p class="" style="font-size:10px;font-family:verdana;">Citylink Technology Solutions Pvt. Ltd.
+                                        <br>Survey no. 124/2, Jadhav Vasti
+                                        <br>Kalas, Pune - 411015,
+                                        <br>India.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div><strong><h3> Invoice</h3></strong></div>
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-right pl-2">
+                                                Date:
+                                            </td>
+                                            <td>
+                                                {{billData.date | date:"dd-MMM-yyyy"}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right pl-2">
+                                                Invoice no.:
+                                            </td>
+                                            <td>
+                                                {{billData.invoice}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            
+                        </div>
+			        </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div><strong><h6>Bill To</h6></strong></div>
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-right pl-2">
+                                                Company name:
+                                            </td>
+                                            <td>
+                                                <span *ngIf="billData.companyName==null || billData.companyName==''">
+                                                    N.A.
+                                                </span>
+                                                <span *ngIf="billData.companyName!=null">
+                                                    {{billData.companyName}}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right pl-2">
+                                            Name:
+                                            </td>
+                                            <td>
+                                                {{billData.firstName}}&nbsp;{{billData.lastName}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right pl-2">
+                                            Address:
+                                            </td>
+                                            <td>
+                                                {{billData.address}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right pl-2">
+                                            contact no.:
+                                            </td>
+                                            <td>
+                                                {{billData.contact}}
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="billData.country == 'IND'">
+                                            <td class="text-right pl-2">
+                                            GSTIN:
+                                            </td>
+                                            <td>
+                                                <span *ngIf="billData.gstin==null || billData.gstin==''">
+                                                    N.A.
+                                                </span>
+                                                <span *ngIf="billData.gstin!=null">
+                                                    {{billData.gstin}}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right pl-2">
+                                            Plan Detail:
+                                            </td>
+                                            <td>
+                                                {{billData.description}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            
+                        </div>
+
+                        <div class="col-md-4">
+                            <h1>PAID</h1>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-5">
+                        </div>
+                        <div class="col-md-7">
+                            <table class="table">
+                                <tbody>
+                                    <tr *ngIf="billData.country == 'IND' && billData.description !='add-on'" >
+                                        <td class="pl-3">
+                                            Plan amount:
+                                        </td>
+                                        <td>
+                                            {{billData.currency | uppercase}}&nbsp;{{billData.totalAmount/1.18 |currency:'':''}}
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="billData.country == 'IND' && billData.description !='add-on'">
+                                        <td class="pl-3">
+                                            GST(18%):
+                                        </td>
+                                        <td>
+                                            {{billData.currency | uppercase}}&nbsp;{{billData.totalAmount - (billData.totalAmount/1.18) |currency:'':''}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pl-3">
+                                            <span *ngIf="billData.description !='add-on'">Total paid amount:</span>
+                                            <span *ngIf="billData.description =='add-on'">Add-on amount:</span>
+                                           
+                                        </td>
+                                        <td>
+                                            {{billData.currency | uppercase}}&nbsp;{{billData.totalAmount |currency:'':''}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 text-center my-2">
+                    <button type="submit"
+                        class="btn btn-info mr-3" (click)="downloadAsPDF()"><strong>Download</strong>
+                    </button>
+                    <button type="button" class="btn btn-danger"
+                         data-dismiss="modal" ><strong> Cancel
+                        </strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    

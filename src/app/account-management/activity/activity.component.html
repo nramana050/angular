@@ -1,0 +1,78 @@
+
+<!---activity HEADER-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-2 font-20">
+            <div class="card-header"><strong>Activity</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="table-responsive mt-4">
+    <table class="table table-hover table-bordered mt-2 tacho-table">
+        <thead class="bg-dark thead">
+            <tr>
+                <th class="th" [class.active]="order === 'currentProduct.productName'"
+                    (click)="setOrder('currentProduct.productName')">Plan Name<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th class="th" [class.active]="order === 'newProduct.productName'"
+                    (click)="setOrder('newProduct.productName')">Downgrade To<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th class="th" [class.active]="order === 'requestedDate'"
+                    (click)="setOrder('requestedDate')">Request date<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th style="text-align: center;">Status</th>
+                <th style="text-align: center;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let plan of activityPlan | orderBy: order :reverse | paginate: { itemsPerPage: showData.rowsPerPage, currentPage: p } ; let i = index ">
+                <td>
+                    <span *ngIf="plan.currentProduct.subProduct=='MAIN'">{{plan.currentProduct.productName}}</span>
+                    <span *ngIf="plan.currentProduct.subProduct!='MAIN'">{{plan.currentProduct.subProduct}}</span>
+                </td>
+                <td>
+                    <span *ngIf="plan.newProduct.subProduct=='MAIN'">{{plan.newProduct.productName}}</span>
+                    <span *ngIf="plan.newProduct.subProduct!='MAIN'">{{plan.newProduct.subProduct}}</span>
+                </td>
+                <td>{{plan.requestedDate | date:"dd-MMM-yyyy"}}</td>
+                <td>
+                    <span *ngIf="plan.description != 'Subscription downgrade successful!' && plan.description != null">{{plan.description}}</span>
+                    <span *ngIf="plan.description == 'Subscription downgrade successful!' && plan.description != null">
+                    <i class="fa fa-check-square-o fa-check-color" aria-hidden="true"></i>
+                    {{plan.description}}</span>
+                    <span *ngIf="plan.description == null || plan.description == ''">Pending</span>
+                </td>
+                <td class="text-center">
+                    <button *ngIf="plan.delete!=1 && plan.planActivationDate == null" type="submit" class="btn btn-danger" (click)="onCancelRequest(plan)">
+                            Cancel Request
+                    </button>
+                    <span *ngIf="plan.delete==1">Request Cancelled</span>
+                    <span *ngIf="plan.planActivationDate != null">N.A.</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--Pagination-->
+<div class="row mt-2 col-xs-2">
+    <!--Show Records-->
+    <div class="col-md-4 mt-2">
+        <div class="show-rows ">
+            <span>Show Records</span><input class="rowsPerPage ml-2" type="number" min="1"
+                [(ngModel)]="showData.rowsPerPage" name="rowsPerPage" #rowsPerPage="ngModel" pattern="^[1-9][0-9]*$"
+                placeholder="Rows">
+        </div>
+        <div *ngIf="rowsPerPage.invalid || rowsPerPage.touched">
+            <p *ngIf="rowsPerPage.errors?.pattern" class="help-bpx" class="help-bpx" style="color: red;">
+                Please enter value greater than 0.</p>
+        </div>
+    </div>
+    <div class="col-md-8 ">
+        <div class="float-right mt-2">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+    </div>
+</div>

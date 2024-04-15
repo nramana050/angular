@@ -1,0 +1,395 @@
+<!---overview HEADER-->
+<div *ngIf="pause ==false" class="row">
+    <div class="col-md-12">
+        <div class="card mb-2 font-20" *ngIf="payFlag">
+            <div class="card-header"><strong class="pr-2">Overview</strong>
+            <span class=" alert alert-danger font-limit p-1" *ngIf="payFlag"><strong>There is an issue with your payment. Please,  <a class="hover" (click)="currentPaymentIssue()">try again</a> .</strong></span>
+            </div>
+        </div>
+        <div class="card mb-2 font-20" *ngIf="payFlag ==false">
+            <div class="card-header"><strong class="pr-2">Overview</strong>
+            <span class=" alert alert-danger font-limit p-1" *ngIf="payFlag"><strong>There is an issue with your payment. Please,  <a class="hover" (click)="currentPaymentIssue()">try again</a> .</strong></span>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="pause ==true" class="row">
+    <div class="col-md-12">
+        <div class=" mb-2 font-20 text-center">
+            <div class="card-header alert alert-danger "><strong class="text-center">Your subscription is in pause mode.
+                </strong>
+                <button class="btn fa-style" (click)="resumeSubscription()" 
+                    title="Your new billing cycle will begin from the date you activate your account. Your plan is subject to change based on number of contacts at the time of resume.">
+                    Resume subscription
+                    </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="cancelSub == true" class="row ">
+    <div class="col-md-12">
+        <div class="p-4 card  text-center" style="background-color: #ab0d1b47;">
+            <h4 class="font-close">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            There is no current selected subscription 
+            </h4>
+        </div>
+    </div>
+</div>
+<!--top cancelSub-->
+
+<div *ngIf="cancelSub == false" class="row ">
+    <div class="  col-lg-9 col-md-9 col-sm-12 ">
+        <div class="card" style="background-color: #d3d3d340;">
+            <div class="row">
+                <div class="col-md-5 pl-4 pr-0">
+                    <span *ngIf="balance!=null && balance.dimProduct!=undefined && 
+                        balance.dimProduct.productName!=undefined && balance.dimProduct.productType!=undefined" class="d-flex">
+                        <h4 class="font-header" ><strong> {{balance.dimProduct.productName}}</strong>|</h4>
+                        <span *ngIf="balance.dimProduct.productType!=undefined" class="pl-1 pt-1">{{balance.dimProduct.productType}}</span>
+                    </span>
+                    <table class="">
+                            <tbody>
+                                <tr>
+                                    <td class="font" ><i class="fa fa-address-book-o pr-2" aria-hidden="true"></i>&nbsp;Contacts used :</td>
+                                    <td>
+                                        <span class="font">
+                                            {{sendUploadStatastic.uploadCount | number}} out of {{balance.contactBalance | number}} contact
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font " ><i class="fa fa-envelope pr-2" aria-hidden="true"></i>&nbsp;Email sent :</td>
+                                    <td>
+                                        <span class="font">
+                                            {{sendUploadStatastic.sendCount | number}} out of {{balance.sendMail | number}} mails
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="card-header alert alert-danger font-limit" *ngIf="contactFlag && mailFlag == false"><strong>Your contact limit is over. Please <a class="hover" (click)="redirectToPlan()">upgrade</a> your plan or delete some of your existing contacts</strong></div>
+                        <div class="card-header alert alert-danger font-limit" *ngIf="mailFlag && contactFlag == false"><strong>Your e-mail sending limit is over, if you want to send more e-mails please <a class="hover" (click)="redirectToPlan()">upgrade</a> your existing plan or you can buy add-on plan</strong></div>
+                        <div class="card-header alert alert-danger font-limit" *ngIf="contactFlag && mailFlag"><strong>Your subscription limit is over please <a class="hover" (click)="redirectToPlan()">upgrade</a> your existing plan</strong></div>
+                        
+                    <!--<h6>Contacts used : {{sendUploadStatastic.uploadCount}} out of {{balance.contactBalance - sendUploadStatastic.uploadCount}} contact</h6>
+                    <h6>Email send : {{sendUploadStatastic.sendCount}}  out of {{balance.sendMail - sendUploadStatastic.sendCount}}</h6>-->
+                </div>
+                <div *ngIf="paymentFail" class="col-md-7">
+                    <div class="card-header alert alert-danger font-limit1" >Your current subscription is closed because your next due date payment has failed, please <a class="hover" >try again</a></div>
+                </div>
+                <div *ngIf="paymentFail==false" class="col-md-7">
+                    <!--circle--> 
+                    <div class="row d-flex justify-content-center" id="stroke">
+                        <div class="px-2 text-center">
+                            <circle-progress [percent]="contactPercentage" [radius]="40" [outerStrokeWidth]="7" [innerStrokeWidth]="5"
+                                [outerStrokeColor]="'yellow'" [innerStrokeColor]="'#00008b5e'" [outerStrokeGradient]="true"
+                                [outerStrokeGradientStopColor]="'green'" [outerStrokeGradient]="true" [animation]="true" titleFontWeight=600
+                                [animationDuration]="800" [showSubtitle]="false" [renderOnClick]="true" toFixed=2 titleFontSize=15>
+                            </circle-progress>
+                            <div class="text-center font">{{sendUploadStatastic.uploadCount | number}} utilised out of {{balance.contactBalance | number}} contact</div>
+                        </div>
+                        <div class="px-2 text-center">
+                            <circle-progress [percent]="mailPercentage" [radius]="40" [outerStrokeWidth]="7" [innerStrokeWidth]="5"
+                                [outerStrokeColor]="'yellow'" [innerStrokeColor]="'#00008b5e'" [outerStrokeGradient]="true"
+                                [outerStrokeGradientStopColor]="'green'" [animation]="true" [animationDuration]="400" titleFontWeight=600
+                                [showSubtitle]="false" [renderOnClick]="true" toFixed=2 titleFontSize=15></circle-progress>
+                            <div class="text-center font">{{sendUploadStatastic.sendCount | number}} mail sent out of {{balance.sendMail | number}}</div>
+                        </div>
+                    </div>
+                    <!--end-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 ">
+        <div class="px-4 card" style="background-color: #d3d3d340;">
+            <div class="text-center mt-3">
+                <button type="submit" [disabled]="pause" class="btn btn-primary upgrade-font py-2 btn-style" 
+                    title="You can change your card details" (click)="switchCard()">
+                    Switch card</button>
+            </div>
+            <div class="text-center mt-3 mb-4">
+                <button type="submit" [disabled]="pause" class="btn btn-warning upgrade-font py-2 btn-style1" (click)="redirectToPlan()">
+                    Upgrade my plan</button>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<br>
+<div class="text-center my-4" >
+    <button *ngFor="let plan of plans" [disabled]="pause"  (click)="setPlanasActive(plan)" 
+        [class.active]="plan === activePlan" class="active-tab">
+        {{plan}}
+    </button>
+    <div class="row">
+        <div class="offset-4 col-md-6 save-color">
+            <strong>Save 10% by paying annually</strong>
+        </div>
+    </div>
+</div>
+<!--plans-->
+<div class="row mod1 justify-content-around1 p-3 ">
+    <div class="col-md-12 ">
+        <div class="row card-center">
+            <div class="col-sm-12 col-md-4 mb-3" *ngFor="let card of cards; let i=index" 
+                (click)="setStateAsActive(card)" >
+                
+                <div class="Basic" *ngIf="noPlan == false">
+                    <div class="card" id="profile" 
+                        (click)="getSubProductList(card.productType,card.productName)"
+                        [class.active]="card === activeState">
+                        <div *ngIf="balance.dimProduct.productName == 'Basic'" class="text-center mt-3">
+                            <button *ngIf="card.productName=='Standard'" class="btn recommend">
+                            Recommended
+                            </button>
+                            <div *ngIf="card.productName!='Standard'" class="mt-4 pt-2">
+                            </div>
+                        </div>
+                        <div *ngIf="balance.dimProduct.productName=='Standard'" class="text-center mt-3">
+                            <button *ngIf="card.productName=='Premium'" class="btn recommend">
+                            Recommended
+                            </button>
+                            <div *ngIf="card.productName!='Premium'" class="mt-4 pt-2">
+                            </div>
+                        </div>
+                        
+                        <span class="text-center" >
+                            <h3 *ngIf="card.productName=='Basic' " class="font-header mt-4"><strong style="color: indianred;">{{card.productName}}</strong></h3>
+                            <h3 *ngIf="card.productName=='Standard'" class="font-header mt-4"><strong style="color: green;">{{card.productName}}</strong></h3>
+                            <h3 *ngIf="card.productName=='Premium'" class="font-header mt-4"><strong style="color: goldenrod;">{{card.productName}}</strong></h3>
+                        </span>
+                        
+                        <div class="text-center  center-price"  >
+                            <div *ngIf="card.productType=='FREE'" class="text-center d-flex">
+                                <h2 id="font" class="py-2">Free</h2>
+                            </div>
+                            <div *ngIf="card.productType!='FREE'" class="text-center d-flex">
+                                <span class="py-2">{{card.dimProductPrice.currencyName}}</span><h2>&nbsp;<strong id="font">{{card.dimProductPrice.productPrice |currency:'':''}}&nbsp;</strong></h2><i  class="py-2">{{card.productType}}</i>
+                            </div>
+                        </div>
+                        
+                        <ul  *ngIf="card.productType=='FREE'" class="font card-height1 list-unstyled pl-4 pr-3 pt-3">
+                            <li *ngIf='card.productLine1!=null && 
+                            card.productLine1!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i> {{card.productLine1}}</li>
+                            <li *ngIf='card.productLine2!=null && 
+                            card.productLine2!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine2}}</li>
+                            <li *ngIf='card.productLine3!=null && 
+                            card.productLine3!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine3}}</li>
+                            <li *ngIf='card.productLine4!=null && 
+                            card.productLine4!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine4}}</li>
+                            <li *ngIf='card.productLine5!=null && 
+                            card.productLine5!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine5}}</li>
+                        </ul>
+                        <ul  *ngIf="card.productType!='FREE'" class="font card-height list-unstyled pl-4 pr-3 pt-3">
+                            <li *ngIf='card.productLine1!=null && 
+                            card.productLine1!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i> {{card.productLine1}}</li>
+                            <li *ngIf='card.productLine2!=null && 
+                            card.productLine2!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine2}}</li>
+                            <li *ngIf='card.productLine3!=null && 
+                            card.productLine3!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine3}}</li>
+                            <li *ngIf='card.productLine4!=null && 
+                            card.productLine4!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine4}}</li>
+                            <li *ngIf='card.productLine5!=null && 
+                            card.productLine5!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine5}}</li>
+                        </ul>
+                        <div class="text-center pb-2">
+                            <button *ngIf="card.productType!='FREE'" type="submit" class="btn btn-link"
+                                (click)="redirectToPlan()" [disabled]="pause">
+                            More Details</button>
+                        </div>
+                        <div class="text-center pb-2">
+                            <button *ngIf="card.productType!='FREE'" type="submit" class="btn btn-primary btn-style mr-3 ml-4 mb-4"
+                                (click)="redirectToPay(card)" [disabled]="pause">
+                                Pay Now</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="noPlan" *ngIf="noPlan">
+                    <div class="card" id="profile" 
+                        (click)="getSubProductList(card.productType,card.productName)"
+                        [class.active]="card === activeState">
+                        <div class="text-center mt-3">
+                            <button *ngIf="card.productName=='Standard'" class="btn recommend">
+                            Recommended
+                            </button>
+                            <div *ngIf="card.productName!='Standard'" class="mt-4 pt-2">
+                            </div>
+                        </div>
+                        
+                        
+                        <span class="text-center" >
+                            <h3 *ngIf="card.productName=='Basic' " class="font-header mt-4"><strong style="color: indianred;">{{card.productName}}</strong></h3>
+                            <h3 *ngIf="card.productName=='Standard'" class="font-header mt-4"><strong style="color: green;">{{card.productName}}</strong></h3>
+                            <h3 *ngIf="card.productName=='Premium'" class="font-header mt-4"><strong style="color: goldenrod;">{{card.productName}}</strong></h3>
+                        </span>
+                        
+                        <div class="text-center  center-price"  >
+                            <div *ngIf="card.productType=='FREE'" class="text-center d-flex">
+                                <h2 id="font" class="py-2">Free</h2>
+                            </div>
+                            <div *ngIf="card.productType!='FREE'" class="text-center d-flex">
+                                <span class="py-2">{{card.dimProductPrice.currencyName}}</span><h2>&nbsp;<strong id="font">{{card.dimProductPrice.productPrice |currency:'':''}}&nbsp;</strong></h2><i  class="py-2">{{card.productType}}</i>
+                            </div>
+                        </div>
+                        
+                        <ul  *ngIf="card.productType=='FREE'" class="font card-height1 list-unstyled pl-4 pr-3 pt-3">
+                            <li *ngIf='card.productLine1!=null && 
+                            card.productLine1!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i> {{card.productLine1}}</li>
+                            <li *ngIf='card.productLine2!=null && 
+                            card.productLine2!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine2}}</li>
+                            <li *ngIf='card.productLine3!=null && 
+                            card.productLine3!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine3}}</li>
+                            <li *ngIf='card.productLine4!=null && 
+                            card.productLine4!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine4}}</li>
+                            <li *ngIf='card.productLine5!=null && 
+                            card.productLine5!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine5}}</li>
+                        </ul>
+                        <ul  *ngIf="card.productType!='FREE'" class="font card-height list-unstyled pl-4 pr-3 pt-3">
+                            <li *ngIf='card.productLine1!=null && 
+                            card.productLine1!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i> {{card.productLine1}}</li>
+                            <li *ngIf='card.productLine2!=null && 
+                            card.productLine2!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine2}}</li>
+                            <li *ngIf='card.productLine3!=null && 
+                            card.productLine3!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine3}}</li>
+                            <li *ngIf='card.productLine4!=null && 
+                            card.productLine4!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine4}}</li>
+                            <li *ngIf='card.productLine5!=null && 
+                            card.productLine5!=""'><i class="fa fa-check-circle-o mr-2 text-purple" aria-hidden="true"></i>{{card.productLine5}}</li>
+                        </ul>
+                        <div class="text-center pb-2">
+                            <button *ngIf="card.productType!='FREE'" type="submit" class="btn btn-link"
+                                (click)="redirectToPlan()" [disabled]="pause">
+                            More Details</button>
+                        </div>
+                        <div class="text-center pb-2">
+                            <button *ngIf="card.productType!='FREE'" type="submit" class="btn btn-primary btn-style mr-3 ml-4 mb-4"
+                                (click)="redirectToPay(card)" [disabled]="pause">
+                                Pay Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div class="text-center ">
+    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+</div>-->
+<!--meter-->
+<div class="card col-md-12 p-4" *ngIf="openSlider">
+    <span class="text-center font-header">
+        <h3>How many contacts do you have?</h3>
+    </span>
+    <span class="text-center font-header">
+        <h6>With the {{prodName}} plan, you can have upto {{uploadContact | number}} contacts</h6>
+    </span>
+    <!--bar-o-meter-->
+    <span class="text-center">
+        <input type="range" (click)="switchProductCart()" class="w-100" min="1" max="{{subProduct.length}}" value="{{planValue}}" id="my-range" list="my-datalist" />
+        <datalist  style="--list-length:{{subProduct.length}};" >
+            <option class="dataSlider" *ngFor="let prod of subProduct" [value]="prod.productCode">{{prod.uploadContact | number}}</option>
+        </datalist>
+    </span>
+    <span class="text-center font-header">
+        Your {{prodType}} plan includes upto {{uploadContact | number}} contacts and {{sendMail | number}} email sends
+    </span>
+</div>
+<table>
+    <tbody>
+        <tr>
+            <td id="show" class="width1 link">
+                <a *ngIf="balance!=null && balance.dimProduct!=null && balance.dimProduct.productType!=='FREE' " class="color">More &nbsp;</a> <a data-toggle="tooltip"
+                title="If you wish to cancel or pause your subscription." data-placement="top">
+                <i *ngIf="balance!=null && balance.dimProduct!=null && balance.dimProduct.productType!=='FREE' " class="fa fa-info-circle text-info" aria-hidden="true"></i></a>
+            </td>
+        </tr>
+        <tr>
+            <td >
+                <div id="cancel" class=" my-2" >
+                    <div class=" p-0">
+                        <div class="text-right">
+                            <a *ngIf="cancelSub == false">
+                                <button type="submit" class="btn btn-danger btn-style1 cancel-color mr-3" data-toggle="modal" data-target="#myModal"
+                                    data-backdrop="false">
+                                    Cancel Subscription
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+    <!--next part-->
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body text-center">
+                    <div>
+                        <h4 *ngIf="pause !=true" class="modal-title font-header mb-4">You can temporarily pause your account instead of closing. (Pause allowed 2 times only)</h4>
+                        <h4 *ngIf="pause ==true" class="modal-title font-header mb-4">Do you want to close your account?</h4>
+                    </div>
+                    <button type="button" *ngIf="pause !=true"  data-dismiss="modal" class="btn btn-info mr-2  mb-4"><strong> <span
+                                class="cursor text-light" data-toggle="modal" data-target="#myModal2"
+                                data-backdrop="false" (click)="getNextDueDate()">Pause Subscription </span> </strong></button>
+                    <button type="button" class="btn btn-danger mb-4"><strong> <a class="cursor text-light"
+                                (click)="closeSubscription()">Close Subscription </a> </strong></button>
+                </div> 
+            </div>
+        </div>
+    </div>
+    <!-- The Modal pause subscriptiom -->
+    <div class="modal" id="myModal2">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header font-header">
+                    <h5>Subscription pause duration</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body text-center">
+                    <div>
+                        <div class="row pb-3">
+                            <div class="col-md-8 pl-3">    
+                                <label>
+                                    Pause duration in month <span class="required-field text-danger">*</span>(including current month)
+                                </label>
+                            </div>
+                            <div class="col-md-4 text-left">
+                                    <select name="pauseDuration" id="pauseDuration" (change)="getNextDueDate()" [(ngModel)]="pauseDuration" >
+                                        <option value="2" selected>2</option>
+                                        <option value="3">3</option>
+                                    </select>
+                            </div>
+                                <div class="col-md-12 pt-4">    
+                                    <label style="font-size: medium;">
+                                        Your account will be paused until {{pauseDate}}
+                                    </label>
+                                </div>
+                                
+                        </div>
+                        <div class="text-center p-2">
+                            <button type="button" class="btn btn-primary btn-style3 mr-3" (click)="pauseSubscription()">Apply</button>
+                            <button type="button" class="btn btn-danger btn-style3" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                        <p *ngIf="fg.touched && fg.invalid">Please add a valid from and to date</p>
+                </div>
+            </div>
+        </div>
+    </div>

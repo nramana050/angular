@@ -1,0 +1,32 @@
+.addContactform .table td{
+    border:0;
+}
+
+.modal.show {
+    background-color: rgb(72 73 74 / 25%) !important;
+    padding-top:22%;
+}
+.scroll-y{
+    max-height: 250px;
+    overflow-y: auto;
+}
+.width-400{
+    width:400px;
+}
+
+input[type="checkbox"]{
+    width: 15px;
+    height: 15px;
+}
+.width-left{
+    width: 146px;
+}
+
+.column{
+    column-count: 3;
+}
+
+.align{
+    margin: auto;
+    width: 35%;
+}

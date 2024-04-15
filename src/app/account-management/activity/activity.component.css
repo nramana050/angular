@@ -1,0 +1,21 @@
+ 
+.thead .th {
+    cursor: pointer;
+    margin-right: 15px;
+    margin-left: 15px;
+  }
+  .thead .th .span {
+    visibility: hidden;
+  }
+  .thead .th.active {
+    color: darkred;
+  
+  }
+  .thead .th.active .span {
+    visibility: visible;
+  }
+
+  .fa-check-color{
+    color: #10a510fa;
+    font-size: 14px;
+  }

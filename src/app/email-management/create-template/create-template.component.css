@@ -1,0 +1,20 @@
+.table td{
+    border:0;
+}
+
+.border1{
+    border: 1px solid black;
+    width: fit-content;  
+    padding: 10px;
+    border-color: lightgrey;
+  
+}
+
+.color{
+    color: rgb(39, 138, 219);
+    cursor: pointer;
+}
+
+.bulb-color{
+    color: darkgoldenrod;
+}

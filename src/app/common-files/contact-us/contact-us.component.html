@@ -1,0 +1,91 @@
+<div class="row">
+    <div class="col-lg-9 offset-lg-2 p-5 contact-us-form">
+        <div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="text-center pb-2">Send Us A Message</h4>
+
+                    <form #contactUsForm="ngForm" (ngSubmit)="contactUsForm.form.valid && saveUser(contactUsForm)"
+                        novalidate autocomplete="off">
+                        <div class="form-group mt-4">
+                            <label for="comment"  class="font-20"><strong>Subject<span
+                                        class="required-field text-danger">*</span></strong></label>
+                            <input type="text" class="form-control " placeholder="Enter Subject"
+                                [(ngModel)]="contactUsData.subjectLine" name="subjectLine" required
+                                #subjectLine="ngModel" pattern="^[A-Za-z][A-Za-z0-9_ ]*$">
+
+                            <!-- <div *ngIf="subjectLine.touched">
+                                <p *ngIf="subjectLine.errors?.required" style="color: red; font-size: 9pt;">
+                                    Please Enter Subject.</p>
+                                <p *ngIf="subjectLine.errors?.pattern" style="color: red; font-size: 9pt;">
+                                    Enter valid Subject.
+                                </p>
+                            </div> -->
+
+                            <div *ngIf="contactUsForm.submitted && subjectLine.invalid || subjectLine.touched">
+                                <div *ngIf="subjectLine.touched || contactUsForm.submitted">
+                                    <p *ngIf="subjectLine.errors?.required " class="help-bpx"
+                                        style="color: red;">Please enter subject!</p>
+                                    <p *ngIf="subjectLine.errors?.pattern" class="help-bpx"
+                                        style="color: red;">
+                                        Please enter valid subject!</p>
+                                </div>
+                            </div> 
+                        </div>
+
+                        <div class="form-group mt-2">
+                            <label for="comment" class="font-20"><strong>Message</strong></label>
+                            <textarea class="form-control" rows="5" id="address"
+                                pattern="^[a-zA-Z0-9_ !@#$%^&*()_+\-=\[\]{};':\\|,.<>\/?]*$" placeholder="Enter Message"
+                                [(ngModel)]="contactUsData.desc" name="desc" #desc="ngModel"  maxlength="254">
+                            </textarea>
+
+                            <div *ngIf="contactUsForm.submitted && desc.invalid || desc.touched">
+                                <p style="color:red" *ngIf="contactUsData.desc?.length > 253">
+                                    Message size should be less than 255 characters</p>
+                            </div>
+ 
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" [disabled]="submitFlg" class="btn btn-info text-center btn-md"><strong>Submit</strong></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <div class="heading fs-14" style="font-size:18px">
+                        <i class="fa fa-map-marker"></i>
+                        <strong> Address</strong>
+                    </div>
+                    <div class="textField mg-t-5 col-md-12">
+                        <p class="" style="font-size:14px;font-family:verdana;">Citylink Technology Solutions Pvt. Ltd.
+                            <br>Survey no. 124/2, Jadhav Vasti
+                            <br>Kalas, Pune - 411015,
+                            <br>India.
+                        </p>
+                    </div>
+                    <div class="heading fs-14" style="font-size:18px">
+                        <i class="fa fa-at"></i>
+                        <strong> Mail Id</strong>
+                    </div>
+                    <div class="textField mg-t-5 col-md-12">
+                        <p class="" style="font-size:14px;font-family:verdana;">info@markzil.com</p>
+                    </div>
+                    <div class="heading fs-14" style="font-size:18px">
+                        <i class="fa fa-phone-square" aria-hidden="true"></i>
+                        <strong> Mobile</strong>
+                    </div>
+                    <div class="textField mg-t-5 col-md-12">
+                        <p class="" style="font-size:14px;font-family:verdana;">(+91) -7410048718 / +91-20-27158080</p>
+                    </div>
+                    <div class="heading fs-14" style="font-size:18px">
+                        <i class="fa fa-clock-o"></i>
+                        <strong> Business Time</strong>
+                    </div>
+                    <div class="textField mg-t-5 col-md-12">
+                        <p class="" style="font-size:14px;font-family:verdana;">24*7 Support</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

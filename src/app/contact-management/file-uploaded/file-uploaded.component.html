@@ -1,0 +1,38 @@
+<div class="card">
+  <div class="card-header">
+    <strong>Import Contact</strong>
+  </div>
+  <div class="card-body">
+    <div class="alert alert-success" role="alert"><strong>Preview table of few selected attributes</strong></div>
+
+    <div class="mt-4">
+      <table class="table-responsive" border="0" *ngIf="previewDatList.length > 0">
+        <thead class="bg-dark">
+          <tr>
+            <span *ngFor="let heder of previewDatList[0].reviewFileList ; let i=index">
+              <th *ngIf="heder.attribute!=null" >{{heder.attribute}}</th>
+            </span>
+          </tr>
+        </thead>
+        <tbody>
+          <div *ngFor="let info of previewDatList ; let i2=index" style="border: 1px solid #ccc;">
+            <tr *ngIf="i2!=0">
+              <div *ngIf="info.reviewFileList!=null" class="d-flex border-right"> 
+                <div *ngFor="let lable of info.reviewFileList; let i3=index" class="border-right">
+                  <td  *ngIf="lable!=null"> {{lable.columnValue}}</td>
+                </div>
+              </div>
+            </tr>
+          </div>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div>
+    <button class="btn btn-warning text-light m-4" type="button" (click)="redirectToimportContact()">
+      <strong><i class="fa fa-angle-left" aria-hidden="true"></i> Back </strong></button>
+    <button class="btn btn-info float-right m-4" type="button" (click)="redirectTofileDetails()">
+      <strong> Confirm <i class="fa fa-angle-right" aria-hidden="true"></i></strong></button>
+  </div>
+</div>

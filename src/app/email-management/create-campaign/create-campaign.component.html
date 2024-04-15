@@ -1,0 +1,572 @@
+<!--- HEADER-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-2 font-20">
+            <div class="card-header"><strong>{{pageName}} Campaign</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form #createCampaign="ngForm"
+    (ngSubmit)="createCampaign.form.valid  && getListonEdit() && saveCampaign(createCampaign)"
+    autocomplete="off" class="w-100">
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td class="width1">Campaign Name <span class="required-field text-danger">*</span></td>
+                        <td>
+                            <input type="text" class="form-control" placeholder="Enter Campaign Name" id="campaign"
+                                (change)="getUniqueCampName(campaign.value)"
+                                pattern="[A-Za-z][A-Za-z0-9 $&+,:;=?@#|'<>.^*()%!-_]+" (change)="checkChangeFlg()"
+                                [disabled]="campNameflg" [(ngModel)]="userInfo.campaign" name="campaign"
+                                #campaign="ngModel" required>
+
+                            <div *ngIf="createCampaign.submitted && campaign.invalid || campaign.touched">
+                                <div *ngIf="campaign.touched || createCampaign.submitted">
+                                    <p *ngIf="campaign.errors?.required " class="help-box">Please enter campaign name
+                                    </p>
+                                    <p *ngIf="campaign.errors?.pattern" class="help-box">
+                                        Please enter valid name</p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="width1">Process Name <span class="required-field text-danger">*</span></td>
+                        <td>
+                            <select class="form-control" id="processName" [(ngModel)]="userInfo.processName"
+                                [disabled]="pausereadonly" name="processName" #processName="ngModel" required
+                                placeholder="d.ff" (change)="setProcessDesc($event);checkChangeFlg()">
+                                <option hidden value="" disabled selected>Select process name</option>
+                                <option *ngFor="let selectProcess of processData | orderBy: order : reverse"
+                                    [class.active]="order === 'processSkey'" [value]="selectProcess.processId">
+                                    {{selectProcess.processName}}</option>
+                            </select>
+                            <div *ngIf="createCampaign.submitted && processName.invalid || processName.touched">
+                                <div *ngIf="processName.touched || createCampaign.submitted">
+                                    <p *ngIf="processName.errors?.required " class="help-box">Select process name</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <a (click)="redirectToCreateProcess()">
+                                <button type="button" class="btn btn-info" [disabled]="pausereadonly"><i
+                                        class="fa fa-plus"></i></button>
+                            </a>
+
+                            <!-- <a><button *ngIf="changeFlg!=false" type="button" data-toggle="modal" data-target="#myModal"
+                                    (click)="checkRoute('Process')" data-backdrop="false" class="btn btn-info"><i
+                                        class="fa fa-plus"></i></button></a> -->
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="width1">Sender <span class="required-field text-danger">*</span></td>
+                        <td>
+                            <select class="form-control" id="fromName" [(ngModel)]="userInfo.fromName" name="fromName"
+                                #fromName="ngModel" required placeholder="d.ff" (change)="checkChangeFlg()"
+                                (keydown.Tab)="onKey(fromName.value,$event)" [disabled]="pausereadonly"
+                                (click)="ChkSenderVerified(fromName.value)">
+                                <option *ngIf="userInfo.fromName==''" hidden selected>Select sender</option>
+                                <option hidden value="" disabled selected>Select sender</option>
+                                <option *ngFor="let selectSender of senderData | orderBy: order: reverse "
+                                    [class.active]="order === 'senderId'" [value]="selectSender.senderId">
+                                    {{selectSender.emailAddress}}</option>
+                            </select>
+                            <div *ngIf="createCampaign.submitted && fromName.invalid || fromName.touched">
+                                <div *ngIf="fromName.touched || createCampaign.submitted">
+                                    <p *ngIf="fromName.errors?.required " class="help-box">Select sender name</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <a (click)="redirectToAddSender()"><button type="button" class="btn btn-info"
+                                    [disabled]="pausereadonly">
+                                    <i class="fa fa-plus"></i>
+                                </button></a>
+                            <!-- <a><button *ngIf="changeFlg!=false" type="button" data-toggle="modal" data-target="#myModal"
+                                    (click)="checkRoute('Sender')" data-backdrop="false" class="btn btn-info"><i
+                                        class="fa fa-plus"></i></button></a> -->
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <!--  change line no 95;HideShowInclude() -->
+                        <td class="width1">List Name <span class="required-field text-danger">*</span></td>
+                        <td class="size">
+                            <ng-multiselect-dropdown [disabled]="pausereadonly" [placeholder]="'Select list'"
+                                [settings]="dropdownSettings" [data]="ListData" name="selectedItems"
+                                [(ngModel)]="selectedItems" (onSelect)="onItemSelect($event)"
+                                (onSelectAll)="onSelectAll($event)" (change)="checkChangeFlg();">
+                            </ng-multiselect-dropdown>
+                            <!--<div id="dropdown-btn" class="role-button pl-3 p-2 form-control" data-toggle="collapse"
+                                (click)="getListonEdit()" data-target="#demo1" required>
+                                Select list <i class="fa fa-angle-down float-right" aria-hidden="true"
+                                    style="font-weight: bolder;"></i>
+                            </div> 
+                            <div id="dropdown" class="collapse sizing" style="display: none;">
+                                <input type="text" class="form-control" name="searchList" placeholder="&#xF002; Search" style="font-family:Arial, FontAwesome;" [(ngModel)]="searchList">
+                                <span *ngFor="let option of ListData | filter : searchList;  let i = index">
+                                    <li class=" list-group-item p-1 form-control pb-2 tacho-checkbox-list drop">
+                                        <input type="checkbox" (click)="changesRoleerror();routingListData()"
+                                            id="checkBox_{{i}}" value="{{option.listId}}"
+                                            class="mr-2 ml-3 tacho-checkbox col-md-3" [disabled]="pausereadonly"
+                                            (change)="checkChangeFlg();" required>
+                                        <label class="tacho-label mb-0 col-md-9 cent"
+                                            for="checkBox_{{i}}">{{option.listName}}</label>
+                                    </li>
+                                </span>
+                            </div>
+
+
+                            <p *ngIf="roleFlg==1 " class="help-box">Please select list name</p>-->
+
+                        </td>
+
+                        <td>
+                            <a (click)="redirectToCreateList()"><button type="button" class="btn btn-info"
+                                    [disabled]="pausereadonly"><i class="fa fa-plus"></i></button></a>
+
+                            <!-- <a><button *ngIf="changeFlg!=false" type="button" data-toggle="modal" data-target="#myModal"
+                                    (click)="checkRoute('List')" data-backdrop="false" class="btn btn-info"><i
+                                        class="fa fa-plus"></i></button></a> -->
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="width1">Template <span class="required-field text-danger">*</span></td>
+                        <td>
+                            <select class="form-control" id="templateName" [(ngModel)]="userInfo.templateName"
+                                name="templateName" #templateName="ngModel" required placeholder="d.ff"
+                                [disabled]="pausereadonly" (change)="checkChangeFlg()">
+                                <option hidden value="" disabled selected>Select template name</option>
+                                <option *ngFor="let selectTemp of templateData | orderBy: order: reverse "
+                                    [class.active]="order === 'emailTemplateSkey'"
+                                    [value]="selectTemp.emailTemplateSkey">
+                                    {{selectTemp.templateName}}</option>
+                            </select>
+
+                            <div *ngIf="createCampaign.submitted && templateName.invalid || templateName.touched">
+                                <div *ngIf="templateName.touched || createCampaign.submitted">
+                                    <p *ngIf="templateName.errors?.required " class="help-box">Select template name</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <a (click)="redirectToCreateTemplate()"><button type="button" class="btn btn-info"
+                                    [disabled]="pausereadonly"><i class="fa fa-plus"></i></button></a>
+                            <!-- <a><button *ngIf="changeFlg!=false" type="button" data-toggle="modal" data-target="#myModal"
+                                    (click)="checkRoute('Template')" data-backdrop="false" class="btn btn-info"><i
+                                        class="fa fa-plus"></i></button></a> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="width1">Subject <span class="required-field text-danger">*</span></td>
+                        <td>
+                            <input type="text" class="form-control" placeholder="Enter Subject" id="subject"
+                                [disabled]="pausereadonly" [(ngModel)]="userInfo.subject" name="subject" required
+                                #subject="ngModel" (change)="checkChangeFlg()">
+
+                            <div *ngIf="createCampaign.submitted && subject.invalid || subject.touched">
+                                <div *ngIf="subject.touched || createCampaign.submitted">
+                                    <p *ngIf="subject.errors?.required " class="help-box">Please enter subject</p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="width1">Communication Channel <span class="required-field text-danger">*</span></td>
+                        <td>
+                            <select class="form-control" id="channelName" [(ngModel)]="userInfo.channelName"
+                                name="channelName" #channelName="ngModel" required placeholder="d.ff"
+                                [disabled]="pausereadonly" (click)="changesRoleerror()">
+                                <option hidden value="" disabled selected>Select communication channel</option>
+                                <option *ngFor="let selectChannel of ChanelData" [value]="selectChannel.channelSkey">
+                                    {{selectChannel.channelName}}</option>
+                            </select>
+
+                            <div *ngIf="createCampaign.submitted && channelName.invalid || channelName.touched">
+                                <div *ngIf="channelName.touched || createCampaign.submitted">
+                                    <p *ngIf="channelName.errors?.required " class="help-box"> Select communication
+                                        channel</p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td id="show" class="width1 link"><a class="color">More: &nbsp;</a> <a data-toggle="tooltip"
+                                title="It will be applicable when you're running campaign second time." data-placement="top">
+                                <i class="fa fa-info-circle text-info" aria-hidden="true"></i></a></td>
+                        <td>
+                            <div id="tr" class="fixed-width">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="unsubscribe"
+                                        [disabled]="pausereadonly" [(ngModel)]="userInfo.unsubscribe" name="unsubscribe"
+                                        #unsubscribe="ngModel" ng-value="Unsubscribe" name="unsubscribe"
+                                        (change)="checkChangeFlg()">
+                                    <label class="custom-control-label" for="unsubscribe">Include Unsubscribe</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mt-2">
+                                    <input type="checkbox" class="custom-control-input" id="softBounce"
+                                        [disabled]="pausereadonly" [(ngModel)]="userInfo.softBounce" name="softBounce"
+                                        #softBounce="ngModel" ng-value="softBounce" name="softBounce"
+                                        (change)="checkChangeFlg()">
+                                    <label class="custom-control-label" for="softBounce">Include Invalid (Soft Bounce)</label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox mt-2">
+                                    <input type="checkbox" class="custom-control-input" id="duplicate"
+                                        [disabled]="pausereadonly" [(ngModel)]="userInfo.duplicate" name="duplicate"
+                                        #duplicate="ngModel" ng-value="duplicate" (change)="checkChangeFlg()">
+                                    <label class="custom-control-label" for="duplicate">Include Duplicate</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mt-2">
+                                    <input type="checkbox" class="custom-control-input" id="weekend"
+                                        (change)="selectDeselect()">
+                                    <label class="custom-control-label" for="weekend">Exclude Weekend</label>
+                                    <a data-toggle="tooltip"
+                                        title="The selected days will be excluded i.e. the campaign will not run on selected days. " data-placement="top">
+                                        <i class="fa fa-info-circle text-info" aria-hidden="true"></i>
+                                    </a>
+                                    <div *ngIf="weekendFlag==true" class="fixed-select">
+                                        <a>({{weekendList.weekends}})</a>
+                                    </div>
+                                    <!--<a class="color"  data-toggle="modal" data-target="#myModal2" data-backdrop="false">Exclude weekend: &nbsp;</a> <a data-toggle="tooltip"
+                                        title="The selected days will be excluded i.e. the campaign will not run on selected days. " data-placement="top">
+                                        <i class="fa fa-info-circle text-info" aria-hidden="true"></i>
+                                    </a>-->
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!--<tr>
+                        
+                        <td id="show" class="width1 link"><a class="color"  data-toggle="modal" data-target="#myModal2" data-backdrop="false">Exclude weekend: &nbsp;</a> <a data-toggle="tooltip"
+                            title="The selected days will be excluded i.e. the campaign will not run on selected days. " data-placement="top">
+                            <i class="fa fa-info-circle text-info" aria-hidden="true"></i></a></td>
+                        
+                    </tr>-->
+
+                </tbody>
+            </table>
+        </div>
+        <!---COL-MD-6-->
+        <div class="col-md-6  table-responsive1">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td class="width">Campaign Description <span class="required-field text-danger">*</span></td>
+                        <td>
+                            <textarea class="form-control" rows="4" id="campaigndesc"
+                                pattern="^[a-zA-Z0-9\x22_ !@#$%^&*()_+\-=\[\]{};':\\|,.<>\/?]*$"
+                                [disabled]="pausereadonly" placeholder="Enter Description" maxlength="250"
+                                [(ngModel)]="userInfo.campaigndesc" name="campaigndesc" required #campaigndesc="ngModel"
+                                (change)="checkChangeFlg()"> </textarea>
+
+                            <div *ngIf="createCampaign.submitted && campaigndesc.invalid || campaigndesc.touched">
+                                <div *ngIf="campaigndesc.touched || createCampaign.submitted">
+                                    <p *ngIf="campaigndesc.errors?.required " class="help-box">Please enter campaign
+                                        Description</p>
+                                </div>
+                                <p style="color:red" *ngIf="userInfo.campaigndesc?.length > 250">
+                                    Description size should be less than 250 characters.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="width">Process Description </td>
+                        <td>
+                            <textarea class="form-control" rows="4" id="processdesc"
+                                pattern="^[a-zA-Z0-9\x22_ !@#$%^&*()_+\-=\[\]{};':\\|,.<>\/?]*$" maxlength="250"
+                                [(ngModel)]="userInfo.processdesc" name="processdesc" #processdesc="ngModel"
+                                [disabled]="true" (change)="checkChangeFlg()"> </textarea>
+
+                            <div *ngIf="createCampaign.submitted && processdesc.invalid || processdesc.touched">
+                                <div *ngIf="processdesc.touched || createCampaign.submitted">
+                                    <p *ngIf="processdesc.errors?.required " class="help-box">Please enter process
+                                        Description</p>
+                                    <p style="color:red" *ngIf="userInfo.processdesc?.length > 250">
+                                        Description size should be less than 250 characters.
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="width">Schedule Campaign <span class="required-field text-danger">*</span></td>
+                        <td>
+                            <select class="form-control" id="shchedule" [(ngModel)]="userInfo.shchedule"
+                                name="shchedule" #shchedule="ngModel" required placeholder="d.ff"
+                                [disabled]="pausereadonly" (change)="checkChangeFlg()">
+                                <option hidden value="" selected>Schedule Campaign</option>
+                                <option value="scheduleNow">Schedule now</option>
+                                <option value="scheduleLater">Schedule later</option>
+                            </select>
+
+                            <div *ngIf="createCampaign.submitted && shchedule.invalid || shchedule.touched">
+                                <div *ngIf="shchedule.touched || createCampaign.submitted">
+                                    <p *ngIf="shchedule.errors?.required " class="help-box">Select schedule campaign</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-3" *ngIf="userInfo.shchedule == 'scheduleLater'">
+                                <!--    <input class="form-control" type="datetime-local" value="2011-08-19" [disabled]="pausereadonly"
+                                    id="scheduleCampaign" name="sheduleDate" [(ngModel)]="userInfo.sheduleDate" required
+                                    #sheduleDate="ngModel" (change)="checkChangeFlg()">-->
+
+                                <div class="d-flex">
+                                    <input class="form-control" type="date" value="2011-08-19"
+                                        [disabled]="pausereadonly" id="scheduleCampaign" name="sheduleDate"
+                                        [(ngModel)]="userInfo.sheduleDate" required #sheduleDate="ngModel"
+                                        (change)="checkChangeFlg()">
+                                    <input class="form-control" type="time" value="2011-08-19"
+                                        [disabled]="pausereadonly" id="scheduleCampaign" name="sheduleDateTime"
+                                        [(ngModel)]="userInfo.sheduleDateTime" required #sheduleDateTime="ngModel"
+                                        (change)="checkChangeFlg()">
+                                </div>
+                                <div
+                                    *ngIf="createCampaign.submitted && sheduleDate.invalid || sheduleDate.touched || sheduleDateTime.touched">
+                                    <div
+                                        *ngIf="sheduleDate.touched || sheduleDateTime.touched || createCampaign.submitted">
+                                        <p *ngIf="sheduleDate.errors?.required || sheduleDateTime.errors?.required"
+                                            class="help-box">Please select date and time! </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="width">
+                            <label class="label">Do you want to pause campaign after some interval? <a
+                                    data-toggle="tooltip"
+                                    title="Pause time and resume time should be different."
+                                    data-placement="top">
+                                    <i class="fa fa-info-circle text-info" aria-hidden="true"></i></a></label>
+                        </td>
+                        <td>
+                            <select class="form-control" id="spuseflg" [(ngModel)]="userInfo.spuseflg" name="spuseflg"
+                                [disabled]="pausereadonly || disablePause" #spuseflg="ngModel" required (change)="checkChangeFlg()">
+                                <option hidden value="" selected>Select</option>
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+
+                            <div *ngIf="userInfo.spuseflg == 'true'" class="row">
+                                <div class="col-md-6">
+                                    <label>Pause Time</label>
+                                    <input class="max-width" type="time"
+                                        (change)="checkChangeFlg();timeNotSame($event,'pause')" id="campaignPauseTime"
+                                        name="campaignPauseTime" [(ngModel)]="userInfo.campaignPauseTime" required
+                                        #campaignPauseTime="ngModel" [disabled]="disablePause">
+                                    <div
+                                        *ngIf="createCampaign.submitted && campaignPauseTime.invalid || campaignPauseTime.touched">
+                                        <div *ngIf="campaignPauseTime.touched || createCampaign.submitted">
+                                            <p *ngIf="campaignPauseTime.errors?.required " class="help-box">Please enter
+                                                pause time
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Resume Time</label>
+                                    <input class="max-width" type="time"
+                                        (change)="checkChangeFlg();timeNotSame($event,'resume')" id="campaignResumeTime"
+                                        name="campaignResumeTime" [(ngModel)]="userInfo.campaignResumeTime" required
+                                        #campaignResumeTime="ngModel" [disabled]="disablePause">
+                                    <div
+                                        *ngIf="createCampaign.submitted && campaignResumeTime.invalid || campaignResumeTime.touched">
+                                        <div *ngIf="campaignResumeTime.touched || createCampaign.submitted">
+                                            <p *ngIf="campaignResumeTime.errors?.required " class="help-box">Please
+                                                enter resume time
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                    <!-- <tr *ngIf="userInfo.spuseflg == 'true' || userInfo.shchedule == 'scheduleLater' || userInfo.skipWeekend == true">-->
+                   
+                  
+                    <tr>
+                        <!--<td class="width">Time Zone<span class="required-field text-danger">*</span></td>
+                        <td>
+                            <input type="text" list="timeZone" [disabled]="pausereadonly" class="form-control"
+                                [(ngModel)]="userInfo.timeZone" name="timeZone" #timeZone="ngModel" required
+                                placeholder="Select time zone" (change)="checkChangeFlg();checkzone()">
+                            <datalist id="timeZone">
+                                <option *ngFor="let p of timeZoneList; let i = index" data-value="p.zoneName">
+                                    {{p.zoneName}}({{p.utc}})</option>
+                            </datalist>-->
+                        <td class="width">Time Zone <span class="required-field text-danger">*</span></td>
+                        <td class="size timezone-list">
+                            <ng-multiselect-dropdown [disabled]="pausereadonly" [placeholder]="'Select time zone'"
+                                [settings]="dropdownSettingsZone" [data]="timeZoneList" name="timeZoneSelection"
+                                [(ngModel)]="timeZoneSelection" (onSelect)="onZoneSelect($event)"
+                                (click)="checkChangeFlg()">
+                            </ng-multiselect-dropdown>
+                            <!--<select id="timeZone" class="form-control" [(ngModel)]="userInfo.timeZone" name="timeZone"
+                                #timeZone="ngModel" required placeholder="d.ff" (change)="checkChangeFlg()">
+                                <option hidden value="" disabled selected>Select time zone</option>
+                                <option *ngFor="let p of timeZoneList" [value]="p.zoneName">{{p.zoneName}}
+                                    {{p.utc}}
+                                </option>
+                            </select>
+                            <div class="dropdown form-control" >
+                                <span class="btn btn-default dropdown-toggle " class="form-control" [(ngModel)]="userInfo.timeZone" name="timeZone"
+                                #timeZone="ngModel" required placeholder="d.ff" (change)="checkChangeFlg()" data-toggle="dropdown"></span>
+                                
+                                <ul class="dropdown-menu form-group" role="menu" >
+                                    <li hidden selected disabled>select time zone</li>
+                                    <input type="text" class="form-control" name="searchList" placeholder="&#xF002; Search" style="font-family:Arial, FontAwesome;" [(ngModel)]="searchList">
+                                    <li *ngFor="let p of timeZoneList | filter: searchList" [value]="p.zoneName"><a role="menuitem" >{{p.zoneName}}{{p.utc}}</a></li>  
+                                </ul>
+                            </div>-->
+                            <div *ngIf="zone==false" class="help-box">
+                                Please select time zone!
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="width">Pause Second<span class="required-field text-danger">*</span>
+                            <a data-toggle="tooltip"
+                                title="It is interval between sending one e-mail after another" data-placement="top">
+                                <i class="fa fa-info-circle text-info" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" placeholder="Pause Second" id="pushSec"
+                                pattern="^[0-9]*$" [(ngModel)]="userInfo.pushSec" name="pushSec" required
+                                [disabled]="disablePause" #pushSec="ngModel" (change)="checkChangeFlg()">
+                            <div *ngIf="createCampaign.submitted && pushSec.invalid || pushSec.touched">
+                                <div *ngIf="pushSec.touched || createCampaign.submitted">
+                                    <p *ngIf="pushSec.errors?.required " class="help-box">Please enter pause seconds
+                                    </p>
+                                    <p *ngIf="pushSec.errors?.pattern" class="help-box">
+                                        Please enter valid pause seconds</p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12 text-center mt-5">
+            <button type="submit" [disabled]="submitFlg || zone!=true"
+                class="btn btn-info mr-3"><strong>{{btnName}}</strong></button>
+            <!-- <a (click)="redirectToConfiguration()">Save & Next </a> -->
+            <button *ngIf="changeFlg==false" type="button" (click)="redirectToCampaignManagemnetNO()"
+                class="btn btn-danger"><strong> Cancel</strong></button>
+            <button *ngIf="changeFlg!=false" type="button" class="btn btn-danger" data-toggle="modal"
+                data-target="#myModal" (click)="getListonEdit() && checkRoute('campDashboard')"
+                data-backdrop="false"><strong>
+                    Cancel</strong></button>
+        </div>
+    </div>
+</form>
+
+<!----Modal pop-up-->
+
+<!-- The Modal -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body text-center">
+                <h4 class="modal-title mb-4">Do you want to save as a draft?</h4>
+                <button type="button" [disabled]="submitFlg" (click)="saveDraft(createCampaign)" data-dismiss="modal"
+                    class="btn btn-info mr-2  mb-4"><strong> <a class="cursor text-light">Yes </a> </strong></button>
+                <button type="button" class="btn btn-danger mb-4" (click)="redirectToCampaignManagemnetNO()"><strong> <a
+                            class="cursor text-light">No </a> </strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal " id="myModal2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+                <button type="button" class="close" (click)="checkSelected()" data-dismiss="modal ">&times;</button>
+        </div>
+            <!-- Modal body -->
+            <div class="modal-body text-center">
+                <h4 class="modal-title mb-4">Please select weekend days</h4>
+                <div class="weekDays-selector">
+                    <input type="checkbox" id="weekday-mon" class="weekday" [(ngModel)]="userInfo.Monday" name="Monday"
+                        #Monday="ngModel" ng-value="Monday" (change)="checkChangeFlg()" />
+                    <label for="weekday-mon">Mon</label>
+                    <input type="checkbox" id="weekday-tue" class="weekday" [(ngModel)]="userInfo.Tuesday"
+                        name="Tuesday" #Tuesday="ngModel" ng-value="Tuesday" (change)="checkChangeFlg()" />
+                    <label for="weekday-tue">Tue</label>
+                    <input type="checkbox" id="weekday-wed" class="weekday" [(ngModel)]="userInfo.Wednesday"
+                        name="Wednesday" #Wednesday="ngModel" ng-value="Wednesday" (change)="checkChangeFlg()" />
+                    <label for="weekday-wed">Wed</label>
+                    <input type="checkbox" id="weekday-thu" class="weekday" [(ngModel)]="userInfo.Thursday"
+                        name="Thursday" #Thursday="ngModel" ng-value="Thursday" (change)="checkChangeFlg()" />
+                    <label for="weekday-thu">Thur</label>
+                    <input type="checkbox" id="weekday-fri" class="weekday" [(ngModel)]="userInfo.Friday" name="Friday"
+                        #Friday="ngModel" ng-value="Friday" (change)="checkChangeFlg()" />
+                    <label for="weekday-fri">Fri</label>
+                    <input type="checkbox" id="weekday-sat" class="weekday" [(ngModel)]="userInfo.Saturday"
+                        name="Saturday" #Saturday="ngModel" ng-value="Saturday" (change)="checkChangeFlg()" />
+                    <label for="weekday-sat">Sat</label>
+                    <input type="checkbox" id="weekday-sun" class="weekday" [(ngModel)]="userInfo.Sunday" name="Sunday"
+                        #Sunday="ngModel" ng-value="Sunday" (change)="checkChangeFlg()" />
+                    <label for="weekday-sun">Sun</label>
+                </div>
+                <button  class="btn btn-danger" (click)="checkSelected()" data-dismiss="modal" #closenewListModal>Submit</button>
+            </div>
+        </div> 
+    </div>
+</div>
+    <div class="modal " id="myModal3">
+        <div class="modal-dialog modal-center">
+            <div class="modal-content modal-size">
+            <div class="modal-header">
+            <span class="text-center pl-4">
+                <h4 class="modal-title" style="word-break: break-all;"><strong class="color">{{reputationDetails.emailAddress}}</strong><br> <strong>Reputation activity</strong></h4>
+            </span>                
+            </div>
+                <!-- Modal body -->
+                <div class="modal-body ">
+                <span class="d-flex">
+                    <i class="fa fa-hand-o-right pt-1 pr-2 sub-font-size" aria-hidden="true"></i>
+                    <h6 class=" mb-2">Reputation creation step : {{reputationDetails.day}} </h6>
+                    </span>
+                    <span class="d-flex">
+                    <i class="fa fa-hand-o-right pt-1 pr-2 sub-font-size" aria-hidden="true"></i>
+                    <h6 class=" mb-2"> Minimum contacts required in list : {{reputationDetails.numberOfEmail}}</h6>
+                    </span>
+                    <span class="d-flex">
+                    <i class="fa fa-hand-o-right pt-1 pr-2 sub-font-size" aria-hidden="true"></i>
+                    <h6 class=" mb-4">Total limit of sending mails : {{reputationDetails.numberOfEmail}} </h6>
+                    </span>
+                    <div class="text-center">
+                    <button  class="btn btn-success" data-dismiss="modal" (click)="closeModal()">Ok</button>
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                    <h6><span class="required-field text-danger">*</span>Note : Please make sure your contacts are valid for good reputation!</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,155 @@
+<!---CAMPAIGN HEADER-->
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-4 mt-1">
+                <strong>All Contacts Details</strong>
+            </div>
+
+            <div class="col-md-8 float-right">
+                <div class=" dropdown d-flex float-right">
+                    <select class="form-control select" id="exampleFormControlSelect1" [(ngModel)]="activedeactive"
+                        *ngIf="allContactData!=null && allContactData.length!=0">
+                        <option value="0" disabled>Select file type</option>
+                        <option value="1">.CSV</option>
+                        <option value="2">.XLSX</option>
+                    </select>
+                    <div class="">
+                        <button (click)="loadingMessage()" class="btn btn-info ml-3 btn-md size"
+                            *ngIf="allContactData!=null && allContactData.length!=0 && itrationCount!=1 && itrationCount!=undefined && itrationCount!=null">Download
+                            <span class="spinner-border" style="height:15px;width:15px;"></span></button></div>
+                    <button *ngIf="itrationCount==1 || itrationCount==undefined || itrationCount==null"
+                        class="btn btn-info ml-3 size" (click)="activeDeactive()"><strong> Download</strong></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!---SEARCH-->
+<div class="row mt-4">
+    <div class="col-md-7 font-20">
+        <div class="search-button d-flex pl-4" *ngIf="allContactData!=null && allContactData.length!=0">
+
+            <input type="checkbox" id="allcheck" class="form-check-input" (click)="selectAll()"
+                style="margin-top: 4px;" />
+            <div class=""><strong class="p-1 ml-1"> Select All</strong></div>
+
+            <button type="submit" class="btn btn-info ml-1 size" *ngIf="filterFlg != 'Blacklist'"
+                (click)="archiveblacklistContact('blacklist')"><strong> Blacklist</strong></button>
+            <button *ngIf="filterFlg != 'Archive'" type="submit" class="btn btn-info ml-3 size"
+                (click)="archiveblacklistContact('archive')"><strong>
+                    Archive</strong></button>
+            <button *ngIf="filterFlg != 'Unsubscribe'" type="submit" class="btn btn-info ml-3 size"
+                (click)="archiveblacklistContact('unsubscribe')"><strong>
+                    Unsubscribe</strong></button>
+            <select class="form-control ml-2 design" (change)="delete()"
+                    [(ngModel)]="filterDelete">
+                    <option hidden value="" disabled selected>Delete</option>
+                    <option value="listDelete">Delete only from list</option>
+                    <option value="universalDelete" >Delete from everywhere</option>
+            </select>
+            <!--<button type="submit" class="btn btn-info ml-3 size"
+                (click)="delete()"><strong>
+                    Delete</strong></button>-->
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="dropdown float-right">
+            <div class=" d-flex">
+                <label for="exampleFormControlSelect1" class="pt-1">
+                    <h5>Filter</h5>
+                </label>
+                <select class="form-control ml-2" id="exampleFormControlSelect1" (change)="filterData()"
+                    [(ngModel)]="filterFlg">
+                    <option value="">All</option>
+                    <option value="Archive">Archive</option>
+                    <option value="Blacklist">Blacklist</option>
+                    <option value="Unsubscribe">Unsubscribe</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 float-right">
+        <input class="form-control float-right " type="text" name="search" [(ngModel)]="search"
+            placeholder="&#xF002; Search" style="font-family:Arial, FontAwesome">
+    </div>
+</div>
+
+<!----TABLE-->
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered  tacho-table">
+        <thead class="bg-dark">
+            <tr>
+                <th class="text-center">Select</th>
+                <th>Email Address</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Mobile Number</th>
+                <th>Blacklist</th>
+                <th>Archive</th>
+                <th>Unsubscribe</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="customerClientIdList==null || customerClientIdList.length==0">
+                <td class="noBorder"></td>
+                <td class="noBorder"></td>
+                <td class="noBorder"></td>
+                <div>
+                    <td class="noBorder">
+                        <span class="text-danger ">
+                            <h5>Please wait.....</h5>
+                        </span><br>
+                        <div class="d-flex justify-content-center text-danger ">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Please wait</span>
+                                <span class="sr-only ">Loading...</span>
+                            </div>
+                        </div>
+                    </td>
+                </div>
+            </tr>
+            <tr *ngFor="let info of allContactData | filter : search | paginate: { itemsPerPage: showData.rowsPerPage, currentPage: p } ; let i=index"
+                (click)="setClickedRow(i)" [class.active]="i == selectedRow">
+                <td class="text-center"><input type="checkbox" class="form-check-input"
+                        id="check_{{info.customerClient.customerClientId}}" type="checkbox" [checked]="checkboxes[i]"
+                        (click)="toggleSelection($event, i)"></td>
+                <td><a (click)="redirectToEditContact(i,info.customerClientId)"
+                        class="text-primary cursor">{{info.customerClient.originalEmailId}}</a> </td>
+                <td>{{info.customerClient.firstName}}</td>
+                <td>{{info.customerClient.lastName}}</td>
+                <td>{{info.customerClient.mobileCountryCode}}&nbsp;{{info.customerClient.mobileNo}}</td>
+                <td *ngIf="info.customerClient.blacklist == '1'">Y</td>
+                <td *ngIf="info.customerClient.blacklist == null || info.customerClient.blacklist == '0' ">N</td>
+                <td *ngIf="info.customerClient.archive == '1'">Y</td>
+                <td *ngIf="info.customerClient.archive == '0' || info.customerClient.archive == null ">N</td>
+                <td *ngIf="info.customerClient.unsubscribed == '1'">Y</td>
+                <td *ngIf="info.customerClient.unsubscribed == '0' || info.customerClient.unsubscribed == null ">N</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--Pagination-->
+<div class="row mt-2 col-xs-2">
+    <!--Show Records-->
+    <div class="col-md-4 mt-2">
+        <div class="show-rows ">
+            <span>Show Records</span><input class="rowsPerPage ml-2" type="number" min="1"
+                [(ngModel)]="showData.rowsPerPage" name="rowsPerPage" #rowsPerPage="ngModel" pattern="^[1-9][0-9]*$"
+                placeholder="Rows">
+        </div>
+        <div *ngIf="rowsPerPage.invalid || rowsPerPage.touched">
+            <p *ngIf="rowsPerPage.errors?.pattern" class="help-bpx" class="help-bpx" style="color: red;">
+                Please enter value greater than 0.</p>
+        </div>
+    </div>
+    <div class="col-md-8 ">
+        <div class="float-right mt-2">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+    </div>
+</div>

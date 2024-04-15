@@ -1,0 +1,33 @@
+.createlistform .table td{
+    border:0;
+}
+
+.thead .th {
+    cursor: pointer;
+    margin-right: 15px;
+    margin-left: 15px;
+  }
+  .thead .th .span {
+    visibility: hidden;
+  }
+  .thead .th.active {
+    color: #000;
+  }
+  .thead .th.active .span {
+    visibility: visible;
+  }
+  .noBorder{
+    border: 0;
+  }
+
+  .fixed-width{
+    word-break: break-word;
+  }
+
+  .float{
+    text-align: center;
+  }
+
+  .width-list{
+    width:120px;
+  }

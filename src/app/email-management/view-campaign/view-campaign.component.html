@@ -1,0 +1,193 @@
+<!---HEADER-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-2 font-20">
+            <div class="card-header"><strong>View Campaign Details</strong>
+            </div>
+        </div> 
+    </div>
+</div>
+
+<!---CAMPAIGN DETAILS-->
+
+<div class="row mt-4">
+    <div class="col-md-4 mt-4">
+        <div class="box-shadow p-4 border">
+            <div class="font-20 text-center mt-1">
+                <strong>{{campViewData.campaignName}}</strong>
+            </div>
+            <div class="row mt-3">
+
+                <div class="col-lg-4">
+                    <div class="mt-2"><strong>Subject</strong></div>
+                    <div class="mt-2"><strong>Sent From</strong></div>
+                    <div class="mt-2"><strong>List Name</strong></div>
+                    <div class="mt-2"><strong>Sent Date</strong></div>
+                    <div class="mt-2"><strong>Status</strong></div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="mt-2">{{campViewData.subject}}</div>
+
+                    <div class="mt-2">{{campViewData.sentfromAddress}}</div>
+                    <div class="mt-2">{{campViewData.Listname}}</div>
+                    <div class="mt-2"
+                        *ngIf="campViewData.campaignStartDate!=null || campViewData.campaignStartDate!=''">
+                        {{campViewData.campaignStartDate | date:"dd-MMM-yyyy 'at' h:mm a"}}</div>
+                    <div class="mt-2"
+                        *ngIf="campViewData.campaignStartDate==null || campViewData.campaignStartDate==''">NA</div>
+                    <div class="mt-2">{{campViewData.campaignStatus}}</div>
+                </div>
+            </div> 
+        </div>
+    </div>
+
+    <div class="col-md-2 mt-4">
+        <div class="text-center text-light bg-secondary p-4 font-20 box-shadow">
+            <strong>{{opencount}}</strong> <br>
+            <strong>Open</strong>
+        </div>
+    </div>
+    <div class="col-md-2 mt-4">
+        <div class="bg-warning text-light text-center p-4 font-20 box-shadow">
+            <strong>{{clickCount}}</strong> <br>
+            <strong>Click</strong>
+        </div>
+    </div>
+    <div class="col-md-2 mt-4">
+        <div class="bg-danger text-light text-center p-4 font-20 box-shadow">
+            <strong>{{subscribeCount}}</strong> <br>
+            <strong>Unsubscribe</strong>
+        </div>
+    </div>
+    <div class="col-md-2 mt-4">
+        <div class=" text-center p-3 font-20 box-shadow" style="background-color: white;" >
+            <span><strong>Download Report</strong> </span>
+            <span class="spinner-border" *ngIf="itrationCount!=1 && itrationCount!=undefined && itrationCount!=null" style="height:30px;width:30px;"></span>
+            <div (click)="download()" *ngIf="itrationCount==1 || itrationCount==undefined || itrationCount==null" class="text-center font-20 p-2 text-primary link "><i class="fa fa-download" aria-hidden="true"></i> </div>
+        </div>
+    </div>
+</div>
+<!---row end-->
+
+<!----TABLE-->
+<br>
+<br>
+<!---CAMPAIGN DETAILS-->
+<div class="row mt-4">
+    <div class="col-md-12 bg-light">
+        <div class=" mb-2 font-20">
+            <strong>
+            </strong>
+        </div>
+    </div>
+    <div class="col-sm-7 col-xl-8">
+    </div>
+    <div class="col-sm-5 col-xl-4 pull-left">
+        <div class="search-button float-right  mt-2 w-100">
+            <input class="form-control" type="text" name="search" [(ngModel)]="search" 
+            placeholder="&#xF002; Search" style="font-family:Arial, FontAwesome">
+        </div>
+    </div>
+</div>
+<div class="table-responsive mt-4">
+    <table class="table table-hover table-bordered mt-2 tacho-table">
+        <thead class="bg-dark thead">
+            <tr>
+                <th class="th" [class.active]="order === 'emailAddress'"
+                (click)="setOrder('emailAddress')">Email Address<span class="pl-1 span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 span" [hidden]="!reverse">▲</span></th>
+                <th class="th" [class.active]="order === 'delivered'"
+                (click)="setOrder('delivered')">Deliver<span class="pl-1 span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 span" [hidden]="!reverse">▲</span></th>
+                <th class="th" [class.active]="order === 'totalOpen'"
+                (click)="setOrder('totalOpen')">Open<span class="pl-1 span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 span" [hidden]="!reverse">▲</span></th>
+                <th class="th" [class.active]="order === 'totalClick'"
+                (click)="setOrder('totalClick')">Click<span class="pl-1 span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 span" [hidden]="!reverse">▲</span></th>
+                <th class="th" [class.active]="order === 'unsubscribed'"
+                (click)="setOrder('unsubscribed')">Unsubscribe<span class="pl-1 span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 span" [hidden]="!reverse">▲</span></th>
+                <th class="th" [class.active]="order === 'blacklisted'"
+                (click)="setOrder('blacklisted')">Blacklist<span class="pl-1 span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 span" [hidden]="!reverse">▲</span></th>
+                <th class="th" [class.active]="order === 'softBounce'"
+                (click)="setOrder('softBounce')">Soft Bounce<span class="pl-1 span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 span" [hidden]="!reverse">▲</span></th>
+                <th class="th" [class.active]="order === 'hardBounce'"
+                (click)="setOrder('hardBounce')">Hard Bounce<span class="pl-1 span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 span" [hidden]="!reverse">▲</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="campViewTableData==null || campViewTableData.length==0">
+                <td class="noBorder"></td>
+                <td class="noBorder"></td>
+                <td class="noBorder"></td>
+                <td class="noBorder"></td>
+                <td class="noBorder"></td> 
+                <div>
+                    <td class="noBorder">
+                        <span class="text-danger ">
+                            <h5>Please wait.....</h5>
+                        </span><br>
+                        <div class="d-flex justify-content-center text-danger ">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Please wait</span>
+                                <span class="sr-only ">Loading...</span>
+                            </div>
+                        </div>
+                    </td>
+                </div>
+            </tr>
+            <tr
+                *ngFor="let camp of campViewTableData | orderBy: order :reverse | filter : search  | paginate: { itemsPerPage: showData.rowsPerPage, currentPage: p }">
+                <td>{{camp.emailAddress}}</td>
+                <td *ngIf="camp.delivered!=null &&  camp.delivered!='' && camp.delivered!=undefined">{{camp.delivered}}
+                </td>
+                <td *ngIf="camp.delivered==null || camp.delivered=='' || camp.delivered==undefined">0</td>
+                <td *ngIf="camp.totalOpen!=null &&  camp.totalOpen!='' && camp.totalOpen!=undefined">{{camp.totalOpen}}
+                </td>
+                <td *ngIf="camp.totalOpen==null ||  camp.totalOpen=='' || camp.totalOpen==undefined">0</td>
+                <td *ngIf="camp.totalClick!=null &&  camp.totalClick!='' && camp.totalClick!=undefined">
+                    {{camp.totalClick}}</td>
+                <td *ngIf="camp.totalClick==null ||  camp.totalClick=='' || camp.totalClick==undefined">0</td>
+                <td *ngIf="camp.unsubscribed!=null &&  camp.unsubscribed!='' && camp.unsubscribed!=undefined">
+                    {{camp.unsubscribed}}</td>
+                <td *ngIf="camp.unsubscribed==null || camp.unsubscribed=='' || camp.unsubscribed==undefined">
+                    0</td>
+                <td *ngIf="camp.blacklisted!=null &&  camp.blacklisted!='' && camp.blacklisted!=undefined">
+                    {{camp.blacklisted}}</td>
+                <td *ngIf="camp.blacklisted==null || camp.blacklisted=='' || camp.blacklisted==undefined">
+                    0</td>
+                <td *ngIf="camp.softBounce!=null &&  camp.softBounce!='' && camp.delivered!=undefined">
+                    {{camp.softBounce}}</td>
+                <td *ngIf="camp.softBounce==null || camp.softBounce=='' || camp.delivered==undefined">
+                    0</td>
+                <td *ngIf="camp.hardBounce!=null &&  camp.hardBounce!='' && camp.hardBounce!=undefined">
+                    {{camp.hardBounce}}</td>
+                <td *ngIf="camp.hardBounce==null || camp.hardBounce=='' || camp.hardBounce==undefined">
+                    0</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="row mt-2 col-xs-2">
+    <div class="col-md-4 mt-2">
+        <div class="show-rows ">
+            <span>Show Records</span><input class="rowsPerPage ml-2" type="number" min="1"
+                [(ngModel)]="showData.rowsPerPage" name="rowsPerPage" #rowsPerPage="ngModel" pattern="^[1-9][0-9]*$"
+                placeholder="Rows">
+        </div>
+        <div *ngIf="rowsPerPage.invalid || rowsPerPage.touched">
+            <p *ngIf="rowsPerPage.errors?.pattern" class="help-bpx" class="help-bpx" style="color: red;">
+                Please enter value greater than 0.</p>
+        </div>
+    </div>
+    <div class="col-md-8 ">
+        <div class="float-right mt-2">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+    </div>
+</div>

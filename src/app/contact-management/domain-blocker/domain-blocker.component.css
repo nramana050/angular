@@ -1,0 +1,37 @@
+.createlistform .table td{
+    border:0;
+}
+
+input[type="checkbox"]{
+    width: 15px;
+    height: 15px;
+}
+
+.thead .th {
+    cursor: pointer;
+    margin-right: 15px;
+    margin-left: 15px;
+  }
+  .thead .th .span {
+    visibility: hidden;
+  }
+  .thead .th.active {
+    color: #000;
+  }
+  .thead .th.active .span {
+    visibility: visible;
+  }
+  .noBorder{
+    border: 0;
+  }
+
+  .fixed-width{
+    word-break: break-word;
+  }
+
+  .align{
+    display: flow-root;
+  }
+  .width-list{
+    width:120px;
+  }

@@ -1,0 +1,308 @@
+<div class="wrapper">
+  <!-- Sidebar Holder -->
+  <nav id="sidebar" *ngIf="login" [ngClass]="{ 'active': navbarOpen }">
+    <div class="sidebar-header">
+      <img width="" height="50px" src="assets/images/Markzil-4_Cut-removebg-preview.png" class="custom-logo  pl-5"
+        alt="Emanzo">
+    </div>
+
+
+
+    <!-- SIDEBAR MENU -->
+    <div class="sidebar-menu" id="accordion">
+
+      <!---PROFILE EDIT-->
+      <div class="media border-bottom p-2">
+        <img id="profileImage" [src]="ImageSource" src="assets/images/avtar.png" width="50px" height="50px" alt="Profile Edit"
+          class="mr-2 rounded-circle image profile-img">
+        <div class="media-body mt-2">
+          <h5>{{dailySessionInfo.firstName}} {{dailySessionInfo.lastName}} </h5>
+          <div class="font-18"><strong>
+              <a (click)="redirectToProfileEdit()" class="edit-profile cursor">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit Profile
+              </a></strong>
+          </div>
+        </div>
+      </div>
+
+      <!---MENU-->
+      <div class="p-2 mt-3 cursor tacho-font" (click)="toggleDisplayDiv()"><strong> Email-Management <i
+            class="fa fa-chevron-down float-right" aria-hidden="true"></i></strong></div>
+      <ul class="tacho-menu list-unstyled" [hidden]="isShowDiv">
+
+
+        <li id="dashboard" (click)="activeClk('dashboard')" [class.active]="active==='dashboard'" class="main-li">
+          <div id="email1">
+            <a (click)="redirectToDashboard()">
+              <span><strong>Dashboard</strong> </span>
+            </a>
+          </div>
+        </li>
+
+        <li id="campaign" (click)="activeClk('campaign')" [class.active]="active==='campaign'" class="main-li">
+          <div id="email1">
+            <a (click)="redirectToCampaignMngmnt()">
+              <span><strong>Campaign Management</strong> </span>
+            </a>
+          </div>
+        </li>
+
+        <li id="process" (click)="activeClk('process')" [class.active]="active==='process'" class="main-li">
+          <a (click)="redirectToProcessManagement()">
+            <span><strong>Process Management</strong> </span>
+          </a>
+        </li>
+
+        <li class="main-li" id="contactManagement">
+          <div id="email1">
+            <a data-toggle="collapse" data-target="#contact">
+              <span><strong>Contact Management <i class="fa fa-chevron-down float-right "
+                    aria-hidden="true"></i></strong> </span>
+            </a>
+          </div>
+          <div class="tacho-submenu pl-5">
+            <ul class="list-unstyled ">
+              <li id="createList" (click)="activeClk('createList')" [class.active]="active==='createList'" class="">
+                <div id="contact" class="collapse">
+
+                  <a (click)="redirectToCreateList()">
+                    <span><strong>Create List</strong> </span>
+                  </a>
+                </div>
+              </li>
+              <li id="addContact" (click)="activeClk('addContact')" [class.active]="active==='addContact'" class="">
+                <div id="contact" class="collapse">
+
+                  <a (click)="redirectToaddContact()">
+                    <span><strong>Add Contact</strong> </span>
+                  </a>
+                </div>
+              </li>
+              <li id="addSender" (click)="activeClk('addSender')" [class.active]="active==='addSender'" class="">
+                <div id="contact" class="collapse">
+
+                  <a (click)="redirectToaddSender()">
+                    <span><strong>Add Sender</strong> </span>
+                  </a>
+                </div>
+              </li>
+              <li id="addNotification" (click)="activeClk('addNotification')" [class.active]="active==='addNotification'" class="">
+                <div id="contact" class="collapse">
+
+                  <a (click)="redirectToNotification()">
+                    <span><strong>Notification</strong> </span>
+                  </a>
+                </div>
+              </li>
+              <li id="addDomain" (click)="activeClk('addDomain')" [class.active]="active==='addDomain'" class="">
+                <div id="contact" class="collapse">
+
+                  <a (click)="redirectToDomain()">
+                    <span><strong>Domain Blocker</strong> </span>
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <li id="template" (click)="activeClk('template')" [class.active]="active==='template'" class="main-li">
+          <div id="email1">
+            <a (click)="redirectToTemplate()">
+              <span><strong>Template</strong> </span>
+            </a>
+          </div>
+        </li>
+        <li class="main-li">
+          <div id="email1">
+            <a data-toggle="collapse" data-target="#account">
+              <span><strong>Account <i class="fa fa-chevron-down float-right "
+                    aria-hidden="true"></i></strong> </span>
+            </a>
+          </div>
+          <div class="tacho-submenu pl-5">
+            <ul class="list-unstyled">
+              <li id="overview" (click)="activeClk2('overview')" [class.active]="active==='overview'" class="">
+                <div id="account" class="collapse">
+
+                  <a (click)="redirectToOverview()">
+                    <span><strong>Overview</strong> </span>
+                  </a>
+                </div>
+              </li>
+              <li id="paymentHistory" (click)="activeClk2('paymentHistory')" [class.active]="active==='paymentHistory'" class="">
+                <div id="account" class="collapse">
+
+                  <a (click)="redirectTopaymentHistory()">
+                    <span><strong>Payment History</strong> </span>
+                  </a>
+                </div>
+              </li>  
+            </ul>
+          </div>
+        </li>
+
+        <li id="contactUs" (click)="activeClk('contactUs')" [class.active]="active==='contactUs'" class="main-li">
+          <div id="email1">
+            <a (click)="redirectTocontactUs()">
+              <span><strong>Contact Us</strong> </span>
+            </a>
+          </div>
+        </li>
+
+
+        <!---Old Code---------
+          <li class="main-li"  >
+            <a data-toggle="collapse" data-target="#email"><i class="fa fa-envelope mr-2" style="font-size: large;"></i>
+              <strong>Email Management</strong> <i class="fa fa-chevron-down float-right" aria-hidden="true"></i></a>
+            <div class="tacho-submenu pl-2 pl-sm-4" >
+                <ul class="list-unstyled">
+                    <li id="dashboard" (click)="activeClk('dashboard')" [class.active]="active==='dashboard'" class="">
+                        <div id="email" class="collapse" data-parent="#accordion">
+                          <a (click)="redirectToDashboard()">
+                              <span><strong><i class="fa fa-chevron-right mr-2" aria-hidden="true"></i>Dashboard</strong> </span>
+                          </a>
+                        </div>
+                    </li>
+                    <li id="campaign" (click)="activeClk('campaign')" [class.active]="active==='campaign'" class="">
+                      <div id="email" class="collapse" data-parent="#accordion">
+                        <a (click)="redirectToCampaignMngmnt()">
+                            <span><strong><i class="fa fa-chevron-right mr-2" aria-hidden="true"></i>Campaign Management</strong> </span>
+                        </a>
+                      </div>
+                  </li>
+                    <li id="template" (click)="activeClk('template')" [class.active]="active==='template'" class="">
+                      <div id="email" class="collapse" data-parent="#accordion">
+                        <a (click)="redirectToTemplate()">
+                            <span><strong><i class="fa fa-chevron-right mr-2" aria-hidden="true"></i>Template</strong> </span>
+                        </a>
+                      </div>
+                  </li>
+                  <li  id="process"  (click)="activeClk('process')" [class.active]="active==='process'" class="">
+                    <div id="email" class="collapse" data-parent="#accordion">
+                      <a (click)="redirectToProcessManagement()">
+                          <span><strong><i class="fa fa-chevron-right mr-2" aria-hidden="true"></i>Process Management</strong> </span>
+                      </a>
+                    </div>
+                </li>
+                <li class="main-li" >
+                    <div id="email" class="collapse" data-parent="#accordion">
+                    <a  data-toggle="collapse" data-target="#contact" > 
+                    <span><strong><i class="fa fa-chevron-right mr-2" aria-hidden="true"></i>Contact Management</strong> </span>
+                    </a>
+                    </div>
+                    <div class="tacho-submenu pl-5">
+                      <ul class="list-unstyled">
+                        <li id="createList" (click)="activeClk('createList')" [class.active]="active==='createList'" class="">
+                            <div id="contact" class="collapse" >
+
+                            <a (click)="redirectToCreateList()" >
+                                <span><strong><i class="fa fa-chevron-right mr-2" aria-hidden="true"></i>Create List</strong> </span>
+                            </a>
+                            </div>
+                        </li>
+                        <li id="addContact" (click)="activeClk('addContact')" [class.active]="active==='addContact'" class="">
+                          <div id="contact" class="collapse" >
+
+                          <a (click)="redirectToaddContact()">
+                              <span><strong><i class="fa fa-chevron-right mr-2" aria-hidden="true"></i>Add Contact</strong> </span>
+                          </a>
+                          </div>
+                        </li>
+                        <li id="addSender" (click)="activeClk('addSender')" [class.active]="active==='addSender'" class="">
+                          <div id="contact" class="collapse" >
+
+                          <a (click)="redirectToaddSender()">
+                              <span><strong><i class="fa fa-chevron-right mr-2" aria-hidden="true"></i>Add Sender</strong> </span>
+                          </a>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>   
+                  <li  id="contactUs"  (click)="activeClk('contactUs')" [class.active]="active==='contactUs'" class="">
+                    <div id="email" class="collapse" data-parent="#accordion">
+                      <a (click)="redirectTocontactUs()">
+                          <span><strong><i class="fa fa-chevron-right mr-2" aria-hidden="true"></i>Contact Us</strong> </span>
+                      </a>
+                    </div>
+                </li>
+                </ul>
+            </div>
+          </li> ----->
+
+
+      </ul>
+
+    </div>
+    <!-- sidebar-menu  -->
+
+  </nav>
+  <!-- Page Content Holder -->
+  <div id="content">
+
+    <nav class="navbar navbar-expand-lg navbar-light" *ngIf="login" [ngClass]="{ 'active': navbarOpen }">
+      <div class="container-fluid pl-0">
+
+        <!--lIPAD LOGO -->
+         
+          <button type="button" id="sidebarCollapse" (click)="toggleNavbar()" class="navbar-btn "
+            [hidden]="navbarOpen">
+            <i class="fa fa-bars font-20 text-light" aria-hidden="true"></i>
+          </button>
+          <img width="120" height="32" src="assets/images/Markzil-4_Cut-removebg-preview.png"
+          class="custom-logo d-none img-fluid d-ipad-block" alt="Emanzo">
+      
+
+          <!--TOP BAR LOGO-->
+        <div (click)="toggleNavbar()" [hidden]="!navbarOpen">
+          <button type="button" id="sidebarCollapse" class="navbar-btn float-left mt-2">
+            <i class="fa fa-bars font-20 text-light mr-2" aria-hidden="true"></i>
+          </button>
+          <img width="120" height="32" src="assets/images/Markzil-4_Cut-removebg-preview.png"
+            class="custom-logo d-none img-fluid d-lg-block" alt="Emanzo">
+
+        </div>
+        <!--lOGOUT DROPDOWN-->
+        <div class="logout dropdown mr-4 cursor">
+          <button class="btn btn-danger logout-btn dropdown-toggle text-light" type="button" id="dropdownMenuButton"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-cog text-light fa-lg mr-1"></i>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a (click)="redirectToActivity()" class="dropdown-item ">
+              <i class="fa fa-handshake-o mr-2 text-danger"></i> Activity
+            </a>
+            <a (click)="redirectToChangePassword()" class="dropdown-item ">
+              <i class="fa fa-lock mr-2 text-danger"></i> Change Password
+            </a>
+            <a (click)="redirectToLogin()" class="dropdown-item ">
+              <i class="fa fa-power-off mr-2 text-danger"></i> Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="page-content">
+      <div class="container-fluid mg-t-40">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<!-- jQuery CDN - Slim version (=without AJAX) -->
+<!-- Popper.JS -->
+<!-- Bootstrap JS -->
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#sidebarCollapse').on('click', function () {
+      $('#sidebar').toggleClass('active');
+      $(this).toggleClass('active');
+    });
+  });
+
+</script>

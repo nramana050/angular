@@ -1,0 +1,67 @@
+<!---PROCESS HEADER-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-2 ">
+            <div class="card-header"><strong>{{pageName}} Process</strong>
+            </div>
+            <div class="card-body">
+                <form #createProcess="ngForm" (ngSubmit)="createProcess.form.valid  &&  CreateProcess(createProcess)"  novalidate  autocomplete="off" class="w-100">
+                    <br>
+                    <div class="row mt-4">
+                        <div class="col-md-6 ">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                      <tr>
+                                        <td>
+                                             Name <span class="required-field text-danger">*</span>
+                                        </td> 
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Process Name" id="processName" pattern="[A-Za-z][A-Za-z0-9 $&+,:;=?@#|'<>.^*()%!-_]+"
+                                            [(ngModel)]="processInfo.processName" name="processName"  [disabled]="changeFlg===true"
+                                            (change)="getUniqueProcessName(processName.value)" required #processName="ngModel">
+                
+                                            <div *ngIf="createProcess.submitted && processName.invalid || processName.touched">
+                                                <div *ngIf="processName.touched || createProcess.submitted">
+                                                    <p *ngIf="processName.errors?.required " class="help-box">Please enter name!</p>
+                                                    <p *ngIf="processName.errors?.pattern"  class="help-box" >
+                                                    Please enter valid name!</p>
+                                                </div>
+                                            </div> 
+                                        </td>
+                                      </tr>
+                
+                                      <tr>
+                                        <td>
+                                             Description
+                                        </td>
+                                        <td>
+                                            <textarea class="form-control" rows="4" id="processDescription" pattern="^[a-zA-Z0-9\x22_ !@#$%^&*()_+\-=\[\]{};':\\|,.<>\/?]*$"
+                                                 placeholder="Enter Description" maxlength="250" [(ngModel)]="processInfo.processDescription" name="processDescription"
+                                                      #processDescription="ngModel"> </textarea>
+                                            <div *ngIf="createProcess.submitted && processDescription.invalid || processDescription.touched">
+                                                <div *ngIf="processDescription.touched || createProcess.submitted">
+                                                    
+                                                    <p class="help-box" *ngIf="processInfo.processDescription?.length > 250">
+                                                        Description size should be less than 250 characters.
+                                                    </p>
+                                                </div>
+                                            </div> 
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class=" text-center mt-5">
+                                <button type="submit" class="btn btn-info mr-3"  [disabled]="submitFlg"><strong>{{btnName}} </strong></button> 
+                                <button  type="button" class="btn btn-danger"><strong> <a (click)="redirectToprocess()"> Cancel </a></strong></button>
+                            </div>
+                        </div>
+                    </div> <!--Row end-->
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+

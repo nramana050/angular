@@ -1,0 +1,387 @@
+<!---CAMPAIGN HEADER-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-2 font-20 pt-1">
+            <div class="card-header"><strong>Campaign Management</strong>
+
+                <div class="float-right">
+                    <a (click)="redirectToCreateCampaignngmnt()">
+                        <button type="button" class="btn btn-info"><strong> <i class="fa fa-plus mr-2"
+                                    aria-hidden="true"></i> Create Campaign</strong></button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DATE AND FILTER-->
+
+<!--FILTERS-->
+<div class="row mt-2">
+    <!---Start Date-->
+    <div class="col-md-12 col-lg-12">
+        <form [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+            <div class="row m-1">
+                <div class="col-md-4 pr-2 pl-0">
+                    <div class="d-flex">
+                        <label for="sel1" class="mr-2 pt-2" style="width: 100px;">Start Date:<span class="text-danger">*</span></label>
+                        <input formControlName="dateFrom" type="date" max="{{min2}}" (change)="dateValid1()" id="startDate"
+                            [(ngModel)]="formData.startDate" useValueAsDate />
+                    </div>
+                    <p *ngIf="dobflag1" class="help-box text-center" >
+                        Please select start date</p>
+                </div>
+                <div class="col-md-4 pr-2">
+                    <div class="d-flex">
+                        <label for="sel1" class="mr-2 pt-2" style="width: 90px;">End Date:<span class="text-danger">*</span></label>
+
+                        <input formControlName="dateTo" type="date" max="{{min2}}" (change)="dateValid2()"
+                            [(ngModel)]="formData.endDate" useValueAsDate />
+                    </div>
+                    <p *ngIf="dobflag2" class="help-box text-center" >
+                        Please select end date</p>
+                    <div *ngIf="form.invalid && formData.endDate ">
+                        <p *ngIf="form.errors" class="help-box text-center" >{{ form.errors?.dates }}</p>
+                    </div>
+                </div>
+                <div class="col-md-2 pt-1 d-flex">
+                    <div class="pr-1">
+                        <button type="submit" class="btn btn-info btn-sm date" (click)="filterDate()" [disabled]="dateApply"> <strong>Apply</strong></button>
+                        <div *ngIf="form.invalid ">
+                            <div *ngIf="form.touched">
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" pr-1">
+                        <button type="submit" class="btn btn-danger btn-sm date" (click)="reset()"> <strong>Reset</strong></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<!---SEARCH-->
+<div class="card mt-3">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-3 font-20 ">
+                <div class="search-button d-flex pl-2">
+                    <input type="checkbox" *ngIf="campaignList!=null && campaignList.length!=0" id="allcheck"
+                        class="form-check-input" (click)="selectAll()" style="margin-top: 11px;" />
+                    <div class="m-2" *ngIf="campaignList!=null && campaignList.length!=0"><strong>Select All</strong>
+                    </div>
+                    <button *ngIf="campaignList!=null && campaignList.length!=0" type="submit"
+                        class="btn btn-info mx-3 mt-1 size" (click)="blackListProcess()"><strong>
+                            Archive</strong></button>
+                </div>
+            </div>
+            <div class="col-md-2 d-flex">
+                <div class="refresh p-2 mt-1" (click)="refresh()">
+                    <i class="fa fa-refresh pr-1" aria-hidden="true"></i>Refresh
+                </div>
+                <span class="pt-2 pl-3">
+                    <i class="fa fa-table fa-2x link" data-toggle="modal" data-target="#myModalView" data-backdrop="false" aria-hidden="true"></i>
+                </span>
+            </div>
+                <!---DOWNLOAD REPORT-->
+            <div class="col-md-3 ">
+                <div class="dropdown">
+                    <div class="dropdown d-flex">
+                        <label class=" mt-2">
+                           Filter
+                        </label>
+                        <select id="filter" name="filter" class="btn btn-light custom-select border mt-2 ml-2 select"
+                            id="exampleFormControlSelect1" (change)="filterStatus()" [(ngModel)]="filterstatus">
+                            <option value="" [disabled]>Select</option>
+                            <option value="Draft">Draft</option>
+                            <option value="Sheduled">Scheduled</option>
+                            <option value="Pause">Pause</option>
+                            <option value="Sending">Sending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-4 ">
+                <div class="search-button mt-1">
+                    <input class="form-control" type="text" name="search" [(ngModel)]="search" 
+                    placeholder="&#xF002; Search" style="font-family:Arial, FontAwesome">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!----TABLE-->
+
+<div class="table-responsive mt-2">
+    <table class="table table-hover table-bordered mt-2 tacho-table table1">
+        <thead class="bg-dark thead text-center">
+            <tr> 
+                <th style="width: 4%;"></th>
+                <th style="width: 7%;" class="th" [class.active]="order === 'campaign.custCampaignId'"
+                    (click)="setOrder('campaign.custCampaignId')">ID<span class="pl-1 point span"
+                        [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th *ngIf="selectName" style="width: 19%;" class="th" [class.active]="order === 'campaign.createdOn'"
+                    (click)="setOrder('campaign.createdOn')">Campaign<span class="pl-1 point span"
+                        [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th *ngIf="selectDesc" style="width: 15%; max-width: 15%;">Description</th>
+                <!--<th style="width: 1%;" > P/R</th>-->
+                <th *ngIf="selectProcess" style="width: 10%;max-width: 10%;" class="th" [class.active]="order === 'process.processName'"
+                    (click)="setOrder('process.processName')">Process <span class="pl-1 point span"
+                        [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th *ngIf="selectList" style="width: 6%;max-width: 6%;">List </th>
+                <th *ngIf="selectTemplate" style="width: 12%;max-width: 12%;" class="th" [class.active]="order === 'emailTemplate.templateName'"
+                    (click)="setOrder('emailTemplate.templateName')">Template<span class="pl-1 point span"
+                        [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th *ngIf="selectStatus" style="width: 5%;" class="th" [class.active]="order === 'campaign.campaignStatus'"
+                    (click)="setOrder('campaign.campaignStatus')">Status<span class="pl-1 point span"
+                        [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th *ngIf="selectAction" style="width: 20%;max-width: 20%;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="campaignList==null || campaignList.length==0 && nodataFlg==false">
+                <td class="noBorder"></td>
+                <td *ngIf="selectName" class="noBorder"></td>
+                <td class="noBorder"></td>
+                <div class= "row">
+                    <td class="col-md-12 padding pt-3 noBorder" >
+                        <span class="text-center text-danger inline">
+                            <h5>Please wait.....</h5>
+                        </span><br>
+                        <div class="d-flex justify-content-center text-danger ">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Please wait</span>
+                                <span class="sr-only ">Loading...</span>
+                            </div>
+                        </div>
+                    </td>
+                </div>
+            </tr>
+
+            <tr *ngIf="nodataFlg==true">
+                <td class="noBorder"></td>
+                <td *ngIf="selectName" class="noBorder"></td>
+                <td class="noBorder"></td>
+                <div class= "row">
+                    <td class="col-md-12 padding pt-3 noBorder" >
+                        <span class="text-danger inline" style="text-align: center;">
+                            <h5>No campaign to show</h5>
+                        </span><br>
+                        
+                    </td>
+                </div>
+            </tr>
+            <tr
+                *ngFor="let data of campaignList | orderBy: order :reverse | filter : search | paginate: { itemsPerPage: showData.rowsPerPage, currentPage: p } ; let i=index">
+                <td class="text-center pl-4 center"><input type="checkbox" class="form-check-input"
+                        id="check_{{data.campaign.campaignSkey}}" type="checkbox" (click)="toggleSelection($event, i)">
+                </td>
+                <!-- <td>{{data.campaign.campaignId}}</td> -->
+                <td>{{data.campaign.custCampaignId}}</td>
+                <td *ngIf="selectName" ><a class="cursor text-info" (click)="ViewCampaign(data)"
+                        [class.disabled]="data.campaign.campaignStatus==='Draft' || data.campaign.campaignStatus==='Sending' || data.campaign.campaignStatus==='Sheduled'">{{data.campaign.campaignName}}
+                    </a><div class="td-date">
+                        Created Date:
+                        {{data.campaign.createdOn | date:"dd-MMM-yyyy 'at' h:mm a"}}
+                        <br> Modified Date: <span *ngIf="data.campaign.modifiedDate==null">NA</span>
+                    <span *ngIf="data.campaign.modifiedDate!=null"> {{data.campaign.modifiedDate | date:"dd-MMM-yyyy 'at' h:mm a"}}</span> </div></td>
+                <td *ngIf="selectDesc">
+                    <a *ngIf="data.campaign.campaignDescription!=''" style="word-break: break-word;">
+                    {{data.campaign.campaignDescription}}
+                    </a>
+                    <a *ngIf="data.campaign.campaignDescription==''">NA
+                    </a>
+                </td>
+                <!-- <td *ngIf="data.communicationChannel!=null && data.communicationChannel.channelName!=''">
+                    {{data.communicationChannel.channelName}}</td> -->
+                <!--<td>
+                    <button *ngIf="data.campaign.campaignStatus=='Send'" (click)="pauseCampaign(data.campaign)" class="btn btn-danger" >Pause</button> 
+                    <button *ngIf="data.campaign.campaignStatus=='Pause'" (click)="resumeCampaign(data.campaign)" class="btn btn-secondary" >Resume</button>
+                    <span *ngIf="data.campaign.campaignStatus!='Pause' && data.campaign.campaignStatus!='Send'" >NA</span>
+                </td>-->
+
+                <!--<td *ngIf="data.communicationChannel==null || data.communicationChannel.channelName==''">NA</td>-->
+                <td *ngIf="selectProcess" >
+                    <a *ngIf="data.process!=null &&  data.process.processName!=''" style="word-break: break-word;">{{data.process.processName}}
+                    </a>
+                    <a *ngIf="data.process==null || data.process.processName==''">
+                    NA
+                    </a>    
+                </td>
+                <td *ngIf="selectList">
+                    <span *ngIf="data.campaignListMap!=null && data.campaignListMap.length!=0">
+                        <button class="btn btn-info" (click)="showListDetails(data)" data-toggle="modal"
+                            data-backdrop="false" data-target="#myModal">View</button>
+                    </span>
+                    <span *ngIf="data.campaignListMap==null || data.campaignListMap.length==0">
+                        NA
+                    </span>
+                </td>
+                <td *ngIf="selectTemplate" >
+                    <a *ngIf="data.emailTemplate!=null && data.emailTemplate.templateName!=''" style="word-break: break-word;">
+                        {{data.emailTemplate.templateName}}
+                    </a>
+                    <a *ngIf="data.emailTemplate==null || data.emailTemplate.templateName==''" >NA
+                    </a>
+                </td>
+                <td *ngIf="selectStatus">
+                    <a *ngIf="data.campaign.campaignStatus!='Pause'">
+                    {{data.campaign.campaignStatus}}
+                        <div *ngIf="(data.campaign.pasueDesc!=null ||data.campaign.pasueDesc!='') && data.campaign.campaignStatus!='Sending' " class="td-date">{{data.campaign.pasueDesc}}</div>
+                    </a>
+                    <a *ngIf="data.campaign.campaignStatus=='Pause'">
+                        <span>{{data.campaign.campaignStatus}}</span>
+                        <div *ngIf="(data.campaign.pasueDesc!=null ||data.campaign.pasueDesc!='') && data.campaign.campaignStatus!='Sending' " class="td-date">{{data.campaign.pasueDesc}}</div>
+                    </a>
+                </td>
+                <td *ngIf="selectAction" class=" text-center">  
+                    <a >
+                        <button class="btn text-danger mr-2 no-drop" type="button" (click)="deletecampaign(data.campaign.campaignSkey,data.campaign.archive)"
+                            [disabled]="data.campaign.campaignStatus==='Sending'">
+                            <span *ngIf="data.campaign.status=='1'"><i class="fa fa-trash-o" title="Delete"
+                                    aria-hidden="true"></i></span>
+                        </button>
+                    </a>
+                    <a>
+                        <button class="btn text-info mr-2 no-drop" type="button" (click)="ViewCampaign(data)"
+                            [disabled]="data.campaign.campaignStatus==='Draft' || data.campaign.campaignStatus==='Sending' || data.campaign.campaignStatus==='Sheduled'"><i
+                                class="fa fa-eye" title="View" aria-hidden="true"></i></button>
+                    </a>
+                    <a>
+                        <button class="btn text-success no-drop"
+                            [disabled]="data.campaign.campaignStatus==='Sending' || data.campaign.campaignStatus==='Completed'"
+                            type="button" (click)="UpdateCampaignngmnt(data)"><i class="fa fa-pencil" title="Edit"
+                                aria-hidden="true"></i></button>
+                    </a>
+                    <a>
+                        <button class="btn text-success no-drop"
+                            [disabled]="data.campaign.campaignStatus==='Draft'"
+                            type="button" (click)="CloneCampaign(data,'Clone')"><i class="fa fa-clone" title="Clone"
+                                aria-hidden="true"></i></button>
+                    </a>
+                    <br>
+                    <a class="p-1">
+                    <button *ngIf="data.campaign.campaignStatus=='Sending'" (click)="pauseCampaign(data.campaign)" class="btn btn-danger action-size" title="pause campaign">Pause</button> 
+                    </a>
+                    <a class="p-1">
+                    <button *ngIf="data.campaign.campaignStatus=='Pause'" (click)="resumeCampaign(data.campaign)" class="btn btn-secondary action-size" title="resume campaign">Resume</button>
+                    </a>
+                    <a class="p-1">
+                    <button *ngIf="data.campaign.campaignStatus=='Pause'" (click)="markAsResume(data.campaign.campaignId)" class="btn btn-danger action-size" title="mark as complete">Close</button>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!-- The Modal -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><strong>All List</strong> </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <table class="table table-hover mt-3 font-weight-500">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Sr. No.</th>
+                            <th>List Id</th>
+                            <th>List Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let option of ListnameData; let i = index;">
+                            <td> {{1 + i}}</td>
+                            <td>{{option.listId}}</td>
+                            <td>{{option.listName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Pagination-->
+<div class="row mt-2 col-xs-2">
+    <!--Show Records-->
+    <div class="col-md-4 mt-2">
+        <div class="show-rows ">
+            <span>Show Records</span><input class="rowsPerPage ml-2" type="number" min="1"
+                [(ngModel)]="showData.rowsPerPage" name="rowsPerPage" #rowsPerPage="ngModel" pattern="^[1-9][0-9]*$"
+                placeholder="Rows">
+        </div>
+        <div *ngIf="rowsPerPage.invalid || rowsPerPage.touched">
+            <p *ngIf="rowsPerPage.errors?.pattern" class="help-bpx" class="help-bpx" style="color: red;">
+                Please enter value greater than 0.</p>
+        </div>
+    </div>
+    <div class="col-md-8 ">
+        <div class="float-md-right mt-2">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+    </div>
+</div>
+<div id="myModalView" class="modal fade" >
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Campaign Header View</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+              <div class="col-md-4">   
+                  <div class="checkbox">
+                    <label><input type="checkbox"  name="selectName" disabled (change)="viewSelectionMemory()" [(ngModel)]="selectName"> &nbsp; Name</label>
+                  </div>
+                  <div class="checkbox">
+                    <label><input type="checkbox"  name="selectDesc" (change)="viewSelectionMemory()" [(ngModel)]="selectDesc">&nbsp; Description</label>
+                  </div>
+                  <div class="checkbox">
+                    <label><input type="checkbox" name="selectProcess" (change)="viewSelectionMemory()" [(ngModel)]="selectProcess"> &nbsp; Process </label>
+                  </div>
+              </div>
+              <div class="col-md-4">
+                <div class="checkbox">
+                    <label><input type="checkbox" name="selectList" (change)="viewSelectionMemory()" [(ngModel)]="selectList">&nbsp; List</label>
+                  </div>
+                  <div class="checkbox">
+                    <label><input type="checkbox" name="selectTemplate" (change)="viewSelectionMemory()" [(ngModel)]="selectTemplate"> &nbsp; Template</label>
+                  </div>
+                  <div class="checkbox">
+                    <label><input type="checkbox" name="selectStatus" disabled (change)="viewSelectionMemory()" [(ngModel)]="selectStatus">&nbsp; Status</label>
+                  </div>
+              </div>
+              <div class="col-md-4">
+                <div class="checkbox">
+                    <label><input type="checkbox" name="selectAction" disabled (change)="viewSelectionMemory()" [(ngModel)]="selectAction">&nbsp; Action</label>
+                  </div>
+                  
+              </div>
+          </div>
+        <div class="text-center">
+          <button class="btn btn-danger " data-dismiss="modal">Close</button>
+        </div>
+        </div>
+        
+    </div>
+  </div>

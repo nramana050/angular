@@ -1,0 +1,77 @@
+<div class="row mt-10">
+    <div class="col-md-4 offset-md-4">
+        <!--justify-content-center -->
+        <div class="card form-bg box-shadow" *ngIf="invalidflg==false">
+            <div class="card-header bg-white text-center">
+
+
+                <h3 class="formHeading text-center text-secondary mt-4"><strong>Unsubscribe </strong></h3>
+
+            </div>
+            <div class="card-body" >
+
+                <form #unsubscribeform="ngForm"
+                    (ngSubmit)="unsubscribeform.form.valid  && unsubscribeMail(unsubscribeform)" novalidate>
+                    <h5 class="formHeading text-center  mt-1"><strong>Would you like to share reason of unsubscribing ? </strong></h5>
+                    <hr>
+                    <div class=" p-3">
+                        <div class="pb-2">
+                            <span class="radio pt-1"><input type="radio" name="level" [(ngModel)]="unsubscibeInfo.value1"
+                                    name="value1" (change)="chkClick()" #value1="ngModel"
+                                    value="I'm not interested anymore" /><span class="p-2">I'm not interested
+                                    anymore</span></span>
+                        </div>
+                        <div class="pb-2">
+                            <span class="radio "><input type="radio" name="level"
+                                    value=" I recived too many of these emails" [(ngModel)]="unsubscibeInfo.value1"
+                                    name="value1" (change)="chkClick()" #value1="ngModel" /><span class="p-2">I
+                                    recieved too many of these email's</span></span>
+                        </div>
+                        <div class="pb-2">
+                            <span class="radio "><input type="radio" name="level" [(ngModel)]="unsubscibeInfo.value1"
+                                    name="value1" (change)="chkClick()" #value1="ngModel"
+                                    value="This content is not relevant to me" /><span class="p-2">This content is not
+                                    relevant to me</span></span>
+                        </div>
+                        <div>
+                            <span class="radio "><input type="radio" name="level" value="Other"
+                                    [(ngModel)]="unsubscibeInfo.value1" name="value1" (change)="chkClick()"
+                                    #value1="ngModel" /><span class="p-2">Other</span></span>
+                        </div>
+                        <div class="p-2" *ngIf="descflag">
+                            <textarea class="form-control" id="bounceReason"
+                                pattern="^[a-zA-Z0-9_ !@#$%^&*()_+\-=\[\]{};':\\|,.<>\/?]*$"
+                                placeholder="Enter Description" ng-maxlength="255"
+                                [(ngModel)]="unsubscibeInfo.bounceReason" name="bounceReason" required
+                                #bounceReason="ngModel"> </textarea>
+
+                            <div *ngIf="unsubscribeform.submitted && bounceReason.invalid || bounceReason.touched">
+                                <div *ngIf="bounceReason.touched || unsubscribeform.submitted">
+                                    <p *ngIf="bounceReason.errors?.required " class="help-box">Please enter
+                                        description!</p>
+                                </div>
+                                <p style="color:red" *ngIf="unsubscibeInfo.bounceReason?.length > 250">
+                                    Description size should be less than 250 characters
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <p style="color:red" *ngIf="reqflg">
+                        Please select reason!
+                    </p>
+
+                    <div class="form-group text-center mt-4">
+                        <button type="submit" class="btn btn-info mg-t-10"><strong>Unsubscribe</strong></button>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+        <div class="card-body" *ngIf="invalidflg">
+            <h3 class="formHeading text-center  mt-4"><strong>Invalid URL </strong></h3>
+
+        </div>
+    </div>
+</div>

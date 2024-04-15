@@ -1,0 +1,242 @@
+<!--- HEADER-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-2 font-20">
+            <div class="card-header"><strong>Contact Management > {{headName}}</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form #addSender="ngForm" (ngSubmit)="addSender.form.valid  &&  saveUser(addSender)"  novalidate  autocomplete="off" class="w-100 createlistform">
+    <div class="row mt-4">
+        <div class="col-md-6 table-responsive">
+            <table class="table">
+                <tbody>
+                  <tr>
+                    <td class="width-left"> Name <span class="required-field text-danger">*</span></td>
+                    <td>
+                        <input type="text" class="form-control" placeholder="Enter Name" id="fromName" pattern="[A-Za-z][A-Za-z0-9 $&+,:;=?@#|'<>.^*()%!-_]+"
+                                [(ngModel)]="userInfo.fromName" name="fromName" required #fromName="ngModel">
+    
+                            <div *ngIf="addSender.submitted && fromName.invalid || fromName.touched">
+                                <div *ngIf="fromName.touched || addSender.submitted">
+                                    <p *ngIf="fromName.errors?.required " class="help-box">Please enter name!</p>
+                                    <p *ngIf="fromName.errors?.pattern"  class="help-box" >
+                                        Please enter valid name!</p> 
+                                </div>
+                            </div>  
+                    </td> 
+                  </tr>
+                  <!-- <tr>
+                    <td>Status <span class="required-field text-danger">*</span></td>
+                    <td>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                  <input type="radio" class="form-check-input" [(ngModel)]="senderInfo.status" name="status" #status="ngModel" required value="Active">Active
+                                </label>
+                              </div>
+                              <div class="form-check-inline">
+                                <label class="form-check-label">
+                                  <input type="radio" class="form-check-input"  [(ngModel)]="senderInfo.status" name="status"  #status="ngModel" required value="Deactive">Deactive 
+                                </label>
+                            </div>
+
+                            <div *ngIf="addSender.submitted && status.invalid || status.touched">
+                                <div *ngIf="status.touched || addSender.submitted">
+                                    <p *ngIf="status.errors?.required " class="help-box">Please Select Status</p>
+                                </div>
+                            </div> 
+                    </td>
+                  </tr> -->
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6 table-responsive">
+            <table class="table mb-0">
+                <tbody>
+                  <tr>
+                    <td class="width-left">Email Address<span class="required-field text-danger">*</span></td>
+                    <td>
+
+                        <input type="text" class="form-control" (change)="checkDuplicateSender($event)"  placeholder=" Email" 
+                            id="emailAddress"  pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,5}$"
+                                [(ngModel)]="userInfo.emailAddress" name="emailAddress" required
+                                 #emailAddress="ngModel" [disabled]="changeFlg===true" >
+
+                        <div *ngIf="addSender.submitted && emailAddress.invalid || emailAddress.touched">
+                            <div *ngIf="emailAddress.touched || addSender.submitted">
+                                <p *ngIf="emailAddress.errors?.required " class="help-box">Please enter email address!</p>
+                                <p *ngIf="emailAddress.errors?.pattern"  class="help-box" >
+                                    Please enter valid email address!</p>
+                            </div>
+                        </div>   
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-6 table-responsive">
+            <table class="table mb-0">
+                <tbody>
+                  <tr>
+                    <td class="width-tab">Do you want to create Reputation?</td>
+                    <td class="width-tab1"> 
+                        <input type="radio" name="gender" value="Y"  [(ngModel)]="userInfo.newDomain" name="newDomain" 
+                        #newDomain="ngModel"> Yes &nbsp;
+                        <input type="radio" name="gender" value="No"  [(ngModel)]="userInfo.newDomain" name="newDomain" 
+                        #newDomain="ngModel" > No 
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12 text-center mt-2">
+            <button type="submit" [disabled]="submitFlg" class="btn btn-info mr-3"><strong>{{btnName}}</strong></button> 
+            <button type="button" class="btn btn-danger" (click)="RedirecttoCamp()"><strong> Cancel </strong></button>
+        </div>
+    </div>
+</form>
+<hr>
+
+<!-- DATE AND FILTER--> 
+ 
+<!---SEARCH-->
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-5 mt-2">
+                <strong>Sender Details</strong>
+            </div>
+            <div class="col-md-3 ">
+                <div class="dropdown  mt-2-sm">
+                    <div class=" d-flex">
+                        <label for="exampleFormControlSelect1" class="mt-2 ">Filter</label>
+                        <select class="form-control ml-2 mt-2" id="exampleFormControlSelect1" (change)="getDeleted()" [(ngModel)]="activedeactive">
+                        <option value="1">Active</option>
+                        <option value="0">In-active</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="search-button float-right w-100">
+                    <input class="form-control  mt-2" type="text" name="search"  [(ngModel)]="search"  
+                    placeholder="&#xF002; Search" style="font-family:Arial, FontAwesome">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive mt-2">
+    <table class="table table-hover table-bordered mt-2 tacho-table">
+        <thead class="bg-dark thead">
+            <tr>
+                <th class="th" [class.active]="order === 'custSenderID'"
+                (click)="setOrder('custSenderID')">ID<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th style="width: 12%;max-width: 12%;" class="th" [class.active]="order === 'fromName'"
+                (click)="setOrder('fromName')"> Name<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th style="width: 20%;max-width: 20%;" class="th" [class.active]="order === 'emailAddress'"
+                (click)="setOrder('emailAddress')">Email Address<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th style="width: 15%;max-width: 15%;" class="th" [class.active]="order === 'verificationStatus'"
+                (click)="setOrder('verificationStatus')">Verification Status<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th style="width: 15%;max-width: 15%;" class="th" [class.active]="order === 'newDomain'"
+                (click)="setOrder('newDomain')">Reputation Creation<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th>Status</th>
+                <th style="text-align: center;">Action</th>
+            </tr>
+        </thead>  
+        <tbody>
+            <tr *ngIf="listData==null || listData.length==0 && nodataFlg==false">
+                <td class="noBorder"></td> 
+                <td class="noBorder"></td> 
+                <td class="noBorder"></td> 
+                <div>
+                    <td class="noBorder">
+                        <span class="text-danger ">
+                            <h5>Please wait.....</h5>
+                        </span><br>
+                        <div class="d-flex justify-content-center text-danger ">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Please wait</span>
+                                <span class="sr-only ">Loading...</span>
+                            </div>
+                        </div>
+                    </td>
+                </div>
+            </tr>
+            <tr *ngIf="nodataFlg==true">
+                <td class="noBorder"></td>
+                <td class="noBorder"></td>
+
+                <div class="row">
+                    <td class="col-md-12 padding pt-3 noBorder">
+                        <span class="text-danger inline">
+                            <h5 style="text-align: left;">No sender to show</h5>
+                        </span><br>
+
+                    </td>
+                </div>
+            </tr>
+            <tr
+                *ngFor="let data of OriginlistData | orderBy: order :reverse | filter : search | paginate: { itemsPerPage: showData.rowsPerPage, currentPage: p }; let i=index" >
+                <td>{{data.custSenderID}}</td>
+                <td>{{data.fromName}}</td>
+                <td>{{data.emailAddress}}</td>
+                <td >
+                    <span *ngIf="data.verificationStatus=='pending'">Pending</span>
+                    <span *ngIf="data.verificationStatus!='pending'">Verified</span>
+                <!--<button class="btn btn-primary pull-right" (click)="senderVerficationMail(i,data)" *ngIf="data.verificationStatus=='pending'">Send Verification Link</button>-->
+                </td>
+                <td >
+                    <span *ngIf="data.newDomain=='Y'">In Progress</span>
+                    <span *ngIf="data.newDomain=='N'">Completed</span>
+                    <span *ngIf="data.newDomain==null || data.newDomain==''">No</span>
+                </td>
+                <td >
+                    <span *ngIf="data.status=='1'">Active</span>
+                    <span *ngIf="data.status!='1'">In-Active</span>
+                </td>
+                <td class="text-center">
+                    <a (click)="deleteList(data)">
+                        <button class="btn text-danger mr-3 p-0" type="button" >
+                          <span *ngIf="data.status!='1'">Active</span>
+                          <span *ngIf="data.status=='1'"><i class="fa fa-trash-o" title="In-Active" aria-hidden="true"></i></span>
+                        </button>
+                    </a>
+                    <a >
+                    <button class="btn text-success p-0" type="button"  (click)="editUserInfo(data);gotoTop()"><i class="fa fa-pencil" title="Edit" aria-hidden="true"></i></button>
+                    </a>
+                </td> 
+                
+                     
+            </tr>
+        </tbody>
+    </table>
+</div>
+  <!--Pagination-->
+  <div class="row mt-2 col-xs-2">
+    <!--Show Records-->
+    <div class="col-md-4 mt-2">              
+        <div class="show-rows " >
+        <span>Show Records</span><input class="rowsPerPage ml-2" type = "number"  min="1" 
+            [(ngModel)]="showData.rowsPerPage" name="rowsPerPage" #rowsPerPage="ngModel" pattern="^[1-9][0-9]*$"  placeholder = "Rows">
+        </div>
+        <div *ngIf="rowsPerPage.invalid || rowsPerPage.touched">
+            <p *ngIf="rowsPerPage.errors?.pattern" class="help-bpx" class="help-bpx" style="color: red;">
+                Please enter value greater than 0.</p>
+        </div>
+    </div>
+    <div class="col-md-8 "> 
+        <div class="float-right mt-2">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+    </div>
+</div>

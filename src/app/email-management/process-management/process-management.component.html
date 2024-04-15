@@ -1,0 +1,169 @@
+<!---PROCESS HEADER-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-2 font-20">
+            <div class="card-header"><strong>Process Management</strong>
+        
+                <div class="float-right">
+                    <a (click)="redirectToCreateProcessplus()">
+                    <button type="button" class="btn btn-info"><strong> <i class="fa fa-plus mr-2" aria-hidden="true"></i> Create Process</strong></button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<!--FILTERS-->
+<div class="row">
+    <!---Start Date-->
+    <div class="col-md-12">
+        <form [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+            <div class="row m-1">
+                <div class="col-md-4 pr-2 ">
+                    <div class="d-flex">
+                        <label for="sel1" style="width: 100px;" class ="mr-2 pt-2 mt-1">Start Date:<span class="text-danger">*</span></label>
+
+                        <input formControlName="dateFrom" type="date" max="{{min2}}" (change)="dateValid1()" id="startDate"
+                            [(ngModel)]="formData.startDate" onblur="compareAge()" useValueAsDate/>
+                    </div>
+                    <p *ngIf="dobflag1" class="help-box text-center" > Please select start date</p>
+                </div>
+                <div class=" col-md-4 pr-2">
+                    <div class="d-flex">
+                        <label for="sel1" style="width: 90px;" class ="mr-2 pt-2 mt-1">End Date:<span class="text-danger">*</span></label>
+
+                        <input formControlName="dateTo" type="date" max="{{min2}}" (change)="dateValid2()"
+                            [(ngModel)]="formData.endDate" useValueAsDate />
+                    </div>
+                     <p *ngIf="dobflag2" class="help-box text-center"> Please select end date</p>
+                    <div *ngIf= "form.invalid && formData.endDate ">
+                         <p *ngIf="form.errors"  class="help-box text-center" >{{ form.errors?.dates }}</p>
+                    </div>
+                </div>
+                <div class="col-md-2 pt-1 d-flex"> 
+                    <div class="pr-1">
+                        <button type="submit" class="btn btn-info btn-sm date" (click)="filterDate()"><strong>Apply </strong></button>
+                        <div *ngIf="form.invalid ">
+                            <div *ngIf="form.touched"></div>
+                        </div>
+                    </div> 
+                    <div class=" pr-1">
+                        <button type="submit" class="btn btn-danger btn-sm date" (click)="reset()"><strong>Reset </strong></button>    
+                    </div>       
+                </div>
+            </div>
+        </form>
+    </div>
+   
+</div>
+
+
+<!---SEARCH-->
+<div class="card mt-3">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-5 mt-2">
+                <strong>Process Details</strong>
+            </div>
+             <!---DOWNLOAD REPORT-->
+            <div class="col-md-3 ">
+                <div class="dropdown mt-2-sm">
+                    <div class=" d-flex">
+                        <label for="exampleFormControlSelect1" class="mt-2 ">Filter</label>
+                        <select class="form-control ml-2" id="exampleFormControlSelect1" (change)="activeDeactive()"[(ngModel)]="activedeactive">
+                        <option value="1">Active</option>
+                        <option value="2">In-active</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 ">
+                <div class="search-button pt-1 mt-2-sm">
+                    <input class="form-control" type="text" name="search"  [(ngModel)]="search"  
+                    placeholder="&#xF002; Search" style="font-family:Arial, FontAwesome">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!----TABLE-->
+
+<div class="table-responsive mt-2">
+    <table class="table table-hover table-bordered mt-2 tacho-table table1">
+        <thead class="bg-dark thead">
+            <tr>
+                <th class="th" [class.active]="order === 'custProcessId'"
+                (click)="setOrder('custProcessId')">ID<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th style="width: 25%;max-width: 25%;" class="th" [class.active]="order === 'createdDate'"
+                (click)="setOrder('createdDate')">Process Name<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th style="width: 30%;max-width: 30%;">Description</th>
+                <th class="th" [class.active]="order === 'status'"
+                (click)="setOrder('status')">Status<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th style="text-align: center;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr *ngIf="nodataFlg==true">
+                <td class="noBorder"></td>
+                <td class="noBorder"></td>
+                <div class= "row">
+                    <td class="col-md-12 padding pt-3 noBorder" >
+                        <span class="text-danger inline">
+                            <h5 style="text-align: center">No process to show</h5>
+                        </span><br>
+                        
+                    </td>
+                </div>
+            </tr>
+            <tr
+                *ngFor="let data of OriginlistData | orderBy: order :reverse | filter : search | paginate: { itemsPerPage: showData.rowsPerPage, currentPage: p } ; let i=index" >
+                <!-- <td>{{data.processSkey}}</td> -->
+                <td>{{data.custProcessId}}</td>
+                <td style="word-break: break-word;">{{data.processName}} <div class="td-date"> Created Date: {{data.createdDate | date:"dd-MM-yyyy 'at' h:mm a"}}
+                <br> Modified Date: <span *ngIf="data.modifiedDate==null">NA</span>
+                <span *ngIf="data.modifiedDate!=null"> {{data.modifiedDate | date:"dd-MMM-yyyy 'at' h:mm a"}}</span> </div></td>
+                <td style="word-break: break-word;">{{data.processDescription}}</td>
+                 <td *ngIf="data.status==1">Active</td>
+                 <td *ngIf="data.status==0">In-Active</td>
+                <td class="text-center"><button class="btn text-success" type="button" >
+                    <a (click)="deleteProcess(data)">
+                        <button class="btn text-danger mr-2" type="button" >
+                          <span *ngIf="data.status!='1'">Active</span>
+                          <span *ngIf="data.status=='1'"><i class="fa fa-trash-o" title="In-Active" aria-hidden="true"></i></span>
+                        </button>
+                    </a>
+                    <a (click)="redirectToCreateprocess(i,data.processSkey)"><i class="fa fa-pencil" title="Edit" aria-hidden="true"></i> </a></button>
+                </td> 
+                
+                    
+            </tr>
+        </tbody>
+    </table>
+</div>
+  <!--Pagination-->
+  <!--Pagination-->
+  <div class="row mt-2 col-xs-2">
+    <!--Show Records-->
+    <div class="col-md-4 mt-2">              
+        <div class="show-rows " >
+        <span>Show Records</span><input class="rowsPerPage ml-2" type = "number"  min="1" 
+            [(ngModel)]="showData.rowsPerPage" name="rowsPerPage" #rowsPerPage="ngModel" pattern="^[1-9][0-9]*$"  placeholder = "Rows">
+        </div>
+        <div *ngIf="rowsPerPage.invalid || rowsPerPage.touched">
+            <p *ngIf="rowsPerPage.errors?.pattern" class="help-bpx" class="help-bpx" style="color: red;">
+                Please Enter Value Greater Than 0.</p>
+        </div>
+    </div>
+    <div class="col-md-8 "> 
+        <div class="float-md-right mt-2">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,195 @@
+<div class="card">
+    <div class="card-header">
+        <strong>Import Contact</strong>
+    </div>
+    <div class="card-body">
+        <h5><strong>File Details</strong>
+        </h5>
+        <hr>
+
+        <div>
+            <h6 class="text-info"><strong><i class="fa fa-check-square-o" aria-hidden="true"></i> Upload File</strong></h6>
+            <div class="m-2"><strong>{{fileName}}</strong></div>
+        </div>
+
+        <hr>
+
+        <div>
+            <h6  class="text-info"><strong><i class="fa fa-check-square-o" aria-hidden="true"></i> List Selection <span class="required-field text-danger">*</span> </strong></h6>
+            <div class="m-2">
+                
+               <!-- Button to Open the Modal -->
+               <button type="button" class="btn btn-info mr-3 mt-3" data-toggle="modal" data-target="#newList" data-backdrop="false">
+                <i class="fa fa-plus mr-2" aria-hidden="true"></i><strong>Create List</strong>
+              </button>
+              <button type="button" class="btn btn-info mr-3 mt-3" (click)="toggleDisplayDiv()">
+                <strong>Existing List</strong>
+              </button>
+            </div>
+        </div>
+
+
+        <br>
+      <div [hidden]="!isShowDiv" >
+      <div class="card">
+        <div class="card-header">
+          <div class="row " >
+            <div class="col-md-8">
+            <p>Please select list here:</p>
+            </div>
+            <div class="col-md-4 ">
+            <div class="search-button">
+                <input class="form-control" type="text" name="search"  [(ngModel)]="search"  
+                placeholder="&#xF002; Search" style="font-family:Arial, FontAwesome">
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>
+        <div class="table-responsive mt-2 table1">
+          <table class="table table-hover table-bordered mt-2 tacho-table ">
+              <thead class="bg-dark thead"> 
+                  <tr>
+                     <th style="width: 10%;">Select</th>
+                     <th style="width: 10%;" class="th" [class.active]="order === 'custListId'"
+                        (click)="setOrder('custListId')">ID<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                      <th style="width: 35%;" class="th" [class.active]="order === 'listName'"
+                        (click)="setOrder('listName')">List<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                      <th style="width: 35%;max-width: 35%;">Description</th>
+                      <th style="width: 10%;" class="th" [class.active]="order === 'contactCount'"
+                        (click)="setOrder('contactCount')">Contacts<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                        <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                  </tr>  
+              </thead>
+              <tbody>
+                  <tr
+                      *ngFor="let data of listData | orderBy: order:reverse| filter : search | paginate: { itemsPerPage: showData.rowsPerPage, currentPage: p } ; let i = index " >
+                      <td><input type="radio"  id="listId" [(ngModel)] = "listrdidata.listId" name="listId" [value]="data.listId"
+                        (click)="getCount(data)" ></td> 
+                      <td>{{data.custListId}}</td>
+                      <td>{{data.listName}} </td>
+                      <td style="word-break: break-word;">{{data.listDescription}}</td>
+                      <td> <span  class="text-info ">{{data.contactCount}}</span></td>      
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+      <!---Pagination-->
+  <div class="row mt-2 col-xs-2">
+    <!--Show Records-->
+    <div class="col-md-4 mt-2">              
+        <div class="show-rows " >
+        <span>Show Records</span><input class="rowsPerPage ml-2" type = "number"  min="1" 
+            [(ngModel)]="showData.rowsPerPage" name="rowsPerPage" #rowsPerPage="ngModel" pattern="^[1-9][0-9]*$"  placeholder = "Rows">
+        </div>
+        <div *ngIf="rowsPerPage.invalid || rowsPerPage.touched">
+            <p *ngIf="rowsPerPage.errors?.pattern" class="help-bpx" class="help-bpx" style="color: red;">
+                Please Enter value greater than 0.</p>
+        </div>
+    </div>
+    <div class="col-md-8 "> 
+        <div class="float-right mt-2">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+    </div>
+  </div>
+      </div>  
+      
+    </div>
+    
+</div>
+<button class="btn btn-info text-light mt-3 float-right" (click)="uploadFile()" type="button"  >
+  <strong>Confirm Your List </strong></button>
+
+  
+<!----Modal pop-up-->
+  
+  <!-- The Modal -->
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+          
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+  
+        <!-- Modal body -->
+        <div class="modal-body text-center">
+        
+          <div class="alert alert-success m-4 p-5">
+            <strong> Success !</strong> You have uploaded file Successfully!
+            <div class="mt-2"><strong>Investor_01.CSV</strong></div>
+         </div>
+          <button  type="button" class="btn btn-info mr-2  mb-4"><strong> <a (click)="redirectToCreateList()" class="cursor text-light">Close </a> </strong></button>
+       
+        </div>
+  
+  
+      </div>
+    </div>
+  </div>
+
+   <!-- Modal body for add list -->
+     <!-- The Modal -->
+     <div class="modal" id="newList">
+      <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+  
+          <!-- Modal Header --> 
+          <div class="modal-header">
+          <h4 class="modal-title"><strong>Add New List</strong> </h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+              <div class="modal-body">
+                <form #createList="ngForm" (ngSubmit)="createList.form.valid && saveList(createList)"  novalidate  autocomplete="off" class="w-100 createlistform">
+                    <div class="row mt-4">
+                        <div class="col-md-6 table-responsive">
+                            <table class="table">
+                                <tbody>
+                                  <tr>
+                                    <td> Name <span class="required-field text-danger">*</span></td>
+                                    <td>
+                                        <input type="text" class="form-control" placeholder="List Name" id="listName"  
+                                                [(ngModel)]="listInfo.listName" (change)=" checkDuplicateList()" name="listName" required #listName="ngModel">
+                    
+                                            <div *ngIf="createList.submitted && listName.invalid || listName.touched">
+                                                <div *ngIf="listName.touched || createList.submitted">
+                                                    <p *ngIf="listName.errors?.required " class="help-box">Please enter list name!</p>
+                                                </div>
+                                            </div>  
+                                    </td>
+                                  </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6 table-responsive">
+                            <table class="table mb-0">
+                                <tbody> 
+                                  <tr>
+                                    <td> Description </td>
+                                    <td>
+                                        <textarea class="form-control" rows="4" id="desc" pattern="^[a-zA-Z0-9_ !@#$%^&*()_+\-=\[\]{};':\\|,.<>\/?]*$"
+                                            placeholder="Enter Description" ng-maxlength="255" [(ngModel)]="listInfo.listDescription" name="listDescription"
+                                                  #listDescription="ngModel"> </textarea> 
+                                    </td>
+                                  </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12 text-center mt-2">
+                            <button type="submit" [disabled]="submitFlg" class="btn btn-info mr-3"><strong>Save</strong></button>
+                            <button  type="button" class="btn btn-info" class="btn btn-danger" (click)="createList.reset" data-dismiss="modal" #closenewListModal><strong> Cancel </strong></button>                        </div>
+                    </div>
+                </form>
+            </div>
+
+          </div>
+      </div>
+  </div>
+  <!--End of Add list pop-up-->
+
+

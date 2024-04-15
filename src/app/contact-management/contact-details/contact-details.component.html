@@ -1,0 +1,109 @@
+<!--- HEADER-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-2 font-20">
+            <div class="card-header"><strong>Update Contact Details</strong>
+        
+                <div class="float-right">
+                    <a (click)="redirectToaddContact()">
+                        <button type="button" class="btn btn-info mr-2"><strong> <i class="fa fa-plus mr-2" aria-hidden="true"></i>Add Contact</strong></button>
+                    </a>
+
+                    <a (click)="redirectToImportContact()">
+                        <button type="button" class="btn btn-info"><strong> <i class="fa fa-upload mr-2" aria-hidden="true"></i>Import Contact</strong></button>
+                    </a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<form #updateContact="ngForm" (ngSubmit)="updateContact.form.valid"  novalidate  autocomplete="off" class="w-100 createlistform">
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <p> jayanti.borde@gmail.com <i class="fa fa-pencil ml-2 text-success" aria-hidden="true"></i></p>
+            <p>Added 29-07-2020  12:00 | Last Activity 30-08-2020 12:50 </p>
+
+        </div>
+    </div>
+            <!---DASHBOARD HEADER-->
+    <div class="row">
+        <div class="col-md-6 col-lg-3 mt-3">
+            <div class="bg-primary text-center text-light p-4 font-20 box-shadow">
+                <strong>0</strong> <br>
+                <strong>Opening</strong>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mt-3">
+            <div class="bg-secondary text-center text-light p-4 font-20 box-shadow">
+                <strong>0</strong> <br>
+                <strong>Clicked</strong>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mt-3">
+            <div class="bg-warning text-center text-light p-4 font-20 box-shadow">
+                <strong>0</strong> <br>
+                <strong>Unsubscribed</strong>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mt-3">
+            <div class="bg-success text-center text-light p-4 font-20 box-shadow">
+                <strong>0</strong> <br>
+                <strong>Black Listed</strong>
+            </div>
+        </div>
+    </div>
+    <br>
+    <hr>
+    <div class="row"> 
+        <div class="col-md-12 mt-4 mb-5">
+            <h5>Update Contact Details :</h5>
+        </div>
+        <div class="col-md-6 table-responsive">
+            <table class="table">
+                <tbody>
+                  <tr>
+                    <td>First Name <span class="required-field text-danger">*</span></td>
+                    <td>
+                        <input type="text" class="form-control" placeholder="First Name" id="firstName"  
+                                [(ngModel)]="updateInfo.firstName" name="firstName" required #firstName="ngModel">
+    
+                            <div *ngIf="updateContact.submitted && firstName.invalid || firstName.touched">
+                                <div *ngIf="firstName.touched || updateContact.submitted">
+                                    <p *ngIf="firstName.errors?.required " class="help-box">Please Enter First Name</p>
+                                </div>
+                            </div>  
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6 table-responsive">
+            <table class="table mb-0">
+                <tbody>
+                  <tr>
+                    <td>Last Name<span class="required-field text-danger">*</span></td>
+                    <td>
+
+                        <input type="text" class="form-control" placeholder="Last Name" id="lastName"  
+                                [(ngModel)]="updateInfo.lastName" name="lastName" required #lastName="ngModel">
+
+                        <div *ngIf="updateContact.submitted && lastName.invalid || lastName.touched">
+                            <div *ngIf="lastName.touched || updateContact.submitted">
+                                <p *ngIf="lastName.errors?.required " class="help-box">Please Enter Email</p>
+                            </div>
+                        </div>  
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12 text-center mt-2">
+            <button type="button" class="btn btn-info mr-3"><strong>Update  </strong></button> 
+            <button  type="button" class="btn btn-danger"><strong> Delete </strong></button>
+        </div>
+    </div>
+</form>
+<hr>

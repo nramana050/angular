@@ -1,0 +1,393 @@
+<!--- HEADER-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-2 font-20">
+            <div class="card-header"><strong>{{headName}}</strong>
+
+                <div class="float-right">
+                    <a (click)="redirectToaddContact()">
+                        <button type="button" class="btn btn-info mr-2"><strong> <i class="fa fa-plus mr-2"
+                                    aria-hidden="true"></i>Add Contact</strong></button>
+                    </a>
+
+                    <a (click)="redirectToImportContact()">
+                        <button type="button" class="btn btn-info mr-2"><strong> <i class="fa fa-upload mr-2"
+                                    aria-hidden="true"></i>Import Contact</strong></button>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<form #createList="ngForm" (ngSubmit)="createList.form.valid &&  saveUser(createList)" novalidate autocomplete="off"
+    class="w-100 createlistform">
+    <div class="row mt-2">
+        <div class="col-md-6 table-responsive">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td class="width-list"> Name <span class="required-field text-danger">*</span></td>
+                        <td>
+                            <input [disabled]="editMode" (change)="checkDuplicateList()" type="text"
+                                class="form-control" placeholder=" Name" id="listName"
+                                pattern="[A-Za-z][A-Za-z0-9 $&+,:;=?@#|'<>.^*()%!-_]+" [(ngModel)]="listInfo.listName"
+                                name="listName" #listName="ngModel" required>
+                            <div *ngIf="createList.submitted && listName.invalid || listName.touched">
+                                <div *ngIf="listName.touched || createList.submitted">
+                                    <p *ngIf="listName.errors?.required " class="help-bpx" style="color: red;">Please
+                                        enter list name!</p>
+                                    <p *ngIf="listName.errors?.pattern" class="help-bpx" style="color: red;">
+                                        Please enter valid list name!</p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6 table-responsive">
+            <table class="table mb-0">
+                <tbody>
+                    <tr>
+                        <td class="width-list"> Description </td>
+                        <td>
+                            <textarea class="form-control" rows="4" id="listdesc"
+                                pattern="^[a-zA-Z0-9\x22_ !@#$%^&*()_+\-=\[\]{};':\\|,.<>\/?]*$"
+                                placeholder="Enter Description" maxlength="250" [(ngModel)]="listInfo.listDescription"
+                                name="listDescription" #listDescription="ngModel"> </textarea>
+                            <div *ngIf="createList.submitted  && listDescription.touched">
+                                <div *ngIf="listDescription.touched || listDescription.invalid">
+                                    <p style="color:red" *ngIf="listInfo.listDescription?.length > 250">
+                                        Description size should be less than 250 characters.
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12 text-center mt-2">
+            <button type="submit" [disabled]="submitFlg" class="btn btn-info mr-3"><strong>{{btnName}}</strong></button>
+            <button type="button" class="btn btn-danger" (click)="redirecttoCampain()"><strong> Cancel
+                </strong></button>
+        </div>
+    </div>
+</form>
+<hr>
+
+<!-- DATE AND FILTER-->
+<div class="row d-flex">
+    <div class="col-md-12 ">
+        <form [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+            <div class="row m-1">
+                <div class="col-md-4 pr-2 ">
+                    <div class="d-flex">
+                        <label for="sel1" class="pr-1 pt-2 mt-1" style="width: 100px;">Start Date:<span
+                                class="text-danger">*</span></label>
+                        <input formControlName="dateFrom" type="date" max="{{min2}}" (change)="dateValid1()"
+                            id="startDate" [(ngModel)]="formData.startDate" useValueAsDate />
+                    </div>
+                    <p *ngIf="dobflag1" class="help-box text-center"> Please select start date</p>
+                </div>
+                <div class="col-md-4 pr-2">
+                    <div class="d-flex">
+                        <label for="sel1" class="mr-2 pt-2 mt-1" style="width: 100px;">End Date:<span
+                                class="text-danger">*</span></label>
+                        <input formControlName="dateTo" type="date" max="{{min2}}" (change)="dateValid2()"
+                            [(ngModel)]="formData.endDate" useValueAsDate />
+                    </div>
+                    <p *ngIf="dobflag2" class="help-box text-center"> Please select end date</p>
+                    <div *ngIf="form.invalid && formData.endDate ">
+                        <p *ngIf="form.errors" class="help-box text-center">{{ form.errors?.dates }}</p>
+                    </div>
+                </div>
+                <div class="col-md-2 pt-1 d-flex">
+                    <div class="pr-1">
+                        <button type="submit" class="btn btn-info btn-sm size"
+                            (click)="filterDate()"><strong>Apply</strong></button>
+                        <div *ngIf="form.invalid ">
+                            <div *ngIf="form.touched"></div>
+                        </div>
+                    </div>
+                    <div class=" pr-1">
+                        <button type="submit" class="btn btn-danger btn-sm size"
+                            (click)="reset()"><strong>Reset</strong></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!---SEARCH-->
+<div class="card mt-2">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-3 mt-2">
+                <strong>List Details</strong>
+            </div>
+            <div class="col-md-2 d-flex">
+                <div class="refresh p-2 float-lg-right mt-2-sm" (click)="refresh()">
+                    <i class="fa fa-refresh pr-1" aria-hidden="true"></i>Refresh
+                </div>
+            </div>
+            <div class="col-md-3 ">
+                <div class="dropdown mt-2-sm">
+                    <div class=" d-flex">
+                        <label for="exampleFormControlSelect1" class="mt-2">
+                            Filter
+                        </label>
+                        <select class="form-control ml-2 mt-2" id="exampleFormControlSelect1" (change)="getDeleted()"
+                            [(ngModel)]="activedeactive">
+                            <option value="1">Active</option>
+                            <option value="0">In-active</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="search-button float-right pt-2  w-100">
+                    <input class="form-control" type="text" name="search" [(ngModel)]="search"
+                        placeholder="&#xF002; Search" style="font-family:Arial, FontAwesome">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----TABLE-->
+<div class="table-responsive mt-2">
+    <table class="table center table-hover table-bordered mt-2 tacho-table table1">
+        <thead class="bg-dark thead">
+            <tr>
+                <th class="th" [class.active]="order === 'custListId'"
+                    (click)="setOrder('custListId')">ID<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th style="width: 25%;max-width: 25%;" class="th" [class.active]="order === 'createdDate'"
+                    (click)="setOrder('createdDate')">List<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th style="width: 25%;max-width: 25%;">Description</th>
+                <th style="width: 10%;max-width: 10%" class="th text-center"
+                    [class.active]="order === 'contactCount'" (click)="setOrder('contactCount')"><span class="">Uploaded</span><span class="pl-2"> Contacts</span><span
+                        class="pl-1 point span" [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th style="width: 10%;max-width: 10%;" class="th text-center" [class.active]="order === 'status'"
+                    (click)="setOrder('status')">Verification Status<span class="pl-1 point span" [hidden]="reverse">▼</span>
+                    <span class="pl-1 point span" [hidden]="!reverse">▲</span></th>
+                <th style="text-align:center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="OriginlistData==null || OriginlistData.length==0 && nodataFlg==false">
+                <td class="noBorder"></td>
+                <td class="noBorder"></td>
+                <div>
+                    <td class="noBorder">
+                        <span class="text-danger ">
+                            <h5>Please wait.....</h5>
+                        </span><br>
+                        <div class="d-flex justify-content-center text-danger ">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Please wait</span>
+                                <span class="sr-only ">Loading...</span>
+                            </div>
+                        </div>
+                    </td>
+                </div>
+            </tr>
+            <tr *ngIf="nodataFlg==true">
+                <td class="noBorder"></td>
+                <td class="noBorder"></td>
+
+                <div class="row">
+                    <td class="col-md-12 padding pt-3 noBorder">
+                        <span class="text-danger inline">
+                            <h5 style="text-align: center">No list to show</h5>
+                        </span><br>
+
+                    </td>
+                </div>
+            </tr>
+            <tr
+                *ngFor="let data of duplicateArray | orderBy: order :reverse | filter : search | paginate: { itemsPerPage: showData.rowsPerPage, currentPage: p } ; let i = index ">
+                <!-- <td><a class="text-info cursor" (click)="redirectToAllContacts(i,data.listId,data.contactCount)">{{data.listId}}</a></td> -->
+                <td>{{data.custListId}}</td>
+                <td> <a class="text-info cursor"
+                        (click)="redirectToAllContacts(i,data.listId,data.contactCount)">{{data.listName}}</a>
+                    <div class="td-date">Created Date: {{data.createdDate | date:"dd-MMM-yyyy 'at' h:mm a"}}
+                        <br>Modified Date: <span *ngIf="data.modifiedDate==null">NA</span>
+                        <span *ngIf="data.modifiedDate!=null">
+                            {{data.modifiedDate | date:"dd-MMM-yyyy 'at' h:mm a"}}</span> </div>
+                </td>
+                <td style="word-break: break-word;">{{data.listDescription}}</td>
+                <td style="text-align:center"> <span class="spinner-border"
+                        style="align-items: center;margin-top: 2px;height: 15px;width:15px;" role="status"
+                        *ngIf="data.uploadStatus=='Uploading'">
+
+                    </span> {{data.contactCount}}</td>
+                <td>
+                    <span
+                        *ngIf="data.uploadStatus==null || data.uploadStatus==' ' || data.uploadStatus=='Uploading' || data.uploadStatus=='Completed'">NA</span>
+
+                    <span *ngIf="data.uploadStatus!=null && data.uploadStatus=='Verified'">
+                        <button type="button" class="btn btn-info" data-toggle="modal"
+                            (click)="getVerificationStatistic(data.listId,data.listName)" data-backdrop="false"
+                            data-target="#myModal">Statistics</button>
+                    </span>
+                    <span *ngIf="data.uploadStatus!=null && data.uploadStatus=='Verifying'">
+                        <button type="button" class="btn btn-info">Verifying
+                            <span class="spinner-border"
+                                style="align-items: center;margin-top: 2px;height: 15px;width:15px;"
+                                role="status"></span>
+                        </button>
+                    </span>
+                <td class="text-center">
+                    <a (click)="deleteList(data)">
+                        <button class="btn text-danger mr-2" type="button">
+                            <span *ngIf="data.status!='1'">Active</span>
+                            <span *ngIf="data.status=='1'"><i class="fa fa-trash-o" title="In-Active"
+                                    aria-hidden="true"></i></span>
+                        </button>
+                    </a>
+
+                    <a (click)="redirectToAllContacts(i,data.listId,data.contactCount)">
+                        <button class="btn text-info mr-2" type="button"><i class="fa fa-eye" title="View"
+                                aria-hidden="true"></i></button>
+                    </a>
+                    <a (click)="editList(data);gotoTop()">
+                        <button class="btn text-success" type="button"><i class="fa fa-pencil mr-2" title="Edit"
+                                aria-hidden="true"></i></button>
+                    </a>
+                    <div class="spinner-border"
+                        *ngIf="data.itrationCount!=1 && data.itrationCount!=undefined && data.itrationCount!=null">
+                    </div>
+                    <span *ngIf="data.itrationCount==1 || data.itrationCount==undefined || data.itrationCount==null"
+                        class="text-center p-2 text-danger" (click)="collectAllDownloadData(i,data.listId)"><i
+                            aria-hidden="true" class="fa fa-download " title="Download"></i></span>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--Pagination-->
+<div class="row mt-2 col-xs-2">
+    <!--Show Records-->
+    <div class="col-md-4 mt-2">
+        <div class="show-rows ">
+            <span>Show Records</span><input class="rowsPerPage ml-2" type="number" min="1"
+                [(ngModel)]="showData.rowsPerPage" name="rowsPerPage" #rowsPerPage="ngModel" pattern="^[1-9][0-9]*$"
+                placeholder="Rows">
+        </div>
+        <div *ngIf="rowsPerPage.invalid || rowsPerPage.touched">
+            <p *ngIf="rowsPerPage.errors?.pattern" class="help-bpx" class="help-bpx" style="color: red;">
+                Please enter value greater than 0.</p>
+        </div>
+    </div>
+    <div class="col-md-8 ">
+        <div class="float-right mt-2">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal fade" data-backdrop="true" id="myModal">
+    <div class="modal-dialog top">
+        <div class="modal-content width">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><strong>Verification Statistics</strong>&nbsp;<i class="fa fa-pie-chart"
+                        aria-hidden="true"></i> </h4>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row" *ngIf="statasticLoader==true">
+                    <div class="col-sm-4 col-md-4 padding">
+                        <p>Please wait.. <span class="spinner-border"
+                                style="align-items: center;margin-top: 2px;height: 20px;width:20px;"
+                                role="status"></span></p>
+                    </div>
+                </div>
+                <div class="row" *ngIf="statasticLoader==false">
+                    <div class="col-sm-3 col-md-3 padding">
+                        <a class="">
+                            <div class="bg-success text-center text-light p-3 font-20 box-shadow">
+                                <strong>Valid Email Id</strong> <br>
+                                <strong>{{this.statastic.valid}}</strong><br> <span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-sm-3 col-md-3 padding ">
+                        <a class="">
+                            <div class="bg-secondary text-center text-light p-3 font-20 box-shadow">
+                                <strong>Unknown Email Id</strong> <br>
+                                <strong>{{this.statastic.domainvalide}}</strong><br> <span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-sm-3 col-md-3 padding ">
+                        <a class="">
+                            <div class="bg-warning text-center text-light p-3 font-20 box-shadow">
+                                <strong>Invalid Email Id</strong> <br>
+                                <strong>{{this.statastic.invalide}}</strong><br> <span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-sm-3 col-md-3 padding">
+                        <a class="cursor">
+                            <div class="bg-link text-center text-light p-3 font-20 box-shadow">
+                                <div class="spinner-border text-dark"
+                                    *ngIf="itrationCount!=1 && itrationCount!=undefined && itrationCount!=null">
+                                </div>
+                                <div *ngIf="itrationCount==1 || itrationCount==undefined || itrationCount==null" class="text-dark"
+                                    (click)="downloadVStatasticsFile(statastic.listId,statastic.listName,statastic.totalValidation)">
+                                    <strong>Download</strong> <br>
+                                    <i class="fa fa-download" aria-hidden="true"></i><br> <span>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="row pb-4" *ngIf="statasticLoader==false">
+                    <div class="col-md-3">
+                        <input type="checkbox" [disabled]="statastic.valid==0" [(ngModel)]="valid"  class="form-check-input checkbox" />
+                        <div class="pl-3"><strong class="pt-2 ml-1"> Include valid</strong></div>
+                    </div>
+                    <div class="col-md-3 d-flex" >
+                        <input type="checkbox"  [disabled]="statastic.domainvalide==0" [(ngModel)]="Unknown"  class="form-check-input2 checkbox" />
+                        <div class=""><strong class="pt-2 mt-1 ml-1"> Include Unknown</strong></div>
+                    </div>
+                    <div class="col-md-3 d-flex" >
+                        <input type="checkbox"  [disabled]="statastic.invalide==0" [(ngModel)]="invalid" class="form-check-input1 checkbox" />
+                        <div class=""><strong class="pt-2 mt-1 ml-1"> Include Invalid</strong></div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="statasticLoader==false">
+                    <div class="col-sm-1 col-md-1 "></div>
+                    <div class="col-sm-3 col-md-3 ">
+                        <button type="button" class="btn btn-success size1"
+                            (click)="uploadVerificationContact(statastic.listId)">Upload Contact</button>
+                    </div>
+                    <div class="col-sm-3 col-md-3 ">
+                        <button type="button" class="btn btn-dark size1"
+                            (click)="deleteStatastics(statastic.listId)">Delete Statistics&nbsp;<i class="fa fa-trash"
+                                aria-hidden="true"></i></button>
+                    </div>
+                    <div class="col-sm-3 col-md-3 ">
+                        <button type="button" class="btn btn-danger size1" data-dismiss="modal"
+                            #closenewListModal>Cancel</button>
+                    </div>
+                    <div class="col-sm-2 col-md-2 "></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+.text-color{
+    color: red;
+}
+
+.header-color{
+    color: brown;
+}
+
+.header-color1{
+    color: gold;
+}
+
+.title-color{
+    color: forestgreen;
+}
+
+.title-color1{
+    color: darkred;
+    padding-left: 30px;
+}
+
+.padding-body{
+    padding-left: 40px;
+    font-family: math;
+}
+
+.padding-body1{
+    padding-left: 80px;
+    font-family: math;
+}
+
+.fa-hand-o-right{
+    color: dodgerblue;
+}
+
+.fa-exclamation-circle{
+    color: #d64848;
+}
+
+.padding{
+    padding: 15px;
+}
+
+.padding-0{
+    padding: 0;
+}
+
+.column {
+    float: left;
+    width: 50%;
+    padding: 10px;
+  }
+
+  .btn-style1{
+    padding: 5px 25px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-style2{
+    padding: 5px 25px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.font-size{
+    font-size: 14px;
+}

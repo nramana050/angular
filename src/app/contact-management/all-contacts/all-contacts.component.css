@@ -1,0 +1,33 @@
+.size{
+    width: 100px;
+    height: 30px;
+}
+
+.select{
+    width: 130px;
+    height: 30px;
+}
+
+input[type="checkbox"]{
+    width: 15px;
+    height: 15px;
+}
+
+.noBorder{
+    border: 0;
+}
+
+
+.size{
+    height: 30px;
+    width: 110px;
+}
+
+.design{
+    height: 30px;
+    width: 100px;
+    background: #17a2b8;
+    color: white;
+    font-weight: 700;
+    font-size: 12px;
+}

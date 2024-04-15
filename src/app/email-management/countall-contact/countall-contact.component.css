@@ -1,0 +1,21 @@
+.align{
+    align-items: center;
+}
+
+.noBorder{
+    border: 0;
+}
+
+.height{
+    height: 30px;
+}
+
+.size{
+    height: 30px;
+    width: 90px;
+}
+
+.select{
+    width: 130px;
+    height: 30px;
+}
