@@ -21,6 +21,8 @@ import { NgCircleProgressModule } from 'ng-circle-progress';
 import { ErrorInterceptor } from './helper/error.interceptor';
 import { RefreshTokenInterceptor } from './helper/token-interceptor.service';
 import { AuthGuard } from './helper/auth.guard';
+import { FilterPipeModule } from './helper/pipes/filter.module';
+import { padhaiModule } from './padhai/padhai.module';
 // import { TokenInterceptorInterceptor } from './Interceptor/token-interceptor.interceptor';
 
 
@@ -44,6 +46,8 @@ import { AuthGuard } from './helper/auth.guard';
     EditorModule,
     NgMultiSelectDropDownModule.forRoot(),
     AccountManagementModule,
+    FilterPipeModule,
+    padhaiModule,
     NgCircleProgressModule.forRoot({
       // set defaults here
       radius: 100,
