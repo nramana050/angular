@@ -10,12 +10,7 @@ export const environment = {
   },
   azureBlobStorage: 'https://communitylivesa.blob.core.windows.net',
   fileSizeLimit: '1GB',
-  reportsBiUrl:
-    `https://pefreports-test.azurewebsites.net/api/reportEmbedToken?code=hbJAnBh29HuF6axxaJqKDThH9bwcr5AHnfAgd7kuDZY8stR4N62gPw==`,
     cdnUrl:'https://community-live-cdn.sequation.com',
-    microsoftClarityProjectId : 'jg1mp6udl5',
     env:ApplicationConstant.PROD_ENV,
     buildId: "{jenkinsBuildId}",
-    issuer: 'https://thera.okta.com',
-    clientId: '0oac0vkhpueHiIEIe417'
 };

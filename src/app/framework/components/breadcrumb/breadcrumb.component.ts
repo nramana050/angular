@@ -152,7 +152,7 @@ export class BreadcrumbComponent implements OnDestroy {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('imageDto', JSON.stringify({"courseRequestId":courseId,"type":"course"}));
-    const href = `${BaseUrl.GENAIE}/uploadImage/image`;
+    const href = `${BaseUrl.PADHAI}/uploadImage/image`;
     this.fileUploadService.uploadFile(href, formData , 'POST').then((response :any) => {
       const reader = new FileReader();
       reader.onload = (e: any) => {        

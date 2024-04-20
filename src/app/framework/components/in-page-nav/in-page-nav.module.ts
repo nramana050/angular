@@ -6,7 +6,6 @@ import { InPageNavComponent } from './in-page-nav.component';
 import { InPageNavService } from './in-page-nav.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { FeatureAllowModule } from '../../directives/features-allow.module';
 
 @NgModule({
   declarations: [InPageNavComponent],

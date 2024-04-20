@@ -8,7 +8,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../../framework/material/material.module';
-import { FeatureAllowModule } from '../directives/features-allow.module';
 
 @NgModule({
   declarations: [StepperNavigationComponent],
@@ -17,7 +16,6 @@ import { FeatureAllowModule } from '../directives/features-allow.module';
     MatTabsModule,
     MatCardModule,
     MatButtonModule,
-    FeatureAllowModule,
     MaterialModule,
     TranslateModule,
     RouterModule

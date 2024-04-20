@@ -8,15 +8,14 @@ import { ListLabelComponent } from '../components/list-label/list-label.componen
 import { FormControlMessagesModule } from '../components/form-control-messages/form-control-messages.module';
 import { StepperNavigationModule } from '../../features/shared/components/stepper-navigation/stepper-navigation.module';
 import { CanDeactivateGuard } from '../guards/can-deactivate/can-deactivate.guard';
-import { FeatureAllowModule } from '../directives/features-allow.module';
 import { ImagePickerModule } from '../components/image-picker/image-picker.module';
 
 
 
 @NgModule({
     declarations: [ListLabelComponent, ],
-    imports: [MaterialModule , AppConfirmModule, StepperNavigationModule, FormControlMessagesModule, FeatureAllowModule , ImagePickerModule],
-    exports: [ListLabelComponent,  StepperNavigationModule, FormControlMessagesModule, FeatureAllowModule , ImagePickerModule],
+    imports: [MaterialModule , AppConfirmModule, StepperNavigationModule, FormControlMessagesModule , ImagePickerModule],
+    exports: [ListLabelComponent,  StepperNavigationModule, FormControlMessagesModule , ImagePickerModule],
     providers: [SnackBarService, AppInsightsService , RoutePartsService, CanDeactivateGuard]
 
 })

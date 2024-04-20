@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 // import { SessionsService } from '../../sessions/sessions.service';
 import { SnackBarService } from '../../framework/service/snack-bar.service';
 import { AppInsightsService } from '../../framework/service/app-insights.service';
-import { SrmService } from 'src/app/features/srm/srm.service';
 // import { ChatNotificationMatBadgeService } from './chatnotification/chatnotification-matbadge.service';
 import { BaseUrl } from 'src/app/framework/constants/url-constants';
 import { AssessmentStatusService } from 'src/app/features/shared/services/assessment-status.service';
@@ -45,8 +44,6 @@ export class TopnavComponent implements OnInit,AfterViewChecked {
         // private readonly sessionService: SessionsService,
         private readonly snackBarService: SnackBarService,
         private readonly appInsightsService: AppInsightsService,
-        private readonly srmGoToChatService : SrmService,
-        // private readonly chatNotificationMatBadgeService : ChatNotificationMatBadgeService,
         private readonly changeDetectorRef: ChangeDetectorRef,
         private readonly assessmentStatusService: AssessmentStatusService,
         private readonly _onConfirmService: AppConfirmService,

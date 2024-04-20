@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AppFeaturesService } from './AppFeatureService';
 import { IAppFeatures } from '../sidebar/AppFeatures'
 
 
@@ -12,8 +11,7 @@ export class SidebarComponent implements OnInit {
 
 
   primaryMenu: IAppFeatures[] = [];
-  constructor(
-    private readonly appFeaturesService: AppFeaturesService) {
+  constructor(  ) {
 
   }
 

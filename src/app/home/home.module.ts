@@ -4,7 +4,6 @@ import { TopnavComponent } from './topnav/topnav.component';
 import { HomeComponent } from './home.component';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../framework/material/material.module';
-import { HttpRequestInterceptorModule } from '../framework/service/http-interceptor.service';
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../framework/shared/shared.module';

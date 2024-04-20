@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { SpinnerVisibilityService } from 'ng-http-loader';
-import { SessionsService } from '../../../../sessions/sessions.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 

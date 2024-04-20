@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) { 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.showLoader = event.url.includes('/genaie/edit-content/') ? false : true;
+        this.showLoader = event.url.includes('/padhai/edit-content/') ? false : true;
       }
     });
   }

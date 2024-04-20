@@ -245,12 +245,12 @@
                 "pageTitle": "Upload"
             },
             {
-                "identifier": "GENAIE",
-                "pageTitle": "GENAIE"
+                "identifier": "PADHAI",
+                "pageTitle": "PADHAI"
             },
             {
-                "identifier": "Edit_Genaie",
-                "pageTitle": "Edit_Genaie",
+                "identifier": "Edit_Padhai",
+                "pageTitle": "Edit_Padhai",
                 "queryParams": true
             },
             {
