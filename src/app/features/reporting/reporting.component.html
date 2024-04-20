@@ -1,0 +1,39 @@
+
+<!-- <div class="tabWrapper" >
+  <ul class="tab-details">
+    <li (keyup.enter)="goToTab('/dashboard/MI_DATA')"  [ngClass]="reportName === 'MI_DATA' ? 'active tabHead tab-heading':'tabHead tab-heading '"
+      routerLink="/dashboard/MI_DATA" queryParamsHandling="merge">
+      <a class="tab-item" id="profile-tab" attr.aria-label="tab Profile">MI Data</a>
+    </li>
+    <li (keyup.enter)="goToTab('/dashboard/RAW_DATA')" [ngClass]="reportName === 'RAW_DATA' ? 'active tabHead tab-heading':'tabHead tab-heading '"
+      routerLink="/dashboard/RAW_DATA" queryParamsHandling="merge">
+      <a class="tab-item" id="certificate-tab" attr.aria-label="tab Certificates">Raw Data</a>
+    </li>
+  </ul>
+</div> -->
+
+<div  *ngIf="!isHavingFeature(92)">
+<mat-card class="report-card" *ngIf="config.accessToken && reportName">  
+  <powerbi-report *ngIf="showReport" [embedConfig]="config" [cssClassName]="reportClass" [phasedEmbedding]="phasedEmbeddingFlag"
+    [eventHandlers]="eventHandlersMap">
+  </powerbi-report>
+</mat-card>
+</div>
+
+  <div  *ngIf="isHavingFeature(92)" >
+    <mat-card class="report-card" *ngIf="config.accessToken && reportName">
+      <ngx-powerbi-component type="report"
+                             [id]="config.id"
+                             [embedUrl]="config.embedUrl"
+                             tokenType="Aad"
+                             [accessToken]="config.accessToken"
+                             [options]="config.settings"
+                             class="card"
+                             >
+      </ngx-powerbi-component>
+    </mat-card>
+    </div>
+
+    
+
+<router-outlet></router-outlet>

@@ -1,0 +1,126 @@
+<mat-card id="user">
+    
+    <mat-card-header>
+        <span class="example-form">
+            <mat-form-field id="search_users_form" appearance="fill" class="example-full-width">
+                <mat-label>Search by user</mat-label>
+                <input 
+                    id="search_user_input"
+                    matInput
+                    autocomplete="off"
+                    #search_user_input aria-label="Search for a user"
+                    (keydown.enter)="onFilter(search_user_input.value)"
+                >
+                <button id="on_search_button" mat-button matSuffix mat-icon-button aria-label="Search" (click)="onFilter(search_user_input.value)">
+                    <mat-icon>search</mat-icon>
+                </button>
+                <button id="clear_search_button" *ngIf="search_user_input.value !==''" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="onFilter(''); search_user_input.value=''">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </span>
+        <span class="spacer"></span>
+        <span>
+            <button *auth="[131,1]" id="add_user_button" mat-stroked-button class="right" color="primary" (click) ="onClickAddUser()">Add user</button>
+        </span>
+    </mat-card-header>
+
+    <mat-card-content class="users_container">
+        <mat-table id="user_table" #table [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="fullName">
+                <mat-header-cell *matHeaderCellDef id="fullName_button" mat-sort-header>
+                    Name
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{ element.fullName }}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="userName">
+                <mat-header-cell *matHeaderCellDef id="userName_button" mat-sort-header> 
+                    Username
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.userName}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="region">
+                <mat-header-cell *matHeaderCellDef id="region_button" mat-sort-header> 
+                    Region
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.regionDescription}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="prisonsResponsible">
+                <mat-header-cell *matHeaderCellDef id="prisonsResponsible_button"> 
+                    Prisons responsible
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.prisonDescription}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="accountType">
+                <mat-header-cell *matHeaderCellDef id="accountType_button" mat-sort-header>
+                    Account type
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.accountType}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="accountState">
+                <mat-header-cell *matHeaderCellDef id="accountState_button" mat-sort-header>
+                    Account status
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.accountStatus}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef >Action</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+        
+                    <button *auth="[131,2]"
+                        id="view_user_button_{{element.id}}" 
+                        mat-icon-button color="primary" 
+                        [routerLink]="['./view-user' + '/' + element.extdUserId]"
+                        matTooltip="View"
+                        [matTooltipShowDelay]="800"
+                    >
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+        
+                    <button *auth="[131,3]" id="edit_user_button_{{element.id}}" mat-icon-button color="primary"
+                        [routerLink]="['./edit-user' + '/' + element.extdUserId]" matTooltip="Edit"
+                        [matTooltipShowDelay]="800">
+                        <mat-icon>create</mat-icon>
+                    </button>
+        
+                    <button *auth="[131,4]" id="delete_user_button" mat-icon-button
+                        (click)="onDeleteClicked(element.extdUserId)" matTooltip="Delete" [matTooltipShowDelay]="800">
+                        <mat-icon color="accent">delete</mat-icon>
+                    </button>
+        
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+        </mat-table>
+
+        <mat-paginator
+            id="user_pagination" 
+            [pageSize]="pageSize" 
+            [showFirstLastButtons]='true' 
+            [hidePageSize]="true"
+        >
+        </mat-paginator>
+    </mat-card-content>
+</mat-card>

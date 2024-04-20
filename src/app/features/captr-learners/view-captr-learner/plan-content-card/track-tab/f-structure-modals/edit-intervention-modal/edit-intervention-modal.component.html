@@ -1,0 +1,156 @@
+<mat-dialog-content class="modal-container">
+  <label id="edit-intervention-label">Update Intervention</label>
+  <form [formGroup]="editInterventionForm" (ngSubmit)="confirmEditIntervention()" validate autocomplete="off">
+    <div class="edit-intervention-form-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Intervention Name</mat-label>
+        <mat-select (selectionChange) = "isOtherIntervention($event.value)" placeholder="Select Intervention Name" formControlName="refInterventionId" id="refInterventionId"
+          required>
+          <mat-option *ngFor="let intervention of data.interventionList" [value]="intervention.id"
+            id="intervention-{{intervention.identifier}}">
+            {{intervention.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="editInterventionForm.get('refInterventionId').hasError('required')">
+          Intervention Name is required
+        </mat-error>
+      </mat-form-field>
+      <ng-container *ngIf="isOther">
+        <mat-form-field appearance="outline">
+          <mat-label>Other Intervention Name</mat-label>
+          <input matInput placeholder="Other Intervention Name" formControlName="otherIntName" id="otherIntName"
+            required>
+          <mat-error *ngIf="editInterventionForm.get('otherIntName').hasError('required')">
+            Other Intervention Name is required
+          </mat-error>
+          <mat-error *ngIf="editInterventionForm.get('otherIntName').hasError('maxlength')">
+            Other Intervention Name should be less than 100 characters
+          </mat-error>
+        </mat-form-field>
+      </ng-container>
+      <mat-form-field appearance="outline">
+        <mat-label>Priority Area</mat-label>
+        <mat-select placeholder="Priority Area" formControlName="pathwayId" id="pathwayId" multiple required>
+          <mat-option *ngFor="let pathway of data.pathwayList" [value]="pathway.id" id="pathway-{{pathway.identifier}}">
+            {{pathway.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="editInterventionForm.get('pathwayId').hasError('required')">
+          Priority area is required
+        </mat-error>
+      </mat-form-field>
+      <div class="intervention-dates-container">
+        <div class="date-input-container">
+          <mat-form-field appearance="outline">
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" placeholder="Start Date"
+              id="startDate" required [max]="calculateMaxStartDate()">
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+            <mat-error *ngIf="editInterventionForm.get('startDate').getError('required')">
+              Start Date is required
+            </mat-error>
+            <mat-error *ngIf="editInterventionForm.get('startDate').getError('matDatepickerMax')">
+              Start Date must be before planned end date
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="date-input-container">
+          <mat-form-field appearance="outline">
+            <mat-label>Planned End Date</mat-label>
+            <input matInput [min]="calculateMinPlannedEndDate()" [matDatepicker]="plannedEndDatePicker"
+              formControlName="plannedEndDate" placeholder="Planned End Date" id="plannedEndDate" required>
+            <mat-datepicker-toggle matSuffix [for]="plannedEndDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #plannedEndDatePicker></mat-datepicker>
+            <mat-error *ngIf="editInterventionForm.get('plannedEndDate').getError('required')">
+              Planned End Date is required
+            </mat-error>
+            <mat-error *ngIf="editInterventionForm.get('plannedEndDate').getError('matDatepickerMin')">
+              Planned End Date must be after start date
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Contact Name</mat-label>
+        <input matInput placeholder="Contact Name" formControlName="contactName" id="contactName" required>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Telephone</mat-label>
+        <input matInput placeholder="Telephone" formControlName="telephone" id="telephone" required>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="Email" formControlName="email" id="email" required>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Intervention Description</mat-label>
+        <textarea rows="5" matInput placeholder="Intervention Description" formControlName="description"
+          id="description" required></textarea>
+      </mat-form-field>
+      <mat-divider></mat-divider>
+      <div class="intervention-dates-container actual-end-date-container">
+        <div class="date-input-container">
+          <mat-form-field appearance="outline">
+            <mat-label>Actual End Date</mat-label>
+            <input matInput [matDatepicker]="actualEndDatePicker" formControlName="actualEndDate"
+              placeholder="Actual End Date" id="actualEndDate" [min]="calculateMinActualEndDate()">
+            <mat-datepicker-toggle matSuffix [for]="actualEndDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #actualEndDatePicker></mat-datepicker>
+            <mat-error *ngIf="editInterventionForm.get('actualEndDate').hasError('required')">
+              Actual End Date is required
+            </mat-error>
+            <mat-error *ngIf="editInterventionForm.get('actualEndDate').getError('matDatepickerMin')">
+              Actual End Date must be after start date
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <ng-container *ngIf="!(editInterventionForm.get('actualEndDate').value === null)">
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select placeholder="Status" formControlName="statusId" id="statusId" required>
+            <mat-option *ngFor="let status of data.statusList" [value]="status.id" id="status-{{status.name}}">
+              {{status.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="editInterventionForm.get('statusId').hasError('required')">
+            Status is required
+          </mat-error>
+        </mat-form-field>
+      </ng-container>
+      <ng-container *ngIf="selectedStatus == 'Completed' ">
+        <mat-form-field appearance="outline">
+          <mat-label>Outcome</mat-label>
+          <mat-select placeholder="Outcome" formControlName="outcomeId" id="outcomeId" required>
+            <mat-option *ngFor="let outcome of data.outcomeList" [value]="outcome.id" id="outcome-{{outcome.name}}">
+              {{outcome.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="editInterventionForm.get('outcomeId').hasError('required')">
+            Outcome is required
+          </mat-error>
+        </mat-form-field>
+      </ng-container>
+      <ng-container *ngIf="selectedStatus == 'Withdrawn'">
+        <mat-form-field appearance="outline">
+          <mat-label>Withdrawal Reason</mat-label>
+          <mat-select placeholder="Withdrawal Reason" formControlName="withdrawalId" id="withdrawalId" required>
+            <mat-option *ngFor="let withdrawal of data.withdrawalList" [value]="withdrawal.id"
+              id="withdrawal-{{withdrawal.name}}">
+              {{withdrawal.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="editInterventionForm.get('withdrawalId').hasError('required')">
+            Withdrawal reason is required
+          </mat-error>
+        </mat-form-field>
+      </ng-container>
+    </div>
+  </form>
+  <div class="action-buttons-container">
+    <button id="confirm_edit_intervention_button" mat-flat-button color="primary"
+      [disabled]="!editInterventionForm.valid" (click)="confirmEditIntervention()">Update</button>
+    <button id="cancel_button" mat-stroked-button color="primary" (click)="cancelEditIntervention()">Cancel</button>
+  </div>
+</mat-dialog-content>

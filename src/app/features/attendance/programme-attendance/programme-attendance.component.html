@@ -1,0 +1,102 @@
+<mat-card id='workshop'>
+    <div class="card-row">
+       <div class="info-text">
+         <p class="mt0">The cards below show dates on which sessions have been automatically scheduled. 
+             Click on a date card to see all of the scheduled sessions for that date. </p>
+             <p class="mt0">You should see 1 working week of dates in the future, and 1 working work of 
+                 dates in the past. You can use the search bar and date picker to display all entries 
+                 for a past or current calendar month. </p>
+                 <p class="mb25">Date cards appear in the ‘To Be Completed’ column if 1 or more
+                      individual sessions on that date are awaiting submission. Dates move to 
+                      the ‘Completed’ column as soon as all sessions on that date are submitted.</p>
+       </div>
+   </div>
+   <mat-card-header>
+           <form>
+              
+               <mat-form-field id="search_timetable" class="search_by">
+                <mat-label class="hide-at">Search by</mat-label>
+               <input matInput [matDatepicker]="monthPicker" [formControl]="attendanceDate"
+                   placeholder="View all entries for month" id="reportMonth" [min]="minDate" [max]="maxDate" #dateField aria-label="View all entries for month">
+               <mat-datepicker-toggle matSuffix [for]="monthPicker"></mat-datepicker-toggle>
+               <mat-datepicker #monthPicker touchUi startView="multi-year"
+                   (monthSelected)="onMonthSelected($event, monthPicker)" disabled="false"></mat-datepicker>
+               <button id="do_search_button" mat-button matSuffix mat-icon-button aria-label="Clear"
+               (click)="fetchData()">
+               <mat-icon>search</mat-icon>
+               </button>
+               <button type="button" id="clear_search_button" *ngIf="dateField.value !==''" mat-button matSuffix mat-icon-button
+                   aria-label="Clear" (click)="reset()">
+                   <mat-icon>close</mat-icon>
+                 </button>
+                 <mat-error *ngIf="attendanceDate.hasError('matDatepickerMin')">
+                   Date cannot be before {{attendanceDate.getError('matDatepickerMin').min
+                   | date: 'MMMM yyyy'}}
+                 </mat-error>
+                 <mat-error *ngIf="attendanceDate.hasError('matDatepickerMax')">
+                   Date cannot be after {{attendanceDate.getError('matDatepickerMax').max
+                   | date: 'MMMM yyyy'}}
+                 </mat-error>
+                 <mat-error *ngIf="attendanceDate.hasError('matDatepickerParse')">
+                   Invalid date
+                 </mat-error>
+                 <mat-error>
+                     <app-control-messages [control]="attendanceDate"></app-control-messages>
+                 </mat-error>
+           </mat-form-field>
+      
+       </form>
+   </mat-card-header>
+
+</mat-card>
+<div class="card-row">
+   <div class="card-column">
+       <mat-card>
+           <mat-card-header>
+               <span class="title not-completed">To be completed</span>
+               <span class="spacer on-mobile"></span>
+           </mat-card-header>
+
+           <mat-card-content>
+               <span>
+                   <div class="card-row">
+                       <div class="date-list" *ngFor="let object of attendance | filter: 'isCompleted': false; let i = index">
+                           <a vid="" mat-stroked-button color="primary"
+                               [routerLink]="['./list']" [queryParams]="{ day: object.date }"
+                               queryParamsHandling="merge">
+                               <!-- {{object.date | customMonthFormat : 'onlyDay'}} -->
+                                {{object.date | date : 'EEE'}}, {{object.date | customMonthFormat}} 
+                           </a>
+                       </div>
+                   </div>
+
+               </span>
+           </mat-card-content>
+       </mat-card>
+       <span class="count-alignement">{{isToBeCompletedLength}}</span>
+   </div>
+
+
+   <div class="card-column">
+       <mat-card>
+           <mat-card-header>
+               <span class="title not-completed">Completed</span>
+               <span class="spacer on-mobile"></span>
+           </mat-card-header>
+
+           <mat-card-content>
+               <span>
+                   <div class="card-row">
+                       <div class="date-list" *ngFor="let object of attendance | filter: 'isCompleted': true; let i = index">
+                           <a *ngIf="object.isCompleted" vid="" mat-stroked-button color="primary"
+                               [routerLink]="['./list']" [queryParams]="{ day: object.date }"
+                               queryParamsHandling="merge">
+                           {{object.date | date:'longDate'}}</a>
+                       </div>
+                   </div>
+               </span>
+           </mat-card-content>
+       </mat-card>
+       <span class="count-alignement">{{isCompletedLength}}</span>
+   </div>
+</div>

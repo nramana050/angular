@@ -1,0 +1,72 @@
+<div class="header">
+    <div class="tabWrapper">
+        <ul>
+            <li class="tabHead " (click)= "goToDigitalCourse()" routerLinkActive="active">
+                <a class="tab-item" id="usefulContacts" attr.aria-label="tab Month">Digital certificates</a>
+            </li>
+            <li  *ngIf="isAuthorized(120,2)" class="tabHead active" (click)= "goToProgramInfo()" routerLinkActive="active" [routerLink]="['/person-supported/certificates/upload-certificates-list']" queryParamsHandling="merge">
+                <a class="tab-item" id="usefulContacts" attr.aria-label="tab Month">External certificates</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<mat-card>
+    <mat-card-header>
+        <span> Certificates </span>
+        <span class="spacer"></span>
+        <span>
+            <button *ngIf="isAuthorized(120,1)" id="edit_view_button" mat-stroked-button color="primary" [routerLink]="['./upload']"
+                queryParamsHandling="preserve">Add</button>
+       </span>
+       <span>
+        <button id="edit_view_button" mat-stroked-button color="primary" (click)="onExitClicked()" queryParamsHandling="merge">Exit</button>
+    </span>
+    </mat-card-header>
+
+    <mat-card-content class="userful_contact">
+      <span  *ngIf="dataSource.data.length == 0"> The Person Supported currently has no certificates </span>
+      <span class="spacer"></span>
+        <mat-table *ngIf="dataSource.data.length >0" id="user_table" #table [dataSource]="dataSource" class="isMobile" matSort>
+            <ng-container matColumnDef="certificate">
+              <mat-header-cell *matHeaderCellDef id="filename_button" class="name width-30"> Certificate</mat-header-cell>
+              <mat-cell class="width-30" *matCellDef="let element"> <span class="mobile-label">Certificate: </span>
+                {{element.name}}
+              </mat-cell>
+            </ng-container>
+      
+            <ng-container matColumnDef="dateAchieved">
+              <mat-header-cell class="width-20" *matHeaderCellDef id="prn_button"> Date Achieved
+              </mat-header-cell>
+              <mat-cell class="width-20 left-align" *matCellDef="let element"> <span class="mobile-label">Date Achieved
+                </span>{{ element.dateAchieved | date : 'dd MMMM yyyy'}}
+              </mat-cell>
+            </ng-container>
+      
+            <ng-container matColumnDef="actions">
+      
+              <mat-header-cell *matHeaderCellDef class="actions-column">Action</mat-header-cell>
+              <mat-cell *matCellDef="let element" class="actions-column left-align"> <span class="mobile-label"></span>
+                <button *ngIf="isAuthorized(120,12)" id="downlaod_doc_button_{{element.id}}" mat-icon-button color="primary"
+                (click)="download(element.id)"  title="Download" attr.aria-label="Download {{element.name}}">
+                <mat-icon>get_app</mat-icon>
+                <div id="form_holder" style="display: none;"></div>
+                </button>
+                
+                <button  id="delete_user_button" mat-icon-button matTooltip="Delete"
+                    [matTooltipShowDelay]="800" (click)="onDelete(element.id)">
+                    <mat-icon color="accent">delete</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+          </mat-table>
+          <mat-paginator #paginator id="documents_pagination" [pageSize]="pageSize" [showFirstLastButtons]='true' [hidePageSize]="true"  (page)='onPaginateChange($event)'>
+          </mat-paginator>
+
+    </mat-card-content>
+
+
+</mat-card>

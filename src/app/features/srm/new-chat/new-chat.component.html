@@ -1,0 +1,65 @@
+<mat-card class="form-container">
+  <mat-card-header>
+    <span class="spacer word-break" *ngIf="conversationWith" id="conversation_with" >
+      Conversation with {{conversationWith}}
+    </span>
+
+    <span class="spacer" *ngIf="!conversationWith" id="create_conversation">
+      Conversation with
+    </span>
+  </mat-card-header>
+
+  <form [formGroup]="newChatForm" autocomplete="off">
+    <div class="card-row">
+      <div class="card-column">
+        <mat-form-field appearance="fill">
+          <mat-label>Select Staff</mat-label>
+          <input type="text" aria-label="Select staff" matInput
+          formControlName="kwControl" [matAutocomplete]="kwAuto" (input)="commonOnInputValueChange($event.target.value)" id="kw_input"
+            >
+          <mat-autocomplete #kwAuto="matAutocomplete" [displayWith]="displayFn"
+            (optionSelected)="onKWListValueChange($event.option.value)">
+            <mat-option *ngFor="let kw of kwFilteredOptions | async" [value]="kw" id="{{kw.id}}">
+              {{kw.userFullName}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div class="card-column" *ngIf ='profileURL !="clink-learners"'>
+        <mat-form-field appearance="fill">
+          <mat-label>Select Participant</mat-label>
+          <input type="text" aria-label="Select participant" matInput
+          formControlName="suControl" [matAutocomplete]="suAuto" (input)="commonOnInputValueChange($event.target.value)" id="su_input">
+          <mat-autocomplete #suAuto="matAutocomplete" [displayWith]="displayFn"
+            (optionSelected)="onSUListValueChange($event.option.value)">
+            <mat-option *ngFor="let su of suFilteredOptions  | async" [value]="su" id="{{su.id}}">
+              {{su.userFullName}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Type message here...</mat-label>
+        <textarea id="text" matInput minlength="0" maxlength="400" #message
+          matTextareaAutosize></textarea>
+          <mat-hint *ngIf="message.value.length !=(400-1) && (400) >= 
+            message.value.length && message.value.length != 0">
+            {{400 - message.value.length}} characters left
+        </mat-hint>
+        <mat-hint *ngIf="message.value.length == 399" id="msg_length">1 character left</mat-hint>
+        <mat-hint *ngIf="message.value.length === 0" id="msg_length">Minimum 1 and maximum 400 characters allowed</mat-hint>
+      </mat-form-field>
+    </div>
+  </form>
+
+  <mat-card-footer>
+    <span class="spacer"></span>
+    <span>
+      <button type="button" id="cancel_button" mat-raised-button color="secondary"
+        (click)="openCancelDialog(message.value)">Cancel</button>
+      <button type="button" id="send_button" mat-raised-button color="primary" (click)="onSubmit(message.value)"
+        [disabled]=" message.value.length === 0">Send</button>
+    </span>
+  </mat-card-footer>
+</mat-card>

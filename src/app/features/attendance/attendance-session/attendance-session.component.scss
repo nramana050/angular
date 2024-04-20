@@ -1,0 +1,126 @@
+.card-row {
+    justify-content: flex-start !important;
+    align-items: baseline;
+
+    .mat-form-field {
+        margin: 8px 15px;
+}
+
+}
+
+.highlight-expendable-table {
+    background-color:#f3f2f1;
+    padding: 0px 22px 0px 0px;
+    width: 100%;
+    .card-row {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: flex-end;
+      flex-wrap: wrap;
+  }
+}
+
+table {
+    width: 100%;
+  }
+
+mat-row.example-detail-row.mat-row {
+    min-height: 0;
+    .mat-cell {
+      margin: 0;
+    }
+}
+
+ tr.example-element-row:not(.example-expanded-row):active {
+    background: #efefef;
+  }
+
+  .example-element-row{
+    border-bottom-width: 0;
+  }
+
+  .example-element-detail {
+    overflow: hidden;
+    margin: 0 -24px;
+    display: contents;
+  }
+
+  .example-element-diagram {
+    min-width: 80px;
+    border: 2px solid #2b769b;
+    padding: 8px;
+    font-weight: lighter;
+    margin: 8px 0;
+    height: 104px;
+  }
+
+  .example-element-symbol {
+    font-weight: bold;
+    font-size: 40px;
+    line-height: normal;
+  }
+
+  .example-element-description {
+    padding: 16px;
+  }
+
+  .example-element-description-attribution {
+    opacity: 0.5;
+  }
+
+  .padding-top{
+    margin-top: 15px;
+  }
+
+  .margin40 {
+      margin: 40px 0;
+    }
+    .positive {
+      color: black;
+  }
+
+  .negative {
+      color: red;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .width-70 {
+    .mat-form-field {
+      width: 100%;
+    }
+  }
+  .custom-label{
+    padding: 0 12px;
+  }
+
+
+  .worksho_plan{
+    .width-10{
+      width: 80px;
+      flex: none;
+      margin-right: 20px;
+      display: inline-block;
+      .mat-form-field{
+        width: 100%;
+      }
+    }
+    .width-200{
+      width: 200px;
+      flex: none;
+      margin-right: 20px;
+      display: inline-block;
+      .mat-form-field{
+        width: 100%;
+      }
+    }
+}
+.nopadleft{
+  padding-left: 0!important;
+}
+
+.centerText{
+  text-align: center;
+}

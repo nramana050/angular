@@ -1,0 +1,226 @@
+<div class="header">
+  <div class="tabWrapper">
+    <ul>
+      <li class="tabHead" (click)=goTOPersonGoals() queryParamsHandling="merge">
+        <a class="tab-item" id="profile-tab" attr.aria-label="tab Profile">Person supported
+          goals and actions</a>
+      </li>
+      <li class="tabHead active" [routerLink]="['/person-supported/plan/staff-goals']" routerLinkActive="active"
+        queryParamsHandling="merge">
+        <a class="tab-item" id="view-further-information-tab" attr.aria-label="tab Further Information">Staff goals and
+          actions</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<ng-container>
+  <mat-card>
+    <div class="myGoals-tab-container">
+      <div id="tabWrapper" class="tabWrapper">
+        <ul>
+          <li tabindex='0' class="tabHead"
+            [ngClass]="{'class-when-supported': this.profileUrl === 'person-supported', 'class-when-not-supported': this.profileUrl !== 'person-supported'}">
+            <a class="tab-item" id="myToGoals-tab" attr.aria-label="tab My to do">
+              <pre>{{overdueActionList?.length}}</pre>
+              Overdue
+            </a>
+          </li>
+          <li tabindex='0' class="tabHead">
+            <a class="tab-item" id="schedule-tab" attr.aria-label="tab Schedule">
+              <pre>{{comingdueActionList?.length}}</pre>
+              Coming Due
+            </a>
+          </li>
+          <li tabindex='0' class="tabHead"><a class="tab-item" id="track-tab" attr.aria-label="tab Track">
+              <pre>{{onTrackList?.length}}</pre> On Track
+            </a>
+          </li>
+          <li tabindex='0' id="completed" class="tabHead completedClick" (click)="completedGoalsTab()">
+            <a class="tab-item" id="track-tab" attr.aria-label="tab Track">
+              <pre>{{completeActionList?.length}}</pre>Complete
+            </a>
+          </li>
+        </ul>
+      </div>
+    
+      <div *ngIf="serviceUserData && !showCompltedGoals" class="goal-section">
+        <table class="table-heading">
+          <th style="width:1%;padding:0"><span class="hide-at">hideAT</span></th>
+          <th style="width:5px;padding:0"><span class="hide-at">hideAT</span></th>
+          <th class="action1">Actions</th>
+          <th style="width:1%;padding:0"><span class="hide-at">hideAT</span></th>
+          <th class="action">Comment</th>
+          <th class="action">Goal</th>
+          <th class="action">Plan</th>
+          <th class="action2">Due by</th>
+          <!-- <td style="width:1%"></td> -->
+        </table>
+        <div *ngFor="let items of newActionList">
+          <div class="su-details-container">
+            <div class="tableWrapper ">
+              <table class="myAssignee" *ngFor="let id of getOverdueId">
+                <tr>
+                  <td *ngIf="id == items.id" style="width:1%;"></td>
+                  <td *ngIf="id == items.id" class="lBorder overDueLBorder"></td>
+                  <td *ngIf="id == items.id"
+                    style="width:20%;max-width:280px;border-bottom: 1px solid #b1b4b6;border-top: 1px solid #b1b4b6;word-break: break-word">
+                    {{items.action}}
+                  </td>
+                  <td *ngIf="id == items.id && items.actionId !=='30'" style="border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6"></td>
+                  <td *ngIf="id == items.id && items.actionId =='30'"
+                    style="padding: 0px;width:30px;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                    <img alt="joint action" class="ml" width="30px" src="./../../../../../../assets/f-structure-icons/jointActionIcon.svg">
+                  </td>
+                  <td *ngIf="id == items.id"
+                    style="width:20%;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                    {{items.comment}}
+                  </td>
+                  <td *ngIf="id == items.id"
+                    style="width:20%;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                    {{items.goal}}
+                  </td>
+                  <td *ngIf="id == items.id"
+                    style="width:20%;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                    {{items.assessmentName}}
+                  </td>
+                  <td *ngIf="id == items.id"
+                    style="width:14%;border-bottom: 1px solid #b1b4b6;border-right: 1px solid #b1b4b6;border-top: 1px solid #b1b4b6;word-break: break-word">
+                    {{items.byWhen| date: 'dd MMMM yyyy'}}</td>
+                  <td *ngIf="id == items.id" style="width:1%;"></td>
+                </tr>
+                <tr colspan="6"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div *ngFor="let items of newActionList">
+          <div class="su-details-container">
+            <div class="tableWrapper ">
+              <table class="myAssignee" *ngFor="let id of getComingdueId">
+                <tr>
+                  <td *ngIf="id == items.id" style="width:1%;"></td>
+                  <td *ngIf="id == items.id" class="lBorder comingDueLBorder"></td>
+                  <td *ngIf="id == items.id"
+                    style="width:20%;max-width:280px;border-bottom: 1px solid #b1b4b6;border-top: 1px solid #b1b4b6;word-break: break-word">
+                    {{items.action}}
+                  </td>
+                  <td *ngIf="id == items.id && items.actionId !=='30'" style="border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6"></td>
+                  <td *ngIf="id == items.id && items.actionId =='30'"
+                    style="padding: 0px;width:30px;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                    <img alt="joint action" class="ml" width="30px" src="./../../../../../../assets/f-structure-icons/jointActionIcon.svg">
+                  </td>
+                  <td *ngIf="id == items.id"
+                    style="width:20%;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                    {{items.comment}}
+                  </td>
+                  <td *ngIf="id == items.id"
+                    style="width:20%;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                    {{items.goal}}
+                  </td>
+                  <td *ngIf="id == items.id"
+                    style="width:20%;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                    {{items.assessmentName}}
+                  </td>
+                  <td *ngIf="id == items.id"
+                    style="width:14%;border-bottom: 1px solid #b1b4b6;border-right: 1px solid #b1b4b6;border-top: 1px solid #b1b4b6;word-break: break-word">
+                    {{items.byWhen| date: 'dd MMMM yyyy'}}</td>
+                  <td *ngIf="id == items.id" style="width:1%;"></td>
+                </tr>
+                <tr colspan="6"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div *ngFor="let items of newActionList">
+          <div class="su-details-container">
+            <div class="tableWrapper ">
+              <table class="myAssignee" *ngFor="let id of getOnTrackId">
+                <tr>
+                  <td *ngIf="id == items.id" style="width:1%;"></td>
+                  <td *ngIf="id == items.id" class="lBorder onTrackLBorder"></td>
+                  <td *ngIf="id == items.id"
+                    style="width:20%;max-width:280px;border-bottom: 1px solid #b1b4b6;border-top: 1px solid #b1b4b6;word-break: break-word">
+                    {{items.action}}
+                  </td>
+                  <td *ngIf="id == items.id && items.actionId !=='30'" style="border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6"></td>
+                  <td *ngIf="id == items.id && items.actionId =='30'"
+                    style="padding: 0px;width:30px;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                    <img alt="joint action" class="ml" width="30px" src="./../../../../../../assets/f-structure-icons/jointActionIcon.svg">
+                  </td>
+                  <td *ngIf="id == items.id"
+                    style="width:20%;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                    {{items.comment}}
+                  </td>
+                  <td *ngIf="id == items.id"
+                    style="width:20%;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                    {{items.goal}}
+                  </td>
+                  <td *ngIf="id == items.id"
+                    style="width:20%;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                    {{items.assessmentName}}
+                  </td>
+                  <td *ngIf="id == items.id"
+                    style="width:14%;border-bottom: 1px solid #b1b4b6;border-right: 1px solid #b1b4b6;border-top: 1px solid #b1b4b6;word-break: break-word">
+                    {{items.byWhen| date: 'dd MMMM yyyy'}}</td>
+                  <td *ngIf="id == items.id" style="width:1%;"></td>
+                </tr>
+                <tr colspan="6"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="serviceUserData && showCompltedGoals" class="goal-section">
+        <table class="table-heading">
+          <th style="width:1%;padding:0"><span class="hide-at">hideAT</span></th>
+          <th style="width:5px;padding:0"><span class="hide-at">hideAT</span></th>
+          <th class="action1">Actions</th>
+          <th style="width:1%;padding:0"><span class="hide-at">hideAT</span></th>
+          <th class="action">Comment</th>
+          <th class="action">Goal</th>
+          <th class="action">Plan</th>
+          <th class="action2">Due by</th>
+          <td style="width:1%"></td>
+        </table>
+        <div *ngFor="let items of actionListNew">
+          <div class="tableWrapper ">
+            <table class="myAssignee" *ngFor="let id of getCompleteId">
+              <tr>
+                <td *ngIf="id == items.id" style="width:1%;"></td>
+                <td *ngIf="id == items.id" class="lBorder compLBorder"></td>
+                <td *ngIf="id == items.id"
+                  style="width:20%;max-width:280px;border-bottom: 1px solid #b1b4b6;border-top: 1px solid #b1b4b6;word-break: break-word">
+                  {{items.action}}
+                </td>
+                <td *ngIf="id == items.id && items.actionId !=='30'" style="border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6"></td>
+                <td *ngIf="id == items.id && items.actionId =='30'"
+                  style="padding: 0px;width:30px;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                  <img alt="joint action" class="ml" width="30px" src="./../../../../../../assets/f-structure-icons/jointActionIcon.svg">
+                </td>
+                <td *ngIf="id == items.id"
+                  style="width:20%;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                  {{items.comment}}
+                </td>
+                <td *ngIf="id == items.id"
+                  style="width:20%;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                  {{items.goal}}
+                </td>
+                <td *ngIf="id == items.id"
+                  style="width:20%;border-bottom: 1px solid #b1b4b6;;border-top: 1px solid #b1b4b6">
+                  {{items.assessmentName}}
+                </td>
+                <td *ngIf="id == items.id"
+                  style="width:13%;border-bottom: 1px solid #b1b4b6;border-right: 1px solid #b1b4b6;border-top: 1px solid #b1b4b6;word-break: break-word">
+                  {{items.byWhen| date: 'dd MMMM yyyy'}}</td>
+                <td *ngIf="id == items.id" style="width:1%;"></td>
+              </tr>
+              <tr colspan="6"></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</ng-container>

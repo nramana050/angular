@@ -1,0 +1,300 @@
+<div class="header">
+    <div class="tabWrapper">
+        <ul>
+            <li class="tabHead active" routerLinkActive="active">
+                <a class="tab-item" id="localJobs-tab" attr.aria-label="tab Month">Referral</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<mat-card id="view-customer">
+
+    <mat-card-header class="flex-end">
+        <span class="spacer"></span>
+        <span>
+            <button [routerLink]="['../edit-referral']" type="button"
+                [queryParams]="{ id: userId, name: name, referralId: referralData?.referralDetails.id }" queryParamsHandling="merge"
+                id="edit_view_button" mat-stroked-button color="primary">
+                Edit
+            </button>
+            <button id="exit_user_button" [routerLink]="['../']" mat-stroked-button class="right" 
+                color="primary" [queryParams]="{ id: userId, name: name }" queryParamsHandling="merge">Exit</button>
+        </span>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="infoSection">
+            <div class="card-row">
+              <div class="card-column">
+                <p class="info">
+                    <span class="details_label">Referral type</span>
+                    <span id="interventionId">{{referralData?.referralDetails?.otherIntervention ? referralData?.referralDetails?.otherIntervention : referralData?.referralDetails?.interventionId |
+                        getLabel:referralList:referralData?.referralDetails?.interventionId:'name'}}</span>
+                </p>
+                </div>
+                <div class="card-column">
+                    <dt class="details-label">Date</dt>
+                     <dd>
+                        <div *ngIf="referralData?.referralDetails.referralDate !=null ">{{referralData?.referralDetails.referralDate | customMonthFormat}}
+                        </div>
+                        <div *ngIf="referralData?.referralDetails.referralDate == null">N/A</div>
+                     </dd>
+                </div>
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Worker</span>
+                        <span id="workerId">{{referralData?.referralDetails.workerId | getLabel:workerList:referralData?.referralDetails.workerId:'userFullName'}}</span>
+                    </p>
+                </div> 
+               <div class="card-column">
+                    <dt class="details-label">Note</dt>
+                     <dd>{{referralData?.referralDetails.notes}}</dd>
+                </div>
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Organisation</span>
+                        <span id="workerId">{{referralData?.referralDetails.otherOrganisation? referralData?.referralDetails.otherOrganisation : referralData?.referralDetails.organisationId |
+                            getLabel:organisationList:referralData?.referralDetails.organisationId:'name'}}</span>
+                    </p>
+                </div>
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Referral outcome</span>
+                        <span id="workerId">{{referralData?.referralDetails.refOutcomeId |
+                            getLabel:outcomeList:referralData?.referralDetails.refOutcomeId:'name'}}</span>
+                    </p>
+                </div>
+            </div>
+       <!-- ------------------------------------          -->
+       <div class="card-row">
+        <div class="card-column">
+            <dt class="details-label">Funding type</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.fundingType != null ">
+                  <app-list-label id="fundingType" [list]="allData.refDataMap?.Funding_Type" [value]="referralData?.fundingDetails.fundingType"
+                  [type]="'readDescription'">
+                  </app-list-label>
+                </div>
+                <div *ngIf="referralData?.fundingDetails.fundingType == null">N/A</div>
+             </dd>
+        </div>
+         <!-- other  -->
+         <div class="card-column" *ngIf="fundingTypeSelect() === 1">
+            <dt class="details-label">Further details</dt>
+             <dd>{{referralData?.fundingDetails.otherFundingType || N/A}}
+             </dd>
+        </div> 
+       
+        <!-- employment -->
+        <div class="card-column" *ngIf="fundingTypeSelect() === 3">
+            <dt class="details-label">Referred to</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.empReferralBy != null && referralData?.fundingDetails.empReferralBy != 966 ">
+                  <app-list-label id="fundingType" [list]="allData.refDataMap?.Referral_By_Employment" [value]="referralData?.fundingDetails.empReferralBy"
+                  [type]="'readDescription'">
+                  </app-list-label>
+                </div>
+                <div *ngIf="referralData?.fundingDetails.empReferralBy == 966">{{referralData?.fundingDetails.otherEmpReferralBy}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.empReferralBy == null">N/A</div>
+             </dd>
+        </div>
+       
+        <!-- //finance/funding -->
+        <div class="card-column" *ngIf="fundingTypeSelect() === 8">
+            <dt class="details-label">Funding purpose</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.fundingPurpose != null && referralData?.fundingDetails.fundingPurpose != 933 ">
+                  <app-list-label id="fundingPurpose" [list]="allData.refDataMap?.Funding_Purpose" [value]="referralData?.fundingDetails.fundingPurpose"
+                  [type]="'readDescription'">
+                  </app-list-label>
+                </div>
+                <div *ngIf="referralData?.fundingDetails.fundingPurpose == 933">{{referralData?.fundingDetails.otherFundingPurpose}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.fundingPurpose == null">N/A</div>
+             </dd>
+        </div>
+        <div class="card-column" *ngIf="fundingTypeSelect() === 8">
+            <dt class="details-label">Funding source</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.fundingSource != null && referralData?.fundingDetails.fundingSource != 937">
+                  <app-list-label id="fundingSource" [list]="allData.refDataMap?.Funding_Source" [value]="referralData?.fundingDetails.fundingSource"
+                  [type]="'readDescription'">
+                  </app-list-label>
+                </div>
+                <div *ngIf="referralData?.fundingDetails.fundingSource == 937">{{referralData?.fundingDetails.otherFundingSource}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.fundingSource == null">N/A</div>
+             </dd>
+        </div> 
+
+        <!-- further education -->
+       <div class="card-column" *ngIf="fundingTypeSelect() === 2">
+            <dt class="details-label">Further Details</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.educationFurtherDetails != null">{{referralData?.fundingDetails.educationFurtherDetails || N/A}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.educationFurtherDetails == null">N/A</div>
+             </dd>
+        </div> 
+         <!-- housing -->
+          
+          <div class="card-column" *ngIf="fundingTypeSelect() === 9">
+                <dt class="details-label">Housing type</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.housingType != null && referralData?.fundingDetails.housingType != 927 ">
+                  <app-list-label id="fundingPurpose" [list]="allData.refDataMap?.Housing_Type" [value]="referralData?.fundingDetails.housingType"
+                  [type]="'readDescription'">
+                  </app-list-label>
+                </div>
+                <div *ngIf="referralData?.fundingDetails.housingType == 927">{{referralData?.fundingDetails.otherHousingType}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.housingType == null">N/A</div>
+             </dd> 
+            </div>
+
+         <!--medical/physical health -->
+        <div class="card-column" *ngIf="fundingTypeSelect() === 6">
+            <dt class="details-label">Referred to</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.mpHealthReferralTo != null && referralData?.fundingDetails.mpHealthReferralTo != 947">
+                  <app-list-label id="mpHealthReferralTo" [list]="allData.refDataMap?.Referral_To_Medical_Physical_Health" [value]="referralData?.fundingDetails.mpHealthReferralTo"
+                  [type]="'readDescription'">
+                  </app-list-label>
+                </div>
+                <div *ngIf="referralData?.fundingDetails.mpHealthReferralTo == 947">{{referralData?.fundingDetails.othermpHealthReferralTo}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.mpHealthReferralTo == null">N/A</div>
+             </dd>
+        </div>
+        <div class="card-column" *ngIf="fundingTypeSelect() === 6">
+            <dt class="details-label">Further details</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.mpHealthFurtherDetails != null ">{{referralData?.fundingDetails.mpHealthFurtherDetails}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.mpHealthFurtherDetails == null">N/A</div>
+             </dd>
+        </div>   
+
+        <!--mental health -->
+       <div class="card-column" *ngIf="fundingTypeSelect() === 5">
+            <dt class="details-label">Referred to</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.mentalHealthRefTo != null && referralData?.fundingDetails.mentalHealthRefTo != 951">
+                  <app-list-label id="mentalHealthRefTo" [list]="allData.refDataMap?.Referral_To_Mental_Health" [value]="referralData?.fundingDetails.mentalHealthRefTo"
+                  [type]="'readDescription'">
+                  </app-list-label>
+                </div>
+                <div *ngIf="referralData?.fundingDetails.mentalHealthRefTo == 951">{{referralData?.fundingDetails.otherMentalHealthRefTo}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.mentalHealthRefTo == null">N/A</div>
+             </dd>
+        </div>
+        <div class="card-column" *ngIf="fundingTypeSelect() === 5">
+            <dt class="details-label">Further details</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.mentalHealthDetails != null ">{{referralData?.fundingDetails.mentalHealthDetails}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.mentalHealthDetails == null">N/A</div>
+             </dd>
+        </div>  
+         
+        <!-- probation -->
+        <div class="card-column" *ngIf="fundingTypeSelect() === 4">
+            <dt class="details-label">Probation region</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.probationRegion != null">
+                    <app-list-label id="probationRegion" [list]="allData.refDataMap?.Probation_Region" [value]="referralData?.fundingDetails.probationRegion"
+                    [type]="'readDescription'">
+                    </app-list-label>
+                  </div>
+                <div *ngIf="referralData?.fundingDetails.probationRegion == null">N/A</div>
+             </dd>
+        </div> 
+        <div class="card-column" *ngIf="fundingTypeSelect() === 4">
+            <dt class="details-label">Probation office</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.probationOffice != null ">{{referralData?.fundingDetails.probationOffice}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.probationOffice == null">N/A</div>
+             </dd>
+        </div> 
+        <div class="card-column" *ngIf="fundingTypeSelect() === 4">
+            <dt class="details-label">Probation officer</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.probationOfficer != null ">{{referralData?.fundingDetails.probationOfficer}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.probationOfficer == null">N/A</div>
+             </dd>
+        </div> 
+        <div class="card-column" *ngIf="fundingTypeSelect() === 4">
+            <dt class="details-label">Probation address</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.probationAdderss != null ">{{referralData?.fundingDetails.probationAdderss}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.probationAdderss == null">N/A</div>
+             </dd>
+        </div> 
+        <div class="card-column" *ngIf="fundingTypeSelect() === 4">
+            <dt class="details-label">Probation email</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.probationEmail != null ">{{referralData?.fundingDetails.probationEmail}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.probationEmail == null">N/A</div>
+             </dd>
+        </div> 
+        <div class="card-column" *ngIf="fundingTypeSelect() === 4">
+            <dt class="details-label">Contact number</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.contactNo != null ">{{referralData?.fundingDetails.contactNo}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.contactNo == null">N/A</div>
+             </dd>
+        </div>  
+
+        <!-- substance misuse/addiction -->
+
+        <div class="card-column" *ngIf="fundingTypeSelect() === 7">
+            <dt class="details-label">Referred by</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.misuseReferralBy != null && referralData?.fundingDetails.misuseReferralBy != 940 ">
+                  <app-list-label id="misuseReferralBy" [list]="allData.refDataMap?.Referral_By_Substance_Misuse_Addiction" [value]="referralData?.fundingDetails.misuseReferralBy"
+                  [type]="'readDescription'">
+                  </app-list-label>
+                </div>
+                <div *ngIf="referralData?.fundingDetails.misuseReferralBy == 940">{{referralData?.fundingDetails.otherMisuseRefBy}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.misuseReferralBy == null">N/A</div>
+             </dd>
+        </div>
+        <div class="card-column" *ngIf="fundingTypeSelect() === 7">
+            <dt class="details-label">Referral type</dt>
+             <dd>
+                <div *ngIf="referralData?.fundingDetails.misuseRefType != null && referralData?.fundingDetails.misuseRefType != 944 ">
+                  <app-list-label id="misuseRefType" [list]="allData.refDataMap?.Referral_Type" [value]="referralData?.fundingDetails.misuseRefType"
+                  [type]="'readDescription'">
+                  </app-list-label>
+                </div>
+                <div *ngIf="referralData?.fundingDetails.misuseRefType == 944">{{referralData?.fundingDetails.otherMisuseRefType}}
+                </div>
+                <div *ngIf="referralData?.fundingDetails.misuseRefType == null">N/A</div>
+             </dd>
+        </div> 
+
+
+
+
+       </div>   
+
+
+
+
+
+          
+
+          
+
+
+        </div>
+    </mat-card-content>
+</mat-card>

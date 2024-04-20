@@ -1,0 +1,45 @@
+<div [ngSwitch]="viewType">
+
+  <!--Launch Media-->
+  <div *ngSwitchCase="'video'">
+    <app-video-player [idx]="idx" [src]="module?.path" [type]="moduleType" [option]="option">
+    </app-video-player>
+  </div>
+
+  <!--Launch SCORM -->
+  <div  *ngSwitchCase="'scorm'">
+    <iframe [id]="idx" [src]="module?.path | safe" height="750px" width="100%"></iframe>
+  </div>
+
+  <!--Launch HTML-->
+  <div  *ngSwitchCase="'html'">
+    <iframe [id]="idx" [src]="module?.path | safe" height="750px" width="100%"></iframe>
+  </div>
+
+  <!--Launch PDF-->
+  <div *ngSwitchCase="'pdf'">
+    <app-doc-viewer [src]="module?.path" [height]="'80vh'" [config]="config"></app-doc-viewer>
+  </div>
+
+  <!--Launch IMAGE-->
+  <div *ngSwitchCase="'image'">
+    <app-image-viewer [images]="[ module?.path ]" *ngIf="module?.path"></app-image-viewer>
+  </div>
+
+  <!-- Launch AUDIO -->
+  <div *ngSwitchCase="'audio'">
+    <app-video-player [idx]="idx" [src]="module?.path" [type]="moduleType" [option]="option"></app-video-player>
+  </div>
+
+  <!--Launch Others-->
+  <div *ngSwitchDefault>
+    <div class="info-text">
+      <p>This resource type is not yet supported, please select 'Download' to open this item.</p>
+      <div>
+        <button type="button" mat-flat-button color="primary" (click)="download(module.id)"> <mat-icon>get_app</mat-icon> Download</button>
+      </div>
+      <div id="form_holder" style="display: none;"></div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,12 @@
+<div class="errorPopup">
+    <h1 mat-dialog-title>CSV Errors</h1>
+    <div mat-dialog-content>The following rows had errors:</div>
+    <div class="errorContent">
+        <span *ngIf="this.csvError">CSV errors : {{this.csvError}}</span>
+        <br><br>
+        <span *ngIf="this.userError">User creation errors : {{this.userError}}</span>
+    </div>
+    <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    </div>
+</div>

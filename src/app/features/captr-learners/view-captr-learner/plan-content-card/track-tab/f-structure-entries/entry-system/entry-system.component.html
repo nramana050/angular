@@ -1,0 +1,19 @@
+<section class="entry-panel">
+  <div class="moj-timeline">
+    <div class="moj-timeline__item">
+      <div class="data-container">
+        <div class="moj-timeline__header">
+          <h2 class="entry-title">{{entryData?.title}}</h2>
+        </div>
+        <p class="entry-subtitle">{{entryData?.subTitle}}</p>
+        <div class="moj-timeline__description">
+          <ng-container *ngFor="let interaction of entryData?.formattedDescription">
+            <p class="entry-system-content">
+              {{interaction}}
+            </p>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

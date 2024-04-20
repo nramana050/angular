@@ -1,0 +1,89 @@
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  #add_appointment_label {
+    text-align: center;
+    font-size: 1.8em;
+    font-weight: 100;
+    margin: 0;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.87);
+    margin-top: 10px;
+    margin-bottom: 30px;
+  }
+}
+
+.action-buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+
+  #cancel_button {
+    margin-left: 10px;
+  }
+}
+
+.add-appointment-form-container {
+  display: flex;
+  flex-direction: column;
+
+  .appointment-date-time-container {
+    display: flex;
+
+    @media (max-width: 660px) {
+      flex-direction: column;
+    }
+
+    .date-input-container {
+      display: flex;
+      width: 100%;
+
+      @media (max-width: 660px) {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .mat-form-field {
+        width: 100%;
+      }
+
+      .time-input-container {
+        display: flex;
+        width: calc(50% - 10px);
+
+        @media (max-width: 660px) {
+          width: 100%;
+        }
+      }
+
+      .time-input-container:first-of-type {
+        margin-right: 20px;
+
+        @media (max-width: 660px) {
+          margin-right: 0px;
+        }
+      }
+    }
+
+    .date-input-container:first-of-type {
+
+      @media (max-width: 660px) {
+        margin-right: 0px;
+      }
+    }
+  }
+}
+
+.full-width{
+  min-width:100%!important;
+  width: 600px;
+}
+.mr10{
+  margin-right: 10px;
+}
+
+.mat-error-end{
+  margin-top: -3px;
+}

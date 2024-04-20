@@ -1,0 +1,68 @@
+<mat-card id='view-programmes'>
+
+    <mat-card-header>
+        <div>
+            <span class="v-align-middle">Licences </span>
+        </div>
+    </mat-card-header>
+
+    <mat-card-content>
+        <div class="label-hr">
+            <span>Professional licences</span>
+        </div>
+    </mat-card-content>
+    <mat-card-content>
+        <div class="infoSection">
+            <div class="card-row">
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Professional CAPTR licences</span>
+                        <span id="titleId">{{licencesDetail?.professionalLicences || "N/A"}}</span>
+                    </p>
+                </div>
+
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Professional CAPTR in use</span>
+                        <span id="titleId">{{licencesDetail?.professionalLicencesInUse || "N/A"}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+
+    <div *ngIf="licencesDetail?.suLicences !== null">
+    <mat-card-content>
+        <div class="label-hr">
+            <span>Service user licences</span>
+        </div>
+    </mat-card-content>
+    <mat-card-content>
+        <div class="infoSection">
+            <div class="card-row">
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Service user CAPTR licences</span>
+                        <span id="titleId">{{licencesDetail?.suLicences || "N/A"}}</span>
+                    </p>
+                </div>
+
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Service user CAPTR in use</span>
+                        <span id="titleId">{{licencesDetail?.suLicencesInUse || "N/A"}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</div>
+
+    <mat-card-footer>
+        <span>
+            <p class="hight">If you would like to discuss your licences please contact Meganexus on</p>
+            <p class="hight">support.mailbox@meganexus.com or 0207 843 4343</p>
+        </span>
+    </mat-card-footer>
+
+</mat-card>

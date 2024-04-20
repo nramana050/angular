@@ -1,0 +1,23 @@
+ul {
+    padding: 0px;
+    margin: 0px;
+    li {
+        list-style: none;
+        margin-bottom: 5px;
+    }
+}
+.info {
+    margin-top: 0px !important;
+}
+.spacer{
+   margin-bottom: 18px !important;
+}
+@media (max-width: 960px){
+    .mat-card .mat-cell:last-of-type {
+      flex-direction: column;
+      margin: 10px 0;
+    }
+    .mat-card .mat-cell.mat-column-status {
+        display: flex !important;
+    }
+}

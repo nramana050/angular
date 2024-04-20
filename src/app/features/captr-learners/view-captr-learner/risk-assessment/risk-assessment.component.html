@@ -1,0 +1,67 @@
+<div class="header">
+  <div class="tabWrapper">
+    <ul>
+      <li class="tabHead active" routerLinkActive="active">
+        <a class="tab-item" id="localJobs-tab" attr.aria-label="tab Month">Risk Assessment</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<mat-card id='view_user_profile'>
+  <mat-card-content class="view_user-plan_container">
+    <mat-card-header class="header">
+      <div class="page-title-icon">
+        <span class="action-buttons">
+          <span>
+            <button id="edit_view_button" mat-stroked-button color="primary"
+              (click)="onEditClicked()">Edit</button></span>
+          <button type="button" id="exit_page" mat-stroked-button class="right" color="primary"
+            (click)="onExitClicked()">Exit</button>
+        </span>
+      </div>
+    </mat-card-header>
+    <div class="versionInfo" *ngIf="versionCount == 0 && countFlag">
+      <p>
+        <span class="versionNumber">Version 1</span>
+        <span class="createdDate">{{riskAssessData.createdByDate | customMonthFormat}}</span>
+        <span class="createdBy">{{riskAssessData.createdByName}}</span>
+      </p>
+    </div>
+    <div class="versionInfo" *ngIf="versionCount > 0">
+      <p>
+        <span class="versionNumber">Version {{versionCount+1}}</span>
+        <span class="createdDate">{{riskAssessData.createdByDate | customMonthFormat}}</span>
+        <span class="createdBy">{{riskAssessData.createdByName}}</span>
+      </p>
+    </div>
+
+    <div class="risk-container">
+      <div class="info">
+        <span class="details_label1">Do you assess there to be any risks with the participant?</span>
+        <li *ngFor="let item of answersNamesArr1" id="restart_participant">
+          {{item}}
+        </li>
+        <span *ngIf="riskAssessData == undefined || answerChoiceIds.length == 0" id="probation">No current risk assessment </span>
+      </div>
+      <p>
+        <span class="details_label1"> Have you received the oasys report from probation?</span>
+        <span id="probation">{{answerName2 || "N/A"}}</span>
+      </p>
+      <p class="info">
+        <span class="details_label1">Has a risk assessment been completed?</span>
+
+        <span id="risk_complete">{{answerName3 || "N/A"}}</span>
+      </p>
+      <p class="info">
+        <span class="details_label1">Professional observations</span>
+        <span id="profession_observation">
+          <p>{{riskAssessData?.professionalObservation || "No current risk assessment"}} </p>
+        </span>
+      </p>
+    </div>
+  </mat-card-content>
+  <div class="cta-buttons">
+    <button mat-stroked-button color="primary" *ngIf="versionCount > 0" id="id-history" type="button" name="show-history"
+      (click)="openDialog()">History</button>
+  </div>
+</mat-card>

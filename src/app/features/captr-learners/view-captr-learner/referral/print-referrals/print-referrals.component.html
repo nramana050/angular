@@ -1,0 +1,106 @@
+
+<mat-dialog-content class="modal-container">
+    <label id="add-intervention-label">Print Referrals</label>
+        <form [formGroup]="printReferralsForm" (submit)="onPrintReferrals(printReferralsForm)">
+            <div class="card-row">
+                <div class="card-column">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Referral Type</mat-label>
+                        <mat-select placeholder="Referral Type" formControlName="interventionId" required multiple>
+                            <mat-option #allSelectedF (click)="toggleAllInterventionSelection(allSelectedF)">
+                                Select All
+                              </mat-option>
+                            <mat-option *ngFor="let inter of interventionList" [value]="inter.id" id="inter">{{inter.name}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="printReferralsForm.get('interventionId').hasError('required')"> Referral type
+                            is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="card-column">
+                    <mat-form-field appearance="outline">
+                        
+                        <mat-label>Worker</mat-label>
+                        <mat-select placeholder="Worker" formControlName="workerId" required multiple>
+                            <mat-option #allSelectedFW (click)="toggleAllWorkerSelection(allSelectedFW)">
+                                Select All
+                              </mat-option>
+                            <mat-option *ngFor="let worker of workerList" [value]="worker.id"
+                                id="worker">{{worker.userFullName}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="printReferralsForm.get('workerId').hasError('required')"> Worker name is
+                            required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="card-column">
+                    <mat-form-field appearance="outline">
+                        
+                        <mat-label>Organisation</mat-label>
+                        <mat-select placeholder="Organisation" formControlName="organisationId" required multiple>
+                            <mat-option #allSelectedFO (click)="toggleAllOrganisationSelection(allSelectedFO)">
+                                Select All
+                              </mat-option>
+                            <mat-option *ngFor="let organisation of organisationList" [value]="organisation.id"
+                                id="organisation">{{organisation?.name}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="printReferralsForm.get('organisationId').hasError('required')"> Organisation name is
+                            required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="card-column">
+                    <mat-form-field appearance="outline">
+                        
+                        <mat-label>Outcome</mat-label>
+                        <mat-select placeholder="Outcome" formControlName="outcomeId" multiple>
+                            <mat-option #allSelectedFOut (click)="toggleAllOutcomeSelection(allSelectedFOut)">
+                                Select All
+                              </mat-option>
+                            <mat-option *ngFor="let outcome of outcomeList" [value]="outcome.id"
+                                id="organisation">{{outcome?.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="card-row">
+                <div class="card-column flex-row">
+                    <mat-form-field appearance="outline">
+                        <mat-label> Start Date</mat-label>
+                        <input matInput [matDatepicker]="datePicker" formControlName="startDate" placeholder="Start Date"
+                            id="date" [max]="calculateMaxStartDate()">
+                        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #datePicker></mat-datepicker>
+                        <mat-error *ngIf="printReferralsForm.get('startDate').hasError('required')">
+                            Date is required
+                        </mat-error>
+                        <mat-error *ngIf="printReferralsForm.get('startDate').errors?.matDatepickerParse">
+                            Invalid date
+                        </mat-error>
+                    </mat-form-field>
+    
+                    <mat-form-field appearance="outline">
+                        <mat-label> End Date</mat-label>
+                        <input matInput [matDatepicker]="Picker" formControlName="endDate" placeholder="End Date" id="date" [min]="calculateMinPlannedEndDate()">
+                        <mat-datepicker-toggle matSuffix [for]="Picker"></mat-datepicker-toggle>
+                        <mat-datepicker #Picker></mat-datepicker>
+                        <mat-error *ngIf="printReferralsForm.get('endDate').hasError('required')">
+                            Date is required
+                        </mat-error>
+                        <mat-error *ngIf="printReferralsForm.get('endDate').errors?.matDatepickerParse">
+                            Invalid date
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div mat-dialog-actions>
+                <button type="submit" mat-flat-button color="primary" [disabled]="printButtonDisabled()">Print</button>
+                <button type="button" id="cancel_button" mat-stroked-button color="primary"
+                    (click)="cancelPrint()">Cancel</button>
+            </div>
+        </form>
+    </mat-dialog-content>

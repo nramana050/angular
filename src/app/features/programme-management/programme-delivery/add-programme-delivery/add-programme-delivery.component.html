@@ -1,0 +1,263 @@
+<mat-card *ngIf="ListOfCourses.length > 0" id="edit-user">
+    <mat-card-header class="flex-end">
+        <button id="exit_user_button" mat-stroked-button color="primary" [routerLink]="['/programme-management/programme-delivery']">Exit</button>
+    </mat-card-header>
+
+    <mat-card-content>
+        <form [formGroup]="programmeDeliveryForm" (ngSubmit)="onSubmit()" (keydown.enter)="handleEnterKeyPress($event)"
+            validate autocomplete="off">
+    <p class="warning"  *ngIf="isProgramCompleted"> This delivery is completed, cannot save changes </p>
+            <div class="label-hr">
+                <span>Programme details</span>
+            </div>
+            <div class="card-column">
+                <mat-form-field appearance="fill">
+                    <mat-label *ngIf="!programmeDeliveryForm.controls.programmeName.value">Search programme</mat-label>
+                    <mat-label *ngIf="programmeDeliveryForm.controls.programmeName.value">Programme name</mat-label>
+                    <input matInput formControlName="programmeName" id="programmeName" (keyup.enter)="onFilter(search_programme.value)"
+                        (keyup)="onFilterKeyupProgramme(search_programme.value)" required #search_programme>
+                    <a id="do_search_button" *ngIf="isNew" class="search-button" mat-button matSuffix mat-icon-button
+                        aria-label="Clear" (click)="onFilter(programmeDeliveryForm.controls.programmeName.value)" >
+                        <mat-icon class="search-icon">search</mat-icon>
+                    </a>
+                    <mat-error *ngIf="programmeDeliveryForm.controls.programmeName.errors?.['required']">
+                       Programme name is required
+                    </mat-error>
+
+                </mat-form-field>
+            </div>
+
+            <div class="search-results" [ngClass]="{'no-search-results' : filteredProgrammes.length === 0}">
+                <mat-list>
+                    <mat-list-item *ngFor="let programme of filteredProgrammes"
+                        (click)="onSelectedProgramme(programme)">
+                        <mat-icon mat-list-icon>notes</mat-icon>
+                        <span matLine> Programme name: {{programme.programmeName}} </span>
+                    </mat-list-item>
+                </mat-list>
+                <div *ngIf="showPaginationForProgramme">
+                    <mat-paginator id="pagination" [pageSize]="pageSize" (page)='onPaginateChange()'
+                        [showFirstLastButtons]='true' [hidePageSize]='true'>
+                    </mat-paginator>
+                </div>
+            </div>
+
+            <div *ngIf="showCourseLearnerList">
+                <mat-card id='view-courseList-setup'>
+                    <mat-card-content class="courseList-setup">
+                        <mat-table id="courseList_table" formArrayName="programmeCourseDelivery" #table
+                            [dataSource]="dataSource" class="isMobile">
+                            <ng-container matColumnDef="courseCode">
+                                <mat-header-cell *matHeaderCellDef id="courseCode">
+                                    Course code
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let element let rowIndex=index" [formGroupName]="rowIndex"><span class="mobile-label">Date added:
+                                </span>
+                                    {{ element.courseCode }}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="courseName">
+                                <mat-header-cell *matHeaderCellDef id="courseName">
+                                    Course name
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let element let rowIndex=index" [formGroupName]="rowIndex"><span class="mobile-label">Date added:
+                                </span>
+                                    {{ element.courseName }}
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="tutor">
+                                <mat-header-cell *matHeaderCellDef id="tutor">
+                                    Tutor
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let element let rowIndex=index" [formGroupName]="rowIndex" class="width">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Tutor</mat-label>
+                                        <mat-select [disabled]="!isNew" formControlName="tutorId" placeholder="Tutor">
+                                            <mat-option *ngFor="let tutor of tutors" [value]="tutor.id">
+                                               {{tutor.firstName }} {{tutor.lastName}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="startDate">
+                                <mat-header-cell *matHeaderCellDef id="startDate">
+                                    Start date
+                                </mat-header-cell>
+                                <mat-cell class="mat-row-hight width" *matCellDef="let element let rowIndex=index"
+                                    [formGroupName]="rowIndex">
+                                    <mat-form-field  appearance="fill">
+                                        <mat-label>Choose a date</mat-label>
+                                        <input [disabled]="!isNew" matInput formControlName="startDate" [min]="isNew ? currentDate : firstStartDate"
+                                            (dateChange)="startDateValidation(rowIndex,$event.target.value)"
+                                            [matDatepicker]="dp" required>
+                                        <mat-datepicker-toggle matSuffix [for]="dp">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #dp></mat-datepicker>
+                                        <mat-error
+                                            *ngIf="coursesFormArray.at(rowIndex).get('startDate').errors?.['required']">
+                                            Start date is required
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="coursesFormArray.at(rowIndex).get('startDate').errors?.['startDateGreaterThanEndDate']">
+                                            Start date must be greater than previous end date
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="coursesFormArray.at(rowIndex).get('startDate').errors?.['incorrect']">
+                                            Start date is invalid
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="endDate">
+                                <mat-header-cell *matHeaderCellDef id="endDate">
+                                    End date
+                                </mat-header-cell>
+                                <mat-cell class="mat-row-hight" *matCellDef="let element let rowIndex=index"
+                                    [formGroupName]="rowIndex">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Choose a date</mat-label>
+                                        <input [disabled]="!isNew" matInput formControlName="endDate" [min]="isNew ? currentDate : firstStartDate"
+                                            (dateChange)="endDateValidation(rowIndex,$event.target.value)"
+                                            [matDatepicker]="picker" required>
+                                        <mat-datepicker-toggle matSuffix [for]="picker">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                        <mat-error
+                                            *ngIf="coursesFormArray.at(rowIndex).get('endDate').errors?.['required']">
+                                            End date is required
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="coursesFormArray.at(rowIndex).get('endDate').errors?.['endDateGreaterThanStartDate']">
+                                            End date can not be before start date
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="coursesFormArray.at(rowIndex).get('endDate').errors?.['incorrect']">
+                                            End date is invalid
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                        </mat-table>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+            <div *ngIf="showCourseLearnerList">
+            <div class="label-hr">
+                <span>Enrolment details</span>
+            </div>
+            <ng-container formArrayName="learnerEnrollments">
+                <ng-container *ngFor="let lAndCForm of learnerAndCoursesEnrollmentFormArray.controls; let i=index">
+
+                    <div class="card-row" [formGroup]="lAndCForm">
+                        <div class="card-column">
+                            <mat-form-field appearance="fill">
+                                <mat-label *ngIf="!lAndCForm.controls.learnerId.value">Search learner</mat-label>
+                                <mat-label *ngIf="lAndCForm.controls.learnerId.value">Learner name</mat-label>
+                                <mat-hint>Please ensure you have completed an enrolment form for this person</mat-hint>
+                                <input matInput formControlName="learnerName"
+                                    (keyup.enter)="onFilterLearner(search_learner.value,i)"
+                                    (keyup)="onFilterKeyupLearner(search_learner.value, i)" required #search_learner>
+                                <a  [disabled] = "isProgramCompleted" id="do_search_button" class="search-button" mat-button matSuffix mat-icon-button
+                                    aria-label="Clear" (click)="onFilterLearner(search_learner.value,i)">
+                                    <mat-icon class="search-icon">search</mat-icon>
+                                </a>
+                                <mat-error *ngIf="learnerAndCoursesEnrollmentFormArray.at(i).get('learnerName').errors?.['required']">
+                                    Learner is required
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="learnerAndCoursesEnrollmentFormArray.at(i).get('learnerName').errors?.['learnerEnrolled']">
+                                    Learner already exist in another delivery
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="learnerAndCoursesEnrollmentFormArray.at(i).get('learnerName').errors?.['duplicateLearner']">
+                                    Learner already selected
+                                </mat-error>
+
+                            </mat-form-field>
+                        </div>
+
+                        <div class="card-column-40">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Courses</mat-label>
+                                <mat-select (selectionChange)="onSelectCourse($event.value,i)" formControlName="courseProgrammeIds" multiple required>
+                                    <mat-select-trigger>
+                                        {{learnerAndCoursesEnrollmentFormArray.at(i).get('coursesPerLearnerNameList').value }}
+                                    </mat-select-trigger>
+
+                                    <mat-option
+                                        (click)="checkLearnerAttendance(learnerAndCoursesEnrollmentFormArray.at(i).get('courseProgrammeIds'),
+                                                                        coursesPerLearner.courseProgrammeId,lAndCForm.controls.learnerId.value, i ,
+                                                                        learnerAndCoursesEnrollmentFormArray.at(i).get('coursesPerLearnerNameList'),
+                                                                        coursesPerLearner.courseName)"
+                                        *ngFor="let coursesPerLearner of coursesPerLearnerList; let courseIndex=index" [value]="coursesPerLearner.courseProgrammeId" [disabled]="isCourseCompletedArray[courseIndex]">
+                                        {{coursesPerLearner.courseName}}
+                                        <span *ngIf="coursesPerLearner.hasQualification">
+                                            Q
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="learnerAndCoursesEnrollmentFormArray.at(i).get('courseProgrammeIds').errors?.['required']">
+                                    Course is required
+                                </mat-error>
+                            </mat-form-field>
+
+                            <div class="icon-align-right">
+                                <button mat-icon-button [disabled]="lAndCForm.invalid || isProgramCompleted"
+                                    *ngIf="i===learnerAndCoursesEnrollmentFormArray.controls.length-1 &&
+                                                   (learnerAndCoursesEnrollmentFormArray.controls.length < 49 || learnerAndCoursesEnrollmentFormArray.controls.length == 49 )"
+                                    color="primary" (click)="onAddLearnerAndCoursesEnrollment()" type="button">
+                                    <mat-icon class="add-btn-size">
+                                        add_circle_outline
+                                    </mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="btn-column">
+                            <button [disabled]="isProgramCompleted" type="button" mat-icon-button (click)="onDelete(i)"
+                                *ngIf="learnerAndCoursesEnrollmentFormArray.controls.length>1">
+                                <mat-icon>
+                                    delete
+                                </mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+
+            <div class="search-results" [ngClass]="{'no-search-results' : filteredLearner.length === 0}">
+                <mat-list>
+                    <mat-list-item *ngFor="let learner of filteredLearner" (click)="onSelectedLearner(learner)">
+                        <mat-icon mat-list-icon>notes</mat-icon>
+                        <span matLine> Learner name: {{learner.fullName}} </span>
+                        <span matLine class="small"> Date of birth: {{learner.dateOfBirth | date:'dd MMM yyyy'}} </span>
+                        <span matLine class="small"> NI number: {{learner.niNumber}} </span>
+                    </mat-list-item>
+                </mat-list>
+                <div *ngIf="showPaginationForLearner">
+                    <mat-paginator id="pagination" [pageSize]="pageSize" (page)='onLearnerPaginateChange()'
+                        [showFirstLastButtons]='true' [hidePageSize]='true'>
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+
+            <mat-card-footer>
+                <span class="spacer"></span>
+                <span *ngIf="isNew">
+                    <button type="submit" id="save_user_button" mat-flat-button color="primary"
+                        [disabled]="!programmeDeliveryForm.valid">Save</button>
+                </span>
+                <span *ngIf="!isNew">
+                    <button type="submit" id="save_user_button" mat-flat-button color="primary"
+                        [disabled]="isProgramCompleted || !learnerAndCoursesEnrollmentFormArray.valid">Save</button>
+                </span>
+            </mat-card-footer>
+        </form>
+    </mat-card-content>
+</mat-card>

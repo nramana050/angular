@@ -1,0 +1,117 @@
+.header {
+  .tabWrapper {
+    margin-top: 10px;
+    position: relative;
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      height: 44px;
+      border-bottom: 1px solid grey;
+
+      li.tabHead {
+        position: relative;
+        margin: 0 33px 0 0;
+        padding: 10px 1px 1px;
+        float: left;
+        background-color: none;
+        text-align: center;
+        cursor: pointer;
+
+        a {
+          margin-right: 3px;
+          float: left;
+          color: #666;
+          text-align: center;
+          text-decoration: none;
+        }
+
+        &:focus a {
+          color: black;
+          background-color: focus-colour;
+          -webkit-box-shadow: 0 -2px focus-colour, 0 4px black;
+          box-shadow: 0 -2px focus-colour, 0 4px black;
+          text-decoration: none;
+        }
+      }
+
+      li.tabHead.active {
+        border-bottom: 3px solid var(--primary-color);
+      }
+    }
+
+  }
+
+  li.active {
+    margin-top: -5px;
+    margin-bottom: -1px;
+    padding: 14px 19px 11px 19px;
+    border-bottom: 3px solid var(--primary-color);
+    background-color: none;
+  }
+
+  .tabHead:active {
+    margin-top: -5px;
+    margin-bottom: -1px;
+    padding: 14px 19px 11px 19px;
+    border-bottom: 3px solid var(--primary-color);
+    background-color: none;
+  }
+
+  .tabHead:focus {
+    border-bottom: 3px solid var(--primary-color);
+  }
+}
+
+.label-hrr {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  margin: 16px 0;
+  flex: 1;
+  color: #000;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+//   .customCheckBoxMargin {
+//      margin: 5px 0;
+//      font-size: 24px;
+//     // padding: 1em 0 1em 0;
+
+// }
+
+.radioAlignment {
+  mat-radio-button {
+    display: flex;
+    flex-direction: column;
+    margin: 0px 15px 15px 0px !important;
+
+
+  }
+}
+
+.card-column.textarea-container {
+  width: 100% !important;
+}
+
+.btn {
+  .btn-filter {
+    margin: 5px 0;
+    font-size: 24px;
+    padding: 1em 0 1em 0;
+
+  }
+}
+
+mat-checkbox[type=checkbox] {
+  display: block;
+  margin: 15px 0px;
+}
+
+.lable-question {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 10px 0px;
+}

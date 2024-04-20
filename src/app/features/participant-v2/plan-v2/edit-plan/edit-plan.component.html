@@ -1,0 +1,26 @@
+
+  <mat-card id='assessment'>
+      <mat-card-header>
+        <span>{{title}} </span>
+        <span class="spacer"></span>
+        <span>
+          <button id="edit_view_button" mat-stroked-button color="primary" (click)="onExitClicked(this)">Exit</button>
+        </span>
+      </mat-card-header>
+     
+      <mat-card-content class="assessments_container" id="planv2-assessment">
+          <div class="survey-container contentcontainer codecontainer">
+            <survey [model]="surveyModel"></survey>
+          </div>
+      </mat-card-content>
+  
+      <mat-card-footer>
+        <span class="spacer"></span>
+        <span>
+          <button type="submit" id="save_user_button"  mat-flat-button color="primary" (click)="saveSurveyResponse(this)">Save as draft</button>
+          <button *ngIf="surveyModel?.isLastPage" type="submit" id="save_user_button"  mat-flat-button color="primary" (click)="completeSurveyResponse(this)">Submit
+          </button>
+        </span>
+      </mat-card-footer>        
+  </mat-card>
+  

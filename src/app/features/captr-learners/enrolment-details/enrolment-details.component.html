@@ -1,0 +1,89 @@
+<mat-card id="view-learner">
+
+    <mat-card-header>
+
+        <div class="learnerName">
+            {{ fullName }}
+            <br>
+            <app-stepper-navigation></app-stepper-navigation>
+        </div>
+
+        <div>
+            <button id="exit_view_button" mat-stroked-button color="primary" [routerLink]="['../']">
+                Exit
+            </button>
+        </div>
+    </mat-card-header>
+
+    <mat-card-content class="learners">
+        The table shows all Programme Enrolments for the Participant.<br><br>
+        You can Withdraw a Participant from a programme that is in progress or has not yet started by Editing the relevant
+        enrolment.<br><br>
+        Programme Completions MUST be recorded using the relevant Programme Delivery Section.<br><br>
+
+        <mat-table id="learners_table" #table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="programmeName">
+                <mat-header-cell *matHeaderCellDef id="programmeName" mat-sort-header>
+                    Programme name
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{ element.programmeName }}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="cohort">
+                <mat-header-cell *matHeaderCellDef id="cohort">
+                    Cohort
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{ element.cohort }}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="startdate">
+                <mat-header-cell *matHeaderCellDef id="startdate">
+                    Cohort start date
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{ element.startdate | customMonthFormat }}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="endDate">
+                <mat-header-cell *matHeaderCellDef id="endDate">
+                    Cohort planned end date
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{ element.endDate | date:'dd MMM yyyy'}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="status">
+                <mat-header-cell *matHeaderCellDef id="status">
+                    Status
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <div  *ngIf="!element.statusId">{{ element.status}}</div>
+                    <app-list-label *ngIf="element.statusId" [list]="refData.programStatus" [value]="element.statusId">
+                    </app-list-label>
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+                <mat-cell *matCellDef="let element;index as i;">
+
+                    <button *ngIf="actionOperation == 'view'" id="view_user_button_{{element.id}}"  mat-icon-button color="primary"
+                        attr.aria-label="View" matTooltip="View" [matTooltipShowDelay]="800"
+                        [routerLink]="['./view-captr-learner']" [queryParams]="{ id: element.id}">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button id="edit_user_button_{{element.id}}" mat-icon-button
+                        color="primary" (click)="navigateToEditEnrolment(i)" attr.aria-label="Edit"
+                        matTooltip="Edit" [matTooltipShowDelay]="800">
+                        <mat-icon>create</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+        <mat-paginator id="user_pagination" [pageSize]="pageSize" [showFirstLastButtons]='true' [hidePageSize]="true">
+        </mat-paginator>
+    </mat-card-content>
+</mat-card>

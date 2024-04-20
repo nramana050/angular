@@ -1,0 +1,15 @@
+.button-div{
+  position: relative;
+  width: 100%;
+  height: 36px;
+  margin: 20px 0px;
+  .forgot-password {
+      font-size: 0.8em;
+      position: absolute!important;
+      right: 0px!important;
+  }
+  #signinBtn{
+    position: absolute!important;
+    left: 0px!important;
+  }
+}

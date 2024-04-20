@@ -1,0 +1,156 @@
+@import "~src/styles/helpers/mixins/grid";
+@import "~src/styles/helpers/variables/palette";
+  .gds-modal-dialog {
+    width: 70vw;
+    max-height: 80vh;
+
+    select {
+      margin-bottom: 20px;
+    }
+  .quesWrapper {
+    font-size: 19px;
+    line-height: 1.3;
+    .divider {
+      border-bottom: 1px solid #7d8081;
+      margin-right: 15px;
+    }
+  }
+  .quesSpace {
+    margin: 15px 0;
+    .dependentQues {
+      padding-left: 20px;
+      border-left: 5px solid #b1b4b6;
+      padding: 15px 15px 15px 20px;
+    }
+    .displayBlock {
+      @include media(mobile) {
+        display: block;
+      }
+    }
+  
+    span {
+      &:first-child {
+        font-family: 'helvetica_bold';
+        @include media(mobile) {
+          width: auto;
+          display: block;
+        }
+      }
+      &:last-child {
+        font-family: 'Helvetica';
+        vertical-align: top;
+        &.checkBoxDisplay {
+          display: inline-block;
+        }
+        @include media(mobile) {
+          display: block;
+          width: auto;
+        }
+      }
+      &:first-child,
+      &:last-child {
+        display: inline-block;
+        @include media(mobile) {
+          display: block;
+        }
+      }
+    }
+  }
+  .gds-modal-body {
+    margin-bottom: 20px;
+    max-height: 50vh;
+    overflow: overlay;
+  }
+  p.checkBoxValue {
+    margin-bottom: 5px;
+  }
+}
+
+@media all and (max-width: 767px) {
+  .container {
+    .gds-modal-dialog {
+      .quesWrapper {
+        font-size: 16px;
+        line-height: 1.25;
+      }
+    }
+  }
+}
+
+table {
+  width: 96%;
+  border-spacing: 0;
+  overflow-x: auto;
+    td {
+      padding: 10px 20px 10px 0;
+      border-bottom: 1px solid #b1b4b6;
+      text-align: left;
+      word-wrap: break-word;
+      vertical-align: middle;
+      font-family: 'Helvetica';
+      font-size: 19px;
+      &:last-child {
+          word-wrap: break-word;
+      }
+    }
+  tr {
+    th {
+      padding: 10px 20px 10px 0;
+      text-align: left;
+      vertical-align: top;
+      font-family: "helvetica_bold", arial, sans-serif;
+    }
+    td {
+      padding: 10px 20px 10px 0;
+      text-align: left;
+      vertical-align: top;
+      font-family: 'Helvetica';
+    }
+  }
+  }
+
+  hr {
+    margin-right: 20px;
+  }
+
+  .multiAction-table {
+    display: flex;
+    @include media(mobile) {
+      font-size: 16px;
+    }
+  }
+
+  .govuk-tag {
+    display: inline-block;
+    outline: 2px solid rgba(0,0,0,0);
+    outline-offset: -2px;
+    color: #fff;
+   
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: "helvetica_bold",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    padding: 5px 8px 4px;
+    &.gray {
+      background-color: #666666;
+    }
+    &.blue {
+      background-color: #1d70b8;
+    }
+    &.green {
+      background-color: #009e0f;
+    }
+  }
+  
+.parentQues {
+  font-size: 24px !important;
+  font-family: "helvetica_bold",arial,sans-serif;
+  margin-bottom: 15px !important;
+  @include media(mobile) {
+    font-size: 16px !important;
+  }
+}

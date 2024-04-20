@@ -1,0 +1,88 @@
+<mat-card id="view-user" *ngIf="user && roles.length>0">
+
+    <mat-card-header>
+      
+      <div>
+        {{ user?.firstName }} {{ user?.lastName }}
+      </div>
+  
+      <div>
+        <button *auth="[131 ,3]" id="edit_view_button" mat-stroked-button color="primary" [routerLink]="['/v2/manage-users/edit-user' + '/' + user?.id]">
+          Edit
+        </button>
+        <button id="exit_view_button" mat-stroked-button color="primary" [routerLink]="['/v2/manage-users']">
+          Exit
+        </button>
+      </div>
+  
+    </mat-card-header>
+  
+    <mat-card-content>
+  
+      <div class="label-hr no-top-margin"></div>
+  
+      <dl>
+  
+        <div *ngIf="user?.accountType">
+          <dt class="details-label">Account type</dt>
+          <app-list-label id="roles" *ngIf="roles" [list]="roles" [value]="user?.accountType"></app-list-label>
+          </div>
+  
+        <div *ngIf="user?.userName">
+          <dt class="details-label">Username</dt>
+          <dd>{{ user.userName }}</dd>
+        </div>
+  
+        <div *ngIf="user?.accountState">
+          <dt class="details-label">Account state</dt>
+          <div [ngSwitch]="user?.accountState">
+            <dd *ngSwitchCase="true">Enabled</dd>
+            <dd *ngSwitchCase="false">Disabled</dd>
+          </div>
+        </div>
+  
+        <div class="label-hr">
+          <span>Details</span>
+        </div>
+  
+        <div *ngIf="user?.title">
+          <dt class="details-label">Title</dt>
+          <dd>{{ user?.title | titlecase}}</dd>
+        </div>
+  
+        <div *ngIf="user?.firstName && user?.lastName">
+          <dt class="details-label">Full name</dt>
+          <dd>{{ user?.firstName }} {{ user?.lastName }}</dd>
+        </div>
+
+        <div *ngIf="user?.region">
+          <dt class="details-label">Region</dt>
+          <dd>{{ user?.regionDescription }}</dd>
+        </div>
+        <div *ngIf="user?.prisonDescription.length>0">
+          <dt class="details-label">Prison responsible</dt>
+          <p class ="prisonList"*ngFor="let item of user?.prisonDescription">
+                {{item}}       
+          </p>
+        </div>
+        
+        <div class="label-hr">
+          <span>Contact</span>
+        </div>
+  
+        <div *ngIf="user?.phoneNumber">
+          <dt class="details-label">Telephone</dt>
+          <dd>{{ user?.phoneNumber }}</dd>
+        </div>
+  
+        <div *ngIf="user?.emailAddress">
+          <dt class="details-label">Email</dt>
+          <dd>{{ user?.emailAddress }}</dd>
+        </div>
+  
+      </dl>
+  
+    </mat-card-content>
+  
+  </mat-card>
+  

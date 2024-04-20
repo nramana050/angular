@@ -1,0 +1,102 @@
+
+<mat-card>
+    <mat-card-header>
+        <span class="spacer"></span>
+        <div>
+          <span class="action-buttons">
+            <button id="exit_user_button" mat-stroked-button color="primary"  (click)="onEditClick(roleId)">Edit</button>
+          </span>
+        </div>
+        <div>
+          <span class="action-buttons">
+            <button id="exit_user_button" mat-stroked-button color="primary" [routerLink]="['/application-setup/role-creation']">Exit</button>
+          </span>
+        </div>
+      </mat-card-header>
+<mat-card-content>
+    <div class="label-hr"> <span> Role </span> </div>
+</mat-card-content>
+<mat-card-content>
+    <div class="infoSection">
+        <div class="card-row">
+            <div class="card-column">
+                <p class="info">
+                    <span class="details_label">Role name</span>
+                    <span id="titleId">{{roleDetails?.roleName || "N/A"}}</span>
+                </p>
+                <p class="info">
+                    <span class="details_label">Description</span>
+                    <span id="titleId">{{roleDetails?.roleDescription || "N/A"}}</span>
+                </p>
+                <p class="info">
+                  <span class="details_label">Landing Page</span>
+                  <span id="titleId">{{roleDetails?.landingPage || "N/A"}}</span>
+              </p>
+            </div> 
+        </div>
+    </div>
+</mat-card-content>
+<mat-card-content>
+    <div class="label-hr"> <span> RBAC permissions </span> </div>
+</mat-card-content>
+<mat-card-content>
+<div class="card-row mb20">
+    <div class="keyword-container">
+      <mat-chip-list #chipList  >
+        <mat-chip color="primary"  *ngFor="let rbac of rbacPermissions" class="input_chip" [selectable]="false" selected>
+          <span matLine>
+            <app-list-label  [list]="refData.features" [value]="rbac">
+            </app-list-label>
+          </span> 
+          
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+</mat-card-content>
+<mat-card-content>
+    <div class="label-hr"> <span> Role configuration </span> </div>
+</mat-card-content>
+<div class="scroll-container">
+<mat-card-content *ngFor="let sourceData of dataSourceArray; let i = index" >
+  <p>{{sourceData.title}}</p>
+  <table mat-table [dataSource]="sourceData.dataSource" >
+    
+    <ng-container matColumnDef="featureName">
+      <th mat-header-cell  *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <app-list-label [list]="refData.features" [value]="element.featureName"></app-list-label>
+        <div class="column-space"></div>
+      </td>
+    </ng-container>
+  
+    <ng-container *ngFor="let opId of getUniqueOperations()" [matColumnDef]="opId">
+      <th mat-header-cell *matHeaderCellDef>{{ opId | getOperationName : refData.operations}}
+      </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="isOperationAvailable(element, opId)">
+            &#10004;
+          </ng-container>
+        </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displyColumns(i)"></tr>
+    <tr mat-row *matRowDef="let row; columns: displyColumns(i);"></tr>
+  </table> 
+</mat-card-content>
+</div>
+<mat-card-content>
+  <div class="label-hr"> <span> Linked users </span> </div>
+</mat-card-content>
+<mat-card-content>
+  <div class="infoSection">
+      <div class="card-row">
+          <div class="card-column">
+              <p class="info" *ngFor="let user of userNames">
+                  <span id="titleId">{{user || "N/A"}}</span>
+              </p>
+          </div> 
+      </div>
+  </div>
+</mat-card-content>
+</mat-card>

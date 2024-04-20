@@ -1,0 +1,158 @@
+<mat-card id='edit-session'>
+  <mat-card-header>
+    <span class="spacer">
+      <app-stepper-navigation></app-stepper-navigation>
+    </span>
+    <span>
+      <button type="button" id="exit_user_button" mat-stroked-button color="primary"
+        (click)="navigateToSessionListPage()">Exit</button>
+    </span>
+  </mat-card-header>
+
+  <div class="card-row">
+    <div class="info-text">
+      <p class="mt0">The session Attendance page allows you to mark attendance for Participants allocated to the selected
+        session, or cancel the session entirely.</p>
+      <p class="mt0">The system will prompt you for reasons when a session is cancelled, or an individual learner is
+        marked as absent from the session.</p>
+    </div>
+  </div>
+
+  <form [formGroup]="attendanceForm" class="margin40" (ngSubmit)="onSubmit()">
+
+    <div class="card-row">
+      <div class="card-column">
+        <mat-form-field appearance="fill">
+          <mat-label>Session teacher </mat-label>
+          <mat-select placeholder="Select" formControlName="teacher">
+            <mat-option *ngFor="let teacher of teacherList" [value]="teacher.id">
+              {{teacher.fullName}}</mat-option>
+              <mat-option [value]="null">Clear selection</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="card-row">
+      <div class="card-column">
+        <mat-form-field appearance="fill">
+          <mat-label>Did this session take place?</mat-label>
+          <mat-select placeholder="Select" formControlName="hasOccurred" required
+          (selectionChange)="sessionTakePlaceChange($event.value)">
+            <mat-option [value]=true>Yes</mat-option>
+            <mat-option [value]=false>No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="card-row" *ngIf="attendanceForm.get('hasOccurred').value === false">
+      <div class="width-70">
+        <mat-form-field appearance="fill">
+          <mat-label>Please provide a reason for why this workshop/classroom session did not run.</mat-label>
+          <mat-select placeholder="Please Select a reason *" formControlName="notOccurredReseaonId" required>
+            <mat-option *ngFor="let reason of refData?.notOccurredReason" [value]="reason.id">
+              {{reason.value}}</mat-option>
+          </mat-select>
+          <mat-error>
+            <app-control-messages [control]="attendanceForm.get('notOccurredReseaonId')"></app-control-messages>
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="card-row">
+      <div class="width-70">
+        <mat-form-field appearance="fill">
+          <mat-label>Session notes</mat-label>
+          <textarea matInput placeholder="Session Notes" formControlName="sessionNotes" maxlength="100"
+            #sessionNotes></textarea>
+          <mat-hint align="end">{{sessionNotes.value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+      
+    <div>
+      <span class="label-hr system_setup">Session attendance</span>
+    </div>
+
+    <div>
+      <mat-error *ngIf="isFutureDate">Session attendance cannot be saved or submitted for future date
+      </mat-error>
+    </div>
+    <br>
+    <div class="centerText" *ngIf="attendanceForm.get('hasOccurred').value === false">
+      *This session did not take place, so you cannot mark attendance*
+    </div>
+
+    <div *ngIf="attendanceForm.get('hasOccurred').value === true">
+      <mat-table formArrayName="learnerList" [dataSource]="enrolledLearns" multiTemplateDataRows>
+        <ng-container matColumnDef="learnerName">
+          <mat-header-cell *matHeaderCellDef id="workerName_button" class="width-20 name"> Learner name
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="width-20 name">
+            {{getValueById(element.learnerId, 'NAME')}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="D.O.B">
+          <mat-header-cell *matHeaderCellDef id="lrn_button" class=" width-20 name">Date of birth </mat-header-cell>
+          <mat-cell *matCellDef="let element" class=" width-20 name">
+              {{getValueById(element.learnerId, 'DOB') | date:'dd MMM yyyy'}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="attended">
+          <mat-header-cell *matHeaderCellDef id="attended" class="width-10 name">Attended?</mat-header-cell>
+          <mat-cell *matCellDef="let element;let i = dataIndex" [formGroupName]="i"
+            [attr.colspan]="learnerColumns.length" class="width-10 name">
+            <mat-form-field appearance="fill">
+              <mat-select formControlName='attendanceStatusId' (selectionChange)="change(i)">
+                  <mat-option *ngFor="let status of refData?.attendanceStatus" [value]="status.id">
+                    {{status.value}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="expandedDetail">
+            <mat-header-cell *matHeaderCellDef id="expandedDetail" class="name"></mat-header-cell>
+            <mat-cell *matCellDef="let element; let i = dataIndex" [formGroupName]="i"
+              [attr.colspan]="learnerColumns.length">
+              <div class="example-element-detail"
+                [@detailExpand]="noAnswers.includes(element.learnerId) ? 'expanded' : 'collapsed'">
+                <div class="highlight-expendable-table" *ngIf="learnerListForm.at(i)?.get('attendanceStatusId')?.value === 3">
+                  <mat-card-content>
+                    <div class="card-row">
+  
+                      <div class="card-column">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Was this absence authorised or unauthorised</mat-label>
+                          <mat-select placeholder="Please Select a reason"
+                            formControlName="absenceTypeId" required>
+                            <mat-option *ngFor="let auth of refData?.absenceType" [value]="auth.id">
+                              {{auth.value}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </div>
+              </div>
+            </mat-cell>
+          </ng-container>
+
+        <mat-header-row *matHeaderRowDef="learnerColumns"></mat-header-row>
+        <mat-row *matRowDef="let element; columns: learnerColumns;" class="example-element-row">
+
+        </mat-row>
+        <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></mat-row>
+      </mat-table>
+    </div>
+    <mat-card-footer>
+      <span class="spacer"></span>
+      <span>
+        <button type="submit" id="save_user_button" mat-flat-button color="primary" [disabled]="isFutureDate || !attendanceForm.valid">Save</button>
+      </span>
+    </mat-card-footer>
+  </form>
+</mat-card>

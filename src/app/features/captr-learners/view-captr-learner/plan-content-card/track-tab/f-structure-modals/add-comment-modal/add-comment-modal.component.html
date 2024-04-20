@@ -1,0 +1,24 @@
+<div class="modal-container">
+  <label id="add_comment_label">Add Comment</label>
+  <form [formGroup]="addCommentForm" (ngSubmit)="confirmAddComment()" validate autocomplete="off">
+    <div class="add-comment-form-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Comment</mat-label>
+        <textarea matInput id="comment_id" cols="20" rows="5" minlength="1" formControlName="comment"
+          required></textarea>
+          <mat-hint>Maximum 200 characters</mat-hint>
+          <mat-error *ngIf="addCommentForm.get('comment').hasError('required')">
+          Comment is required
+        </mat-error>
+        <mat-error *ngIf="addCommentForm.get('comment').hasError('maxlength')">
+          Comment should be less than 200 characters
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+  <div class="action-buttons-container">
+    <button id="confirm_add_comment_button" mat-flat-button color="primary" [disabled]="!addCommentForm.valid"
+      (click)="confirmAddComment()">Add</button>
+    <button id="cancel_button" mat-stroked-button color="primary" (click)="cancelAddComment()">Cancel</button>
+  </div>
+</div>

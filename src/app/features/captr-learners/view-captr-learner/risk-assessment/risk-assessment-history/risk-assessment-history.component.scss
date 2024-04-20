@@ -1,0 +1,53 @@
+.gds-modal-dialog {
+    overflow-y: auto;
+    max-height: 500px;
+
+    .gds-modal-body div {
+        border-bottom: 1px solid #b1b4b6;
+        
+        &:last-child {
+            border-bottom: none;
+        }
+        p{
+            font-size: 16px;
+        }
+    }
+}
+
+li#restart_participant {
+    list-style: none;
+}
+
+.label1_ans {
+    display: block;
+    font-size: 16px;
+}
+
+span.details_label1 {
+    display: block;
+    font-size: 14px;
+    color: var(--primary-color);
+    font-weight: 600;
+    margin: 14px 0;
+  }
+
+.details_label {
+    font-size: 14px;
+}
+
+.govuk-heading-l {
+    margin-bottom: 20px !important;
+}
+#id-close {
+    margin: 10px 0px;
+}
+.card-row{
+    border-bottom: 1px solid #b1b4b6;
+    margin-bottom: 12px;
+    &:last-child {
+        border-bottom: none
+    }
+}
+.ans {
+    font-size: 16px;
+}

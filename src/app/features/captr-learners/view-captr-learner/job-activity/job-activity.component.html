@@ -1,0 +1,23 @@
+<div class="header">
+    <div class="tabWrapper">
+        <ul>
+            <!-- <li class="tabHead" [routerLink]="['./favourites']" 
+            [queryParams]="{id: userId, name: fname}" (click)="jobActivityTabs('favouritesJobs')" routerLinkActive="active">
+                <a class="tab-item" id="favouritesJobs-tab"  
+                    attr.aria-label="tab Year">Favourite Jobs</a>
+            </li>
+            <li class="tabHead"  [routerLink]="['./job-applications']" [queryParams]="{id: userId, name: fname}" 
+            (click)="jobActivityTabs('jobApllications')" routerLinkActive="active">
+                <a class="tab-item" id="jobApllications-tab" 
+                    attr.aria-label="tab Year">Job Applications</a>
+            </li> -->
+            <li class="tabHead"  [routerLink]="['./local-jobs']" 
+            [queryParams]="{id: userId, name: fname}" (click)="jobActivityTabs('localJobs')" routerLinkActive="active">
+                <a class="tab-item" id="localJobs-tab" 
+                    attr.aria-label="tab Month">Jobs</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<router-outlet></router-outlet>

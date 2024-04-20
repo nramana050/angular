@@ -1,0 +1,94 @@
+<h1 mat-dialog-title>{{isNew ? 'Add previous qualification' : 'Update previous qualification'}}</h1>
+<mat-card-content>
+ <form [formGroup]="previousQualifications" (ngSubmit)="onSubmit()" autocomplete="off"> 
+  <div class="card-row">
+          <mat-form-field appearance="fill">
+            <mat-label for="firstName">What are your previous qualifications?</mat-label>
+            <input matInput placeholder="What are your previous qualifications?" formControlName="qualification" id="qualification" required>
+            <mat-hint>Maximum 100 characters are allowed</mat-hint>
+            <mat-error *ngIf="previousQualifications.get('qualification').hasError('pattern')">
+              Invalid qualification name</mat-error>
+            <mat-error *ngIf="previousQualifications.get('qualification').hasError('required')">
+              Qualification name is required</mat-error>
+            <mat-error *ngIf="previousQualifications.get('qualification').hasError('maxlength')">
+              Qualification name should be 100 characters or less
+            </mat-error>
+          </mat-form-field>
+    </div>
+   <div class="card-row">
+        <mat-form-field appearance="fill">
+            <mat-label>
+              Qualification level?
+            </mat-label>
+            <mat-select placeholder="Qualification level"
+              formControlName="levelId">
+              <mat-option *ngFor="let item of refAnswer" [value]="item?.id" id="item">{{item.description}}</mat-option>
+              <mat-option [value]="null" id="residentUKEEAlast3yrs-null"> Clear Selection </mat-option>
+            </mat-select>
+            <mat-error *ngIf="previousQualifications.get('levelId').hasError('required')">Qualification level is required
+            </mat-error>
+          </mat-form-field>
+    </div>
+  <div class="card-row">
+        <mat-form-field appearance="fill">
+            <mat-label for="startDate">Qualification start date</mat-label>
+            <input matInput [matDatepicker]="startDate"[max]="maxStartDate"
+              formControlName="startDate" placeholder="Qualification start date"
+              id="startDate" required>
+            <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+            <mat-datepicker #startDate></mat-datepicker>
+           <mat-error
+            *ngIf="!previousQualifications.get('startDate').getError('matDatepickerMax')
+                                  && !previousQualifications.get('startDate').getError('matDatepickerParse')
+                                  && previousQualifications.get('startDate').getError('required')">
+                                  Qualification start date is required
+          </mat-error>
+          <mat-error
+            *ngIf="previousQualifications.get('startDate').errors?.matDatepickerParse">
+            Invalid
+            qualification start date
+          </mat-error>
+          <mat-error
+          *ngIf="previousQualifications.get('startDate').getError('matDatepickerMax')
+                              && !previousQualifications.get('startDate').getError('matDatepickerParse')
+                              && !previousQualifications.get('startDate').getError('required')">
+                              Invalid qualification start date. Date cannot be in future  </mat-error> 
+          </mat-form-field>
+    </div> 
+     
+    <div class="card-row">
+        <mat-form-field appearance="fill">
+            <mat-label for="achievedDate">Qualification achieved date</mat-label>
+            <input matInput [matDatepicker]="achievedDate" [min]="minEndDate" [max]="maxStartDate"
+              formControlName="achievedDate" placeholder="Qualification achieved date"
+              id="achievedDate" required>
+            <mat-datepicker-toggle matSuffix [for]="achievedDate"></mat-datepicker-toggle>
+            <mat-datepicker #achievedDate></mat-datepicker>
+            <mat-error
+            *ngIf="!previousQualifications.get('achievedDate').getError('matDatepickerMax')
+                                  && !previousQualifications.get('achievedDate').getError('matDatepickerParse')
+                                  && previousQualifications.get('achievedDate').getError('required')">
+                                  Qualification achieved date is required
+          </mat-error>
+          <mat-error
+            *ngIf="previousQualifications.get('achievedDate').errors?.matDatepickerParse">
+            Invalid qualification achieved date
+          </mat-error>
+          <mat-error *ngIf="previousQualifications.get('achievedDate').getError('matDatepickerMin')
+          && !previousQualifications.get('achievedDate').getError('matDatepickerParse')">
+          Invalid  achieved Date. Date should be greater than start date </mat-error>  
+          <mat-error
+          *ngIf="previousQualifications.get('achievedDate').getError('matDatepickerMax')
+                              && !previousQualifications.get('achievedDate').getError('matDatepickerParse')
+                              && !previousQualifications.get('achievedDate').getError('required')">
+                              Invalid qualification achieved date. Date cannot be in future  </mat-error>         
+          </mat-form-field>
+    </div> 
+    <mat-dialog-actions align="end">
+        <button mat-button type="button" (click)="dialogClose()">Cancel</button>
+        <button type="submit" mat-flat-button color="primary" [disabled]="!previousQualifications.valid">
+            {{ isNew ? 'Save' : 'Update' }}
+        </button>
+    </mat-dialog-actions>
+ </form>
+</mat-card-content>

@@ -1,0 +1,214 @@
+<div class="caseload-overview-container">
+    <div class="custom-options">
+        <mat-slide-toggle (click)="allowPersonalise()">Personalise</mat-slide-toggle>
+    </div>
+    <div class="caseload-overview" [ngClass]="personalise ? 'personaliseOn' : 'personaliseOff'">
+        <div class="caseload-inner" #parent1 [class.caseDisable]="isHighlighted[0]" *ngIf="isEnable(708)?.isEnable">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>Active cases</mat-card-title>
+                    <span class="caseload-icon" (click)="onChildClick(0, 708)">
+                    </span>
+                </mat-card-header>
+                <mat-card-content>
+                    <!-- <ul class="caseload-list">
+                        <li><a href="#">Emily</a></li>
+                        <li><a href="#">Tom</a></li>
+                        <li><a href="#">Ben</a></li>
+                        <li><a href="#">Emily</a></li>
+                        <li><a href="#">Tom</a></li>
+                        <li><a href="#">Ben</a></li>
+                        <li><a href="#">Emily</a></li>
+                        <li><a href="#">Tom</a></li>
+                        <li><a href="#">Ben</a></li>
+                        <li><a href="#">Ben</a></li>
+                    </ul> -->
+                    <mat-table class="caseload-list" id="learners_table" #table [dataSource]="datasourceActiveCases"
+                        matSort>
+                        <ng-container matColumnDef="fullName">
+
+                            <mat-cell class="active-cases container" *matCellDef="let element">
+                                <a href="#" onclick="return false;" (click)="viewUser(element)"
+                                    matTooltip="{{element.fullName}}">{{ element.fullName | truncate:[20, '...']}}</a>
+                                <div *ngIf="element.isNew" class="new-tag">
+                                    <span class="mobile-label call-status-label">Status: </span><span
+                                        class="status">New</span>
+                                </div>
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-row *matRowDef="let row; columns: displayedColumnsActiveCases;"></mat-row>
+                    </mat-table>
+                </mat-card-content>
+                
+                <mat-card-actions>
+                    <div class="export-pagination-container">
+                        <button 
+                            *auth="[111,37]"
+                            id="export_active_caseload"
+                            mat-icon-button color="primary"
+                            (click)="exportCsv()"
+                            matTooltip="Export Caseload"
+                            attr.aria-label="Export Caseload"
+                            class="mat-style">
+                            <mat-icon size="small">file_download</mat-icon>
+                        </button>
+                        <span class="flex-spacer"></span>
+                        <mat-paginator #paginatorActiveCases
+                                       id="user_pagination"
+                                       [pageSize]="pageSizeActiveCases"
+                                       [showFirstLastButtons]='true'
+                                       [hidePageSize]="true">
+                        </mat-paginator>
+                    </div>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+        <div class="caseload-inner" #parent4 [class.caseDisable]="isHighlighted[3]" *ngIf="isEnable(711)?.isEnable">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>Recently viewed</mat-card-title>
+                    <span class="caseload-icon" (click)="onChildClick(3,711)">
+                    </span>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-table class="caseload-list" id="learners_table" #table [dataSource]="datasourceRecentlyViewed"
+                        matSort>
+                        <ng-container matColumnDef="fullName">
+                            <mat-cell class="active-cases" *matCellDef="let element">
+                                <a href="#" onclick="return false;" (click)="viewUser(element)"
+                                    matTooltip="{{element.fullName}}">{{ element.fullName | truncate:[20, '...']}}</a>
+                            </mat-cell>
+                        </ng-container>
+                        <mat-row *matRowDef="let row; columns: displayedColumnsActiveCases;"></mat-row>
+                    </mat-table>
+                </mat-card-content>
+                <mat-card-actions align="end">
+                 <mat-paginator #paginatorRecently id="user_paginationRecent" [pageSize]="pageSizeRecently" [showFirstLastButtons]='true'
+                    [hidePageSize]="true">
+                </mat-paginator>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+        <div class="caseload-inner" #parent2 [class.caseDisable]="isHighlighted[1]" *ngIf="isEnable(709)?.isEnable">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>Upcoming tasks</mat-card-title>
+                    <span class="caseload-icon" (click)="onChildClick(1,709)">
+                    </span>
+                </mat-card-header>
+                <mat-card-content>
+                    <!-- <ul class="caseload-list"> -->
+                        <mat-table class="caseload-list" id="learners_table" #table [dataSource]="datasourceUpcomingTask"
+                        matSort>
+                        
+                        <ng-container matColumnDef="fullName">
+                            <mat-header-cell *matHeaderCellDef> Participant </mat-header-cell>
+                            <mat-cell class="active-cases" *matCellDef="let element">
+                                <a href="#" onclick="return false;" (click)="viewUserByUserId(element)"
+                                    matTooltip="{{element.fullName}}">{{ element.fullName}}</a>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="task">
+                            <mat-header-cell *matHeaderCellDef> Task </mat-header-cell>
+                            <mat-cell class="active-cases" *matCellDef="let element">
+                                    <a href="#" onclick="return false;" (click)="viewRiskAssesmentByUserId(element)"
+                                    matTooltip="{{element.task}}">{{ element.task}}</a>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dueDate">
+                            <mat-header-cell *matHeaderCellDef> Due Date </mat-header-cell>
+                            <mat-cell class="active-cases" *matCellDef="let element">
+                                <matTooltip="{{element.review_date}}">{{ element.review_date | date:'d MMMM yyyy'}} </matTooltip>
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumnsUpcomingTask"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumnsUpcomingTask;"></mat-row>
+                      
+                    </mat-table>
+                    <!-- </ul> -->
+                </mat-card-content>
+                <mat-card-actions align="end">
+                    <mat-paginator #paginatorUpcoming id="user_paginationUp" [pageSize]="pageSizeUpcomingRisk" [showFirstLastButtons]='true'
+                        [hidePageSize]="true">
+                    </mat-paginator> 
+                </mat-card-actions>
+            </mat-card>
+        </div>
+        <div class="caseload-inner" #parent3 [class.caseDisable]="isHighlighted[2]" *ngIf="isEnable(710)?.isEnable">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>Outstanding tasks</mat-card-title>
+                    <span class="caseload-icon" (click)="onChildClick(2,710)">
+                    </span>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-table class="caseload-list" id="learners_table" #table [dataSource]="datasourceOutstandingTask"
+                        matSort>
+                        
+                        <ng-container matColumnDef="fullName">
+                            <mat-header-cell *matHeaderCellDef> Participant </mat-header-cell>
+                            <mat-cell class="active-cases" *matCellDef="let element">
+                                <a href="#" onclick="return false;" (click)="viewUserByUserId(element)"
+                                    matTooltip="{{element.fullName}}">{{ element.fullName}}</a>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="task">
+                            <mat-header-cell *matHeaderCellDef> Task </mat-header-cell>
+                            <mat-cell class="active-cases" *matCellDef="let element">
+                                    <a href="#" onclick="return false;" (click)="viewRiskAssesmentByUserId(element)"
+                                    matTooltip="{{element.task}}">{{ element.task}}</a>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dueDate">
+                            <mat-header-cell *matHeaderCellDef> Due Date </mat-header-cell>
+                            <mat-cell class="active-cases" *matCellDef="let element">
+                                <matTooltip="{{element.review_date}}">{{ element.review_date | date:'d MMMM yyyy'}} </matTooltip>
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumnsUpcomingTask"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumnsUpcomingTask;"></mat-row>
+                      
+                    </mat-table>
+                </mat-card-content>
+                <mat-card-actions align="end">
+                  <mat-paginator #paginatorOutstanding id="user_paginationOut" [pageSize]="pageSizeOutstandingRisk" [showFirstLastButtons]='true'
+                        [hidePageSize]="true">
+                    </mat-paginator>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+        
+        <div class="caseload-inner my-todo" #parent5 [class.caseDisable]="isHighlighted[4]" *ngIf="isEnable(712)?.isEnable">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>My to do</mat-card-title>
+                    <span class="caseload-icon" (click)="onChildClick(4,712)">
+                    </span>
+                </mat-card-header>
+                <mat-card-content style="padding: 25px;">
+                    <app-my-goals-tab [dashboard]="true"></app-my-goals-tab>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="caseload-inner my-todo" #parent5 [class.caseDisable]="isHighlighted[4]" *ngIf="isEnable(1081)?.isEnable">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>My To Do</mat-card-title>
+                    <span class="caseload-icon" (click)="onChildClick(4,1081)">
+                    </span>
+                </mat-card-header>
+                <mat-card-content style="padding: 25px;">
+                    <app-my-to-do [dashboard]="true"></app-my-to-do>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    <div class="caseload-mycalendar"></div>
+</div>

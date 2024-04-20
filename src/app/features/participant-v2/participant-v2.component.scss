@@ -1,0 +1,13 @@
+z.search_users_form{
+    display: flex;
+     flex-direction: column;
+    flex-wrap: wrap;
+    width: calc(50% - 12px);
+}
+.v-align-middle { 
+    vertical-align: middle;
+    margin-right: 8px;
+}
+.mat-select-arrow-wrapper {
+    margin-top: 50px !important;
+}

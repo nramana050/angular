@@ -1,0 +1,209 @@
+<mat-card id="edit-user">
+    <mat-card-header class="flex-end">
+        <span class="spacer"></span>
+        <button id="exit_user_button" mat-stroked-button color="primary" (click)="onExit()"
+            queryParamsHandling="merge">Exit</button>
+    </mat-card-header>
+
+    <mat-card-content>
+        Here you can record attempts at contacting the learner,and any employment outcome detailsif the contact attempt 
+        was successful <br><br>
+        <form [formGroup]="outcomeForm" (ngSubmit)="onSubmit()" (keydown.enter)="handleEnterKeyPress($event)" validate
+            autocomplete="off">
+            <div class="label-hr">
+                <span>Employment outcomes </span>
+            </div>
+
+            <div class="card-row">
+                <div class="card-column">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Contact date</mat-label>
+                        <input matInput [matDatepicker]="outcomeDatePicker" formControlName="contactDate" placeholder="Contact date"
+                            id="contactDate" [min]="programDeliveryStartDate" [max]="maxContactDate" required>
+                        <mat-datepicker-toggle matSuffix [for]="outcomeDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #outcomeDatePicker></mat-datepicker>
+                        <mat-error
+                            *ngIf="outcomeForm.get('contactDate').errors?.required && !outcomeForm.get('contactDate').errors?.matDatepickerParse">Contact
+                            date is
+                            required</mat-error>
+                        <mat-error
+                            *ngIf="!outcomeForm.get('contactDate').errors?.required && outcomeForm.get('contactDate').hasError('matDatepickerMin')">Contact
+                            date is
+                            cannot be less than program delivery start date</mat-error>
+                        <mat-error
+                            *ngIf="!outcomeForm.get('contactDate').errors?.required && outcomeForm.get('contactDate').hasError('matDatepickerMax')">Contact
+                            date is
+                            cannot be greater than program delivery start date</mat-error>
+                        <mat-error *ngIf="outcomeForm.get('contactDate').errors?.matDatepickerParse">Invalid
+                            contact
+                            date</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="card-column">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Contact successful</mat-label>
+                        <ng-container>
+                            <mat-select (selectionChange)="onSelectContact($event.value)"
+                                placeholder="Contact successful" formControlName="contactStatusId" required>
+                                <mat-option *ngFor="let isContacted of userRefData?.contactStatus"
+                                    [value]="isContacted.id">
+                                    {{isContacted.value}}
+                                </mat-option>
+                            </mat-select>
+                        </ng-container>
+                        <mat-error *ngIf="outcomeForm.get('contactStatusId').errors?.required">Contact successful is
+                            required</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="card-row" *ngIf="outcomeForm.get('contactStatusId').value==1">
+                <div class="card-column">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Employment status</mat-label>
+                        <ng-container>
+                            <mat-select (selectionChange)="onSelectEmployeeStatus($event.value)"
+                                placeholder="Employment status" formControlName="employmentStatusId" required>
+                                <mat-option *ngFor="let employmentStatus of userRefData?.employmentStatus" 
+                                 [value]="employmentStatus.id">
+                                    {{employmentStatus.value}}
+                                </mat-option>
+                            </mat-select>
+                        </ng-container>
+                        <mat-error *ngIf="outcomeForm.get('employmentStatusId').errors?.required">Employment status is
+                            required</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="card-column" *ngIf="outcomeForm.get('employmentStatusId').value==1">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Outcome type</mat-label>
+                        <ng-container>
+                            <mat-select placeholder="Outcome type" formControlName="outcomeTypeId" required>
+                                <mat-option *ngFor="let outcome of userRefData?.outcomeType" 
+                                 [value]="outcome.id">
+                                    {{outcome.value}}
+                                </mat-option>
+                            </mat-select>
+                        </ng-container>
+                        <mat-error *ngIf="outcomeForm.get('outcomeTypeId').errors?.required">Outcome type is
+                            required</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="card-row" *ngIf="outcomeForm.get('employmentStatusId').value==1">
+                <div class="card-column">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Start date</mat-label>
+                        <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" placeholder="Start date"
+                            id="startDate" [min]="outcomeStartDate" required>
+                        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #startDatePicker></mat-datepicker>
+                        <mat-error
+                            *ngIf="outcomeForm.get('startDate').errors?.required && !outcomeForm.get('startDate').errors?.matDatepickerParse">Start
+                            date is
+                            required</mat-error>
+                        <mat-error
+                            *ngIf="!outcomeForm.get('startDate').errors?.required && outcomeForm.get('startDate').hasError('matDatepickerMin')">Start
+                            date is
+                            cannot be less or equal to program delivery start date</mat-error>
+                        <mat-error
+                            *ngIf="!outcomeForm.get('startDate').errors?.required && outcomeForm.get('startDate').hasError('matDatepickerMax')">Start
+                            date is
+                            cannot be greater than program delivery start date</mat-error>
+                        <mat-error
+                            *ngIf="outcomeForm.get('startDate').errors?.matDatepickerParse">Invalid
+                            start
+                            date</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="card-column">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Employer</mat-label>
+                        <input matInput formControlName="employer" placeholder="Employer" maxlength="30" id="employer" [matAutocomplete]="auto" required>
+                        <mat-autocomplete #auto="matAutocomplete" >
+                          <mat-option *ngFor="let option of filteredEmployerNameList | async" [value]="option.employerName"
+                            id="author_{{option.employerName}}">
+                            {{option.employerName}}
+                          </mat-option>
+                        </mat-autocomplete>
+                        <mat-hint>
+                             Maximum 30 characters are allowed
+                        </mat-hint>
+                        <mat-error *ngIf="outcomeForm.get('employer').hasError('pattern')">
+                            Invalid employer value
+                        </mat-error>
+                      <mat-error *ngIf="outcomeForm.get('employer').errors?.required">Employer is
+                        required</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="card-row" *ngIf="outcomeForm.get('employmentStatusId').value==1">
+                <div class="card-column">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Employment type</mat-label>
+                        <ng-container>
+                            <mat-select placeholder="Employment type" formControlName="employmentTypeId">
+                                <mat-option *ngFor="let employmentType of userRefData?.employmentType" 
+                                [value]="employmentType.id">
+                                   {{employmentType.value}}
+                               </mat-option>
+                               <mat-option [value]="null">Clear selection</mat-option>
+                            </mat-select>
+                        </ng-container>
+                    </mat-form-field>
+                </div>
+
+                <div class="card-column">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Employment sector</mat-label>
+                        <ng-container>
+                            <mat-select placeholder="Employment sector" formControlName="employmentSectorId">
+                                <mat-option *ngFor="let employmentSector of userRefData?.employmentSector" 
+                                [value]="employmentSector.id">
+                                   {{employmentSector.value}}
+                               </mat-option>
+                               <mat-option [value]="null">Clear selection</mat-option>
+                            </mat-select>
+                        </ng-container>
+                    </mat-form-field>
+                </div>
+
+                <div class="card-column" *ngIf="outcomeForm.contains('otherSectorValue')">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Other sector</mat-label>
+                            <input matInput formControlName="otherSectorValue" id="course" required>
+                            <mat-hint>maximum 20 characters allowed</mat-hint>
+                            <mat-error *ngIf="outcomeForm.controls.otherSectorValue.errors?.required">
+                                Other sector value is required.
+                            </mat-error>
+                            <mat-error
+                                *ngIf="outcomeForm.controls.otherSectorValue.errors?.minlength">
+                                Other sector value must be greater than 3 characters.
+                            </mat-error>
+                            <mat-error
+                                *ngIf="outcomeForm.controls.otherSectorValue.errors?.maxlength">
+                                Other sector value must be less than 20 characters.
+                            </mat-error>
+                            <mat-error
+                                *ngIf="outcomeForm.controls.otherSectorValue.errors?.pattern">
+                                Invalid other sector value.
+                            </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <mat-card-footer>
+                <span class="spacer"></span>
+                <span>
+                    <button type="submit" id="save_user_button" mat-flat-button color="primary"
+                        [disabled]="!outcomeForm.valid">Save</button>
+                </span>
+            </mat-card-footer>
+        </form>
+    </mat-card-content>
+</mat-card>

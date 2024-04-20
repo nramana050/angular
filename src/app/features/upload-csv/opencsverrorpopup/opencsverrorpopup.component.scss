@@ -1,0 +1,11 @@
+.errorPopup {
+    width:400px;
+    min-height: 180px;
+    @media (max-width: 500px) {
+        width:200px;
+      }
+    .errorContent {
+        margin-top: 15px;
+        word-wrap: break-word;
+    }
+}

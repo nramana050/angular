@@ -1,0 +1,59 @@
+<section class="entry-panel">
+  <div class="left-container">
+    <div class="moj-timeline">
+      <div class="moj-timeline__item">
+        <div class="data-container">
+          <h2 class="entry-title">{{entryData?.title}}</h2>
+        <div class="subtitle-container">
+          <p class="entry-subtitle">{{entryData?.formattedSubtitle}}</p>
+          <p class="entry-subtitle">{{entryData?.keyWorkerName | titlecase}}</p>
+        </div>
+        <div class="intervention-container" *ngIf="entryData?.interventionName">
+          <div class="entry-pathway-bullet-container">
+            <div *ngIf="entryData?.pathway" [style.background-color]="setBulletColor(entryData?.pathway)"
+              class="entry-pathway-bullet"></div>
+          </div>
+          <p class="entry-system-content">{{entryData?.interventionName}}</p>
+        </div>
+        <p *ngIf="entryData?.organisationName" class="entry-notes-content"><span
+            class="entry-notes-label">Organisation:</span> {{entryData?.organisationName}}</p>
+        <p *ngIf="entryData?.description" class="entry-notes-content"><span class="entry-notes-label">Notes:</span>
+          {{entryData?.description}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="right-container">
+      <div class="entry-tags-container" style="text-align:-webkit-right;">
+        <span>
+          <div *ngIf="entryData?.status === 'Attended'" class="entry-status-tag status-attended">{{entryData?.status |
+            uppercase}}</div>
+        </span>
+        <span>
+          <div *ngIf="entryData?.status === 'Fail to attend'" class="entry-status-tag status-failed">FAILED TO ATTEND</div>
+        </span>
+        <span>
+          <div *ngIf="entryData?.status === 'Engagement cancelled by Organisation'"
+            class="entry-status-tag status-cancelled_Organisation">{{entryData?.status | uppercase}}</div>
+        </span>
+        <span>
+          <div *ngIf="entryData?.status === 'Engagement cancelled by/on behalf of Client'"
+            class="entry-status-tag status-behalf_of_Client">{{entryData?.status | uppercase}}</div>
+        </span>
+        <span>
+          <div *ngIf="entryData?.status === 'Non-attendance (reason provided)'"
+            class="entry-status-tag status-Non-attendance_reason_provided">{{entryData?.status | uppercase}}</div>
+        </span>
+        <span>
+          <div *ngIf="entryData?.status === 'Non-attendance (unexplained)'"
+            class="entry-status-tag status-Non-attendance_unexplained">{{entryData?.status | uppercase}}</div>
+        </span>
+      </div>
+      <div class="entry-actions-container">
+        <button *ngIf="isAuthorized" mat-icon-button color="primary" title="Update" attr.aria-label="Update"
+          (click)="openAddOrEditAppointmentModal()">
+          <mat-icon>create</mat-icon>
+        </button>
+      </div>
+  </div>
+</section>

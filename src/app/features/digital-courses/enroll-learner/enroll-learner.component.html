@@ -1,0 +1,62 @@
+<mat-card id='edit_content'>
+  <mat-card-header>
+    <span class="spacer">
+
+    </span>
+
+    <span>
+      <button id="exit_user_button" mat-stroked-button color="primary" [routerLink]="['/digital-courses']">Exit</button>
+    </span>
+  </mat-card-header>
+  <mat-card-content>
+
+    <ng-container *ngIf="!collapsible">
+      <div class="label-hr">
+        <span *ngIf="enrolmentStatus==='unenrolled'">{{enrollmentSectionLabel}}</span>
+        <span *ngIf="enrolmentStatus==='enrolled'">{{unerollmentSectionLabel}}</span>
+      </div>
+      <ng-container *ngIf="1===1 then estbSelectionList"></ng-container>
+    </ng-container>
+
+
+    <ng-template #estbSelectionList>
+      <div class="card-row">
+        <div class="card-column-third">
+          <mat-form-field appearance="fill">
+            <mat-label>Search</mat-label>
+            <input matInput id="orgNameFilter" [formControl]="orgNameFilter">
+
+          </mat-form-field>
+        </div>
+
+        <div class="card-column-third">
+          <span class="mat-form-field spacer">
+            <mat-checkbox color="primary" class="orgSelectAll" [(ngModel)]="selectAll" id="orgSelectAll"
+              [disabled]="isallLearnersEnrolled" (change)="toggleSelectAll()">Select
+              All</mat-checkbox>
+          </span>
+        </div>
+      </div>
+      <div class="card-row">
+        <div class="estb-container">
+          <mat-selection-list #orgSection *ngIf="serviceUsers" class="org-list">
+            <mat-list-option color="primary" *ngFor="let user of filteredAndPagedServiceUsers" class="chip_margin_top"
+              [selected]="user.checked" class="chip" value="{{user.id}}"
+              [disabled]="user.progress==='100'">
+              <span matLine>{{user.firstname}} {{user.lastname}}</span>
+            </mat-list-option>
+          </mat-selection-list>
+          <p *ngIf="serviceUsers?.length === 0">No results found</p>
+        </div>
+      </div>
+    </ng-template>
+  </mat-card-content>
+
+  <mat-card-footer>
+    <span class="spacer"></span>
+    <span>
+      <button type="button" id="save_org" mat-raised-button color="primary" [disabled]="isallLearnersEnrolled"
+        (click)="onSubmit()">Submit</button>
+    </span>
+  </mat-card-footer>
+</mat-card>

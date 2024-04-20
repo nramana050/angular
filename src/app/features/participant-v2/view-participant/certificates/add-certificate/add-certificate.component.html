@@ -1,0 +1,106 @@
+<div class="header">
+    <div class="tabWrapper">
+        <ul>
+            <li class="tabHead " (click)= "goToDigitalCourse()" routerLinkActive="active">
+                <a class="tab-item" id="usefulContacts" attr.aria-label="tab Month">Digital certificates</a>
+            </li>
+            <li  *ngIf="isAuthorized(120,2)" class="tabHead active" (click)= "goToProgramInfo()" routerLinkActive="active" [routerLink]="['/person-supported/certificates/upload-certificates-list']" queryParamsHandling="merge">
+                <a class="tab-item" id="usefulContacts" attr.aria-label="tab Month">External certificates</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<mat-card id='edit_content'>
+    <mat-card-header>
+        <span class="spacer"></span>
+        <span>
+            <button id="exit_button" mat-stroked-button color="primary" (click)="returnToDocuments()">Exit</button>
+        </span>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="info-text">
+            <p class="mt0">Maximum file size is 16MB.</p>
+        </div>
+        <div class="label-hr">
+            <span>Upload File *</span>
+        </div>
+        <div>
+            <file-upload [option]="option" [disabled]="false" [showSelector]="false" [showReset]="false"
+                (fileSelected)="onFileSelected($event)" [errorInput]="errorInput"></file-upload>
+        </div>
+
+        <div class="label-hr">
+            <span>Certificate details</span>
+        </div>
+        <form [formGroup]="contentForm" autocomplete="off">
+
+            <div class="card-row">
+                <div class="card-column">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Certificate name</mat-label>
+                        <input matInput type="text" formControlName="fileName" id="fileName" value="" required
+                            minlength="1">
+                        <mat-error *ngIf="contentForm.controls.fileName.invalid && !contentForm.controls.fileName.errors?.pattern && 
+                !contentForm.controls.fileName.errors?.minlength && !contentForm.controls.fileName.errors?.maxlength">
+                            Mandatory Field
+                        </mat-error>
+                        <mat-error *ngIf="contentForm.controls.fileName.errors?.minlength || 
+              contentForm.controls.fileName.errors?.maxlength">
+                            Minimum 1 and maximum 30 alphanumeric characters allowed
+                        </mat-error>
+                        <mat-error *ngIf="contentForm.controls.fileName.errors?.pattern && 
+              !contentForm.controls.fileName.errors?.minlength && !contentForm.controls.fileName.errors?.maxlength">
+                            Invalid Value: <> : " / \ | ? * are not allowed
+                        </mat-error>
+                        <mat-hint
+                            *ngIf="contentForm.controls.fileName.valid && contentForm.controls.fileName.value.length ==  (30-1) && contentForm.controls.fileName.value.length !=  (30) ">
+                            {{30 - contentForm.controls.fileName.value.length}} character left
+                        </mat-hint>
+                        <mat-hint
+                            *ngIf="contentForm.controls.fileName.valid && (30) >= contentForm.controls.fileName.value.length && (30-1) != contentForm.controls.fileName.value.length ">
+                            {{30 - contentForm.controls.fileName.value.length}} characters left
+                        </mat-hint>
+                        <mat-hint
+                            *ngIf="contentForm.controls.fileName.value.length == 0 && contentForm.controls.fileName.value.length >30">
+                            Minimum 1 and maximum 30 alphanumeric characters allowed
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="card-row">
+                <div class="card-column">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Date achieved</mat-label>
+                        <input matInput [matDatepicker]="achievedDate" [max]="maxDateOFJoinedUnityWork"
+                            [min]="minDateOFJoinedUnityWork" formControlName="achievedDate"
+                            placeholder="Date certificate achieved" id="achievedDate" required>
+                        <mat-datepicker-toggle matSuffix [for]="achievedDate"></mat-datepicker-toggle>
+                        <mat-datepicker #achievedDate></mat-datepicker>
+                        <mat-error *ngIf="contentForm.get('achievedDate').getError('required')">
+                            Date achieved is required
+                        </mat-error>
+                        <mat-error *ngIf="contentForm.get('achievedDate').errors?.matDatepickerParse">
+                            Invalid
+                            date
+                        </mat-error>
+                        <mat-error *ngIf="contentForm.get('achievedDate').getError('matDatepickerMax')
+                              && !contentForm.get('achievedDate').getError('matDatepickerParse')
+                              && !contentForm.get('achievedDate').getError('required')">
+                            Invalid achieved date. Date cannot be in future </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+        </form>
+
+    </mat-card-content>
+
+    <mat-card-footer>
+        <span class="spacer"></span>
+        <span>
+            <button type="submit" id="save_module_button" mat-flat-button color="primary"
+                [disabled]="saveButtonDisabled()" (click)="uploadDocument()">Save </button>
+        </span>
+    </mat-card-footer>
+</mat-card>

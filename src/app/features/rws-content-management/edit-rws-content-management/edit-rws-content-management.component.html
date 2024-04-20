@@ -1,0 +1,124 @@
+<mat-card id='edit_content'>
+    <mat-card-header>
+      <span class="spacer">
+        <app-stepper-navigation *ngIf="!isNew"></app-stepper-navigation>
+      </span>
+      <span>
+        <button id="exit_user_button" mat-stroked-button color="primary" [routerLink]="['/rws-content-management']">Exit</button>
+      </span>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="manageContentForm" (ngSubmit)="onSubmit(manageContentForm)" validate autocomplete="off">
+        <!-- add content details start -->
+        <div class="label-hr">
+          <span>Description</span>
+        </div>
+        <div class="card-row">
+            <div class="card-column">
+                <mat-form-field appearance="fill">
+                      <mat-label>Title</mat-label>
+                      <input matInput formControlName="title" id="title" value=""
+                      required minlength="3" maxlength="100">
+                      <mat-error *ngIf="manageContentForm.controls.title.invalid && !manageContentForm.controls.title.errors?.pattern && !manageContentForm.controls.title.errors?.minlength && !manageContentForm.controls.title.errors?.maxlength">
+                          Mandatory Field
+                      </mat-error>
+                      <mat-error *ngIf="manageContentForm.controls.title.errors?.pattern || manageContentForm.controls.title.errors?.maxlength || manageContentForm.controls.title.errors?.minlength">
+                          Invalid Value
+                      </mat-error>
+                      <mat-hint>
+                          Minimum 3 and maximum 100 alphanumeric and ! , . - /  ' are allowed
+                      </mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="card-column">
+                <mat-form-field appearance="fill">
+                    <mat-label>Author</mat-label>
+                    <input matInput formControlName="author" maxlength="20" id="author" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let option of filteredAuthorNameList | async" [value]="option.authorName"
+                        id="author_{{option.authorName}}">
+                        {{option.authorName}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-hint>
+                         Maximum 20 characters are allowed
+                    </mat-hint>
+                    <mat-error *ngIf="manageContentForm.controls.author.errors?.pattern || manageContentForm.controls.author.errors?.maxlength">
+                      Invalid Value
+                  </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+         <div class="card-row">
+              <div class="card-column">
+                  <mat-form-field appearance="fill">
+                  <mat-label>Resource type</mat-label>
+                  <mat-select formControlName="resourceTypeId" required >
+                      <mat-option *ngFor="let item of allRefdata?.refDataMap?.Resource_Type" [value]="item.id">{{item.description}} </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="manageContentForm.controls.resourceTypeId.invalid">
+                     Select resource type
+                  </mat-error>
+                  </mat-form-field>
+              </div>
+  
+              <div class="card-column">
+                <mat-form-field appearance="fill">
+                      <mat-label>Description</mat-label>
+                      <textarea matInput formControlName="description" rows="4" minlength="3" maxlength="200" required></textarea>
+                      <mat-hint *ngIf="manageContentForm.controls.description.valid && manageContentForm.controls.description.value.length !=(200-1) && (200) >= manageContentForm.controls.description.value.length"> {{200 - manageContentForm.controls.description.value.length}} characters left</mat-hint>
+                      <mat-hint *ngIf="manageContentForm.controls.description.value.length == (200-1)">
+                        1 character left
+                      </mat-hint>
+                      <mat-hint *ngIf="manageContentForm.controls.description.value.length === 0">
+                          Minimum 3 and maximum 200 characters allowed
+                      </mat-hint>
+                      <mat-error *ngIf="manageContentForm.controls.description.invalid && !manageContentForm.controls.description.errors?.minlength && !manageContentForm.controls.description.errors?.maxlength">
+                        Mandatory Field
+                      </mat-error>
+                      <mat-error *ngIf="manageContentForm.controls.description.errors?.maxlength || manageContentForm.controls.description.errors?.minlength">
+                        Invalid Value
+                    </mat-error>
+                </mat-form-field>
+              </div>
+          </div>
+          <div class="label-hr">
+            <span>Dates active </span>
+          </div>
+          <div class="card-row">
+            <div class="card-column">
+              <mat-form-field appearance="fill">
+                <mat-label>Start Date</mat-label>
+                <input matInput [matDatepicker]="curationStartDate" [min]="minStartDate" formControlName="curationStartDate" id="curationStartDate" required>
+                <mat-datepicker-toggle matSuffix [for]="curationStartDate"></mat-datepicker-toggle>
+                <mat-datepicker #curationStartDate></mat-datepicker>
+                <mat-error *ngIf="manageContentForm.get('curationStartDate').getError('matDatepickerMin')
+                                    && !manageContentForm.get('curationStartDate').getError('matDatepickerParse')
+                                    && !manageContentForm.get('curationStartDate').getError('required')"> Invalid Curation Start Date. Date cannot be in past </mat-error>
+                <mat-error *ngIf="!manageContentForm.get('curationStartDate').getError('matDatepickerMin')
+                                      && !manageContentForm.get('curationStartDate').getError('matDatepickerParse')
+                                      && manageContentForm.get('curationStartDate').getError('required')"> Mandatory field OR Invalid Date</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="card-column">
+              <mat-form-field appearance="fill">
+                <mat-label>End Date</mat-label>
+                <input matInput [matDatepicker]="curationEndDate" [min]="minEndDate" formControlName="curationEndDate"  id="curationEndDate" >
+                <mat-datepicker-toggle matSuffix [for]="curationEndDate"></mat-datepicker-toggle>
+                <mat-datepicker #curationEndDate></mat-datepicker>
+                <mat-error *ngIf="manageContentForm.get('curationEndDate').getError('matDatepickerMin')
+                                    && !manageContentForm.get('curationEndDate').getError('matDatepickerParse')"> Invalid Curation End Date. Date should be greater than start date </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        <!-- add content details end -->
+        <mat-card-footer>
+          <span class="spacer"></span>
+          <span>
+              <button type="submit" id="save_user_button" mat-flat-button color="primary"
+              [disabled]="!manageContentForm.valid">Save & Next</button>
+          </span>
+        </mat-card-footer>
+      </form>
+    </mat-card-content>
+  </mat-card>

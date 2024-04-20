@@ -1,0 +1,41 @@
+.errorPopup {
+    width:380px;
+   min-height: 180px;
+    .errorContent {
+        margin-top: 15px;
+        padding:10px;
+    }
+}
+
+.status{
+    background-color: #2e6eb8;
+    color: white;
+}
+
+.button_status{
+  background-color: rgb(228, 222, 222);
+  color: black;
+}
+
+.action {
+    position: relative;
+    margin: 25px 0;
+    .mat-form-field {
+      display: block;
+    }
+    button {
+      // position: absolute;
+      // right: 0px;
+      // bottom: -25px;
+      @media all and (max-width: 767px) {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        float: right;
+      }
+    }
+  }
+
+  .mt40{
+    margin-top: 40px;
+  }

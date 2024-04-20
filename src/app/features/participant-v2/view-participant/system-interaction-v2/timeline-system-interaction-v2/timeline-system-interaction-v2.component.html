@@ -1,0 +1,36 @@
+<mat-card>
+    <mat-card-header>
+        <span>System Interaction</span>
+        <span class="spacer"></span>
+      </mat-card-header>
+    <div class="track-tab-container">
+        <div class="f-structure-container">
+            <div class="f-structure-entry-container track-row" *ngFor="let entryData of fStructureData; index as i">
+                <ng-container [ngSwitch]="entryData.activityId">
+                    <ng-container [ngSwitch]="entryData.activityId">
+                        <ng-container *ngSwitchCase="getActivityId('System Interaction')">
+                            <div class="track-row-icon">
+                                <div class="track-icon">
+                                    <span class='material-icons'>laptop</span>
+                                </div>
+                            </div>
+                            <div class="entry-system-content">
+                                <mat-card class="entry-comment-content">
+                                    <mat-card-subtitle>{{entryData?.subTitle}}</mat-card-subtitle>
+                                    <ng-container *ngFor="let interaction of entryData?.formattedDescription">
+                                        <p class="entry-system-content">
+                                            {{interaction}}
+                                        </p>
+                                    </ng-container>
+                                </mat-card>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div class="load-more-container" *ngIf="loadMoreVisible">
+                <a href="javascript:void(0)" (click)="onClickLoadMore()">Load more</a>
+            </div>
+        </div>
+    </div>
+</mat-card>

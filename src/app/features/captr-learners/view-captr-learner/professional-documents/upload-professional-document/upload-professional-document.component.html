@@ -1,0 +1,84 @@
+<mat-card id='edit_content'>
+    <mat-card-header>
+      <span class="spacer"></span>
+      <span>
+        <button id="exit_button" mat-stroked-button color="primary" (click)="returnToDocuments()">Exit</button>
+      </span>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="info-text">
+        <p class="mt0">Maximum file size is 16MB.</p>
+      </div>
+      <div class="label-hr">
+        <span>Upload File *</span>
+      </div>
+      <div>
+        <file-upload [option]="option" [disabled]="false" [showSelector]="false" [showReset]="false"
+          (fileSelected)="onFileSelected($event)" [errorInput]="errorInput"></file-upload>
+      </div>
+  
+      <div class="label-hr">
+        <span>Details</span>
+      </div>
+      <form [formGroup]="contentForm" autocomplete="off">
+  
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="outline">
+              <mat-label>File name</mat-label>
+              <input matInput type="text" formControlName="fileName" id="fileName" value="" required minlength="1">
+              <mat-error *ngIf="contentForm.controls.fileName.invalid && !contentForm.controls.fileName.errors?.pattern && 
+                !contentForm.controls.fileName.errors?.minlength && !contentForm.controls.fileName.errors?.maxlength">
+                Mandatory Field
+              </mat-error>
+              <mat-error *ngIf="contentForm.controls.fileName.errors?.minlength || 
+              contentForm.controls.fileName.errors?.maxlength">
+                Minimum 1 and maximum 30 alphanumeric characters allowed
+              </mat-error>
+              <mat-error *ngIf="contentForm.controls.fileName.errors?.pattern && 
+              !contentForm.controls.fileName.errors?.minlength && !contentForm.controls.fileName.errors?.maxlength">
+                Invalid Value: <> : " / \ | ? * are not allowed
+              </mat-error>
+              <mat-hint
+                *ngIf="contentForm.controls.fileName.valid && contentForm.controls.fileName.value.length ==  (30-1) && contentForm.controls.fileName.value.length !=  (30) ">
+                {{30 - contentForm.controls.fileName.value.length}} character left
+              </mat-hint>
+              <mat-hint
+                *ngIf="contentForm.controls.fileName.valid && (30) >= contentForm.controls.fileName.value.length && (30-1) != contentForm.controls.fileName.value.length ">
+                {{30 - contentForm.controls.fileName.value.length}} characters left
+              </mat-hint>
+              <mat-hint *ngIf="contentForm.controls.fileName.value.length == 0 && contentForm.controls.fileName.value.length >30">
+                Minimum 1 and maximum 30 alphanumeric characters allowed
+              </mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="outline">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" rows="3" minlength="1" maxlength="100"></textarea>
+              <mat-hint
+                *ngIf="contentForm.controls.description.valid && contentForm.controls.description.value?.length !== 0">
+                {{100 - contentForm.controls.description.value.length}} characters left
+              </mat-hint>
+              <mat-hint *ngIf="contentForm.controls.description.value?.length === 0">
+                Maximum 100 characters allowed
+              </mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+  
+      </form>
+  
+    </mat-card-content>
+  
+    <mat-card-footer>
+      <span class="spacer"></span>
+      <span>
+        <button type="submit" id="save_module_button" mat-flat-button color="primary" [disabled]="saveButtonDisabled()"
+          (click)="uploadProfessionalDocument()">Save </button>
+      </span>
+    </mat-card-footer>
+  </mat-card>

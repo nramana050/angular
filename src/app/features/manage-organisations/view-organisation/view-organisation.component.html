@@ -1,0 +1,50 @@
+<mat-card id="view-organisation">
+  <mat-card-header>
+    <div class="view-organisation-header-container" >
+      <div class="break-class" *ngIf="organisationData">
+        {{organisationData.organizationName}}
+      </div>
+      <div class="view-organisation-action-btns-container">
+        <div>
+          <button *ngIf="organisationData"
+            id="edit_organisation_button" 
+            mat-stroked-button 
+            color="primary"
+            [routerLink]="['/manage-organisations/edit-organisation' + '/' + organisationData.id]"
+          >
+            Edit
+          </button>
+        </div>
+        <div>
+          <button 
+            id="exit_view_button" 
+            mat-stroked-button color="primary" 
+            [routerLink]="['/manage-organisations']"
+          >
+            Exit
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <dl>
+      <div *ngIf="organisationData?.organizationName">
+        <dt class="details-label">Organisation Name</dt>
+        <dd class="break-class">{{organisationData?.organizationName}}</dd>
+      </div>
+      <div *ngIf="organisationData?.lotName">
+        <dt class="details-label">Lot Name</dt>
+        <dd class="break-class">{{organisationData.lotName}}</dd>
+      </div>
+      <div *ngIf="organisationData?.contactEmail">
+        <dt class="details-label">Email</dt>
+        <dd>{{organisationData?.contactEmail}}</dd>
+      </div>
+      <div *ngIf="organisationData?.contactTelephone">
+        <dt class="details-label">Telephone</dt>
+        <dd>{{organisationData.contactTelephone}}</dd>
+      </div>
+    </dl>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,280 @@
+<div class="header">
+  <div class="tabWrapper">
+    <ul>
+      <li class="tabHead active" routerLinkActive="active">
+        <a class="tab-item" id="localJobs-tab" attr.aria-label="tab Month">Risk Assessment</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<mat-card id='view_user_profile' *ngIf="isShow">
+  <mat-card-header>
+    <div class="page-title-icon">
+      <span class="action-buttons">
+
+        <button type="button" id="exit_page" mat-stroked-button class="right" color="primary"
+          (click)="onExitClicked()">Exit</button>
+      </span>
+    </div>
+  </mat-card-header>
+  <mat-card-content class="local-jobs_container">
+    <form [formGroup]="riskForm" validate autocomplete="off">
+      <div class="lable-question"> <span>What is the graduates level of risk?*</span> </div>
+      <div class="card-column">
+        <mat-radio-group class="radioAlignment" formControlName="graduatesLevelRiskId" name="graduatesLevelRisk">
+          <mat-radio-button color="primary" (change)="radioChangeHandler($event,'graduatesLevelRiskId')"
+            *ngFor="let item of allData?.refDataMap?.Graduates_Level_Risk"
+            [value]="item.id">{{item.description}}</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <div class="lable-question"> <span>Who is at risk from the graduate?*</span></div>
+      <div class="card-column">
+        <div class="col-md-12">
+          <section class="checkbox-section text-center" formArrayName="riskFromGraduate">
+              <p *ngFor="let n of riskfromGraduateslist; let i = index">
+                <mat-checkbox color="primary" [formControlName]="i" class="checkbox-margin"  [value]="n.id"
+                (change)="updateChkbxArrayForGraduates(n, $event,i)">
+                {{n.description}}
+                </mat-checkbox>
+              </p>
+          </section>
+        </div>
+      </div>
+      <div *ngIf="showPublicRisk">
+        <div class="lable-question"> <span>Is there a specific group in the public that is at risk?*</span> </div>
+        <div class="card-column">
+          <div class="col-md-12">
+            <section class="checkbox-section text-center" formArrayName="groupPublicRisk" required>
+              <p *ngFor="let n of publicriskAssessment ; let i = index">
+                <mat-checkbox color="primary" [formControlName]="i" class="checkbox-margin"
+                  (change)="updateChkbxArrayforpublic(n, $event,i)" value="{{n.id}}" >{{n.description}}</mat-checkbox>
+              </p>
+            </section>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="showOtherPublicRisk">
+        <div class="lable-question"> <span>Other specific group in the public that is at risk?*</span> </div>
+        <div class="card-column textarea-container">        
+      <div class="card-row">
+        <div class="card-column">
+          <mat-form-field appearance="outline">
+            <input matInput formControlName="otherPublicRisk" rows="1" maxlength="100" required>
+            <mat-hint
+              *ngIf="riskForm.get('otherPublicRisk')?.value?.length !== 0 && riskForm.get('otherPublicRisk')?.value?.length !== null && riskForm.get('otherPublicRisk')?.value?.length !=(100-1) && (100) >= riskForm.get('otherPublicRisk')?.value?.length">
+              {{100 - riskForm.get('otherPublicRisk')?.value?.length}} characters left
+            </mat-hint>
+            <mat-hint *ngIf="riskForm.get('otherPublicRisk')?.value?.length == (100-1)">
+              1 character left
+            </mat-hint>
+            <mat-hint
+              *ngIf="riskForm.get('otherPublicRisk')?.value?.length === 0 || riskForm.get('otherPublicRisk')?.value?.length === null">
+              Maximum 100 characters allowed
+            </mat-hint>
+            <mat-error *ngIf="riskForm.get('otherPublicRisk')?.hasError('required')">
+              Other specific group in the public that is at risk is required
+          </mat-error>
+          </mat-form-field>
+          </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lable-question"> <span>Is the graduate MAPPA?*</span> </div>
+      <div class="card-column">
+        <mat-radio-group class="radioAlignment" formControlName="graduateMAPPA" name="graduateMAPPA">
+          <mat-radio-button color="primary" (change)="radioChangeHandler($event,'graduateMAPPA')"
+            *ngFor="let item of allData?.refDataMap?.Status_Yes_No"
+            [value]="item.id">{{item.description}}</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+
+      <div *ngIf="riskForm.get('graduateMAPPA')?.value === 1">
+        <div class="lable-question"> <span>What is the MAPPA category?*</span> </div>
+        <div class="card-column">
+          <mat-radio-group class="radioAlignment" formControlName="mappaCategory" name="mappaCategory" required>
+            <mat-radio-button color="primary" (change)="radioChangeHandler($event,'mappaCategory')"
+              *ngFor="let item of allData?.refDataMap?.MAPPA_Category_Level"
+              [value]="item.id">{{item.description}}</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <div class="lable-question"> <span>What is the MAPPA Level?*</span> </div>
+        <div class="card-column">
+          <mat-radio-group class="radioAlignment" formControlName="mappaLevel" name="mappaLevel" required>
+            <mat-radio-button color="primary" (change)="radioChangeHandler($event,'mappaLevel')"
+              *ngFor="let item of allData?.refDataMap?.MAPPA_Category_Level"
+              [value]="item.id">{{item.description}}</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+
+        <div class="lable-question"> <span>Is there any further information about the MAPPA category?*</span> </div>
+        <div class="card-column textarea-container">
+          <mat-form-field appearance="outline">
+            <textarea matInput formControlName="mappaCategoryInfo" rows="4" maxlength="500" required></textarea>
+            <mat-hint
+              *ngIf="riskForm.get('mappaCategoryInfo')?.value?.length !== 0 && riskForm.get('mappaCategoryInfo')?.value?.length !== null && riskForm.get('MAPPACategoryInfo')?.value?.length !=(500-1) && (500) >= riskForm.get('mappaCategoryInfo')?.value?.length">
+              {{500 - riskForm.get('mappaCategoryInfo')?.value?.length}} characters left
+            </mat-hint>
+            <mat-hint *ngIf="riskForm.get('mappaCategoryInfo')?.value?.length == (500-1)">
+              1 character left
+            </mat-hint>
+            <mat-hint
+              *ngIf="riskForm.get('mappaCategoryInfo')?.value?.length === 0 || riskForm.get('mappaCategoryInfo')?.value?.length === null">
+              Maximum 500 characters allowed
+            </mat-hint>
+            <mat-error *ngIf="riskForm.get('mappaCategoryInfo')?.hasError('required')">
+              Is there any further information about the MAPPA category is required
+          </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+
+      <div class="lable-question"> <span>Is there a history of sexual offending?*</span> </div>
+      <div class="card-column">
+        <mat-radio-group class="radioAlignment" formControlName="isSexualOffendingHistory"
+          name="isSexualOffendingHistory">
+          <mat-radio-button color="primary" (change)="radioChangeHandler($event,'isSexualOffendingHistory')"
+            *ngFor="let item of allData?.refDataMap?.Status_Yes_No"
+            [value]="item.id">{{item.description}}</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <div *ngIf="riskForm.get('isSexualOffendingHistory')?.value === 1">
+        <div class="lable-question"> <span>Is there any further information about the sexual offending history?*</span>
+        </div>
+        <div class="card-column textarea-container">
+          <mat-form-field appearance="outline">
+            <textarea matInput formControlName="sexualOffendingHistory" rows="4" maxlength="500" required></textarea>
+            <mat-error *ngIf="riskForm.get('sexualOffendingHistory')?.hasError('required')">
+              Is there any further information about the sexual offending history is required
+          </mat-error>
+            <mat-hint
+              *ngIf="riskForm.get('sexualOffendingHistory')?.value?.length !== 0 && riskForm.get('sexualOffendingHistory')?.value?.length !== null && riskForm.get('sexualOffendingHistory')?.value?.length !=(500-1) && (500) >= riskForm.get('sexualOffendingHistory')?.value?.length">
+              {{500 - riskForm.get('sexualOffendingHistory')?.value?.length}} characters left
+            </mat-hint>
+            <mat-hint *ngIf="riskForm.get('sexualOffendingHistory')?.value?.length == (500-1)">
+              1 character left
+            </mat-hint>
+            <mat-hint
+              *ngIf="riskForm.get('sexualOffendingHistory')?.value?.length === 0 || riskForm.get('sexualOffendingHistory')?.value?.length === null">
+              Maximum 500 characters allowed
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="lable-question"> <span>What information has been used to determine the risk of the graduate?*</span>
+      </div>
+      <div class="card-column textarea-container">
+        <mat-form-field appearance="outline">
+          <textarea matInput formControlName="determineRiskGraduateInfo" rows="4"  minlength="1" maxlength="1000"></textarea>
+          <mat-error *ngIf="riskForm.get('determineRiskGraduateInfo')?.hasError('required')">
+            Determine the risk of the graduate information is required
+        </mat-error>
+          <mat-hint
+            *ngIf="riskForm.get('determineRiskGraduateInfo')?.value?.length !== 0 && riskForm.get('determineRiskGraduateInfo')?.value?.length !== null && riskForm.get('determineRiskGraduateInfo')?.value?.length !=(1000-1) && (1000) >= riskForm.get('determineRiskGraduateInfo')?.value?.length">
+            {{1000 - riskForm.get('determineRiskGraduateInfo')?.value?.length}} characters left
+          </mat-hint>
+          <mat-hint *ngIf="riskForm.get('determineRiskGraduateInfo')?.value?.length == (1000-1)">
+            1 character left
+          </mat-hint>
+          <mat-hint
+            *ngIf="riskForm.get('determineRiskGraduateInfo')?.value?.length === 0 || riskForm.get('determineRiskGraduateInfo')?.value?.length === null">
+            Maximum 1000 characters allowed
+          </mat-hint>
+        </mat-form-field>
+      </div>
+
+
+      <div class="label-hr"> <span> Upload file*</span> </div>
+
+      <div class="info-text">
+        <p class="mt0">Maximum file size is 16MB.</p>
+      </div>
+      <div>
+        <file-upload [option]="option" [disabled]="false" [showSelector]="false" [showReset]="false"
+          (fileSelected)="onFileSelected($event)" [errorInput]="errorInput"></file-upload>
+      </div>
+
+      <div class="card-row">
+        <div class="card-column">
+      <mat-form-field appearance="outline">
+        <mat-label>File name</mat-label>
+        <input matInput type="text" formControlName="fileName" id="fileName" value="" required minlength="1">
+        <mat-hint
+        *ngIf="riskForm.get('fileName')?.value?.length === 0 || riskForm.get('fileName')?.value?.length === null">
+        Maximum 30 characters allowed
+      </mat-hint>
+        <mat-error *ngIf="riskForm.controls.fileName.invalid && !riskForm.controls.fileName.errors?.pattern && 
+                !riskForm.controls.fileName.errors?.minlength && !riskForm.controls.fileName.errors?.maxlength">
+                File name is required
+              </mat-error>
+              <mat-error *ngIf="riskForm.controls.fileName.errors?.minlength || 
+              riskForm.controls.fileName.errors?.maxlength">
+                Minimum 1 and maximum 30 alphanumeric characters allowed
+              </mat-error>
+              <mat-error *ngIf="riskForm.controls.fileName.errors?.pattern && 
+              !riskForm.controls.fileName.errors?.minlength && !riskForm.controls.fileName.errors?.maxlength">
+                Invalid Value: <> : " / \ | ? * are not allowed
+              </mat-error>
+              <mat-hint
+                *ngIf="riskForm.controls.fileName.valid && riskForm.controls.fileName.value.length ==  (30-1) && riskForm.controls.fileName.value.length !=  (30) ">
+                {{30 - riskForm.controls.fileName.value.length}} character left
+              </mat-hint>
+              <mat-hint
+                *ngIf="riskForm.controls.fileName.valid && (30) >= riskForm.controls.fileName?.value.length && (30-1) != riskForm.controls.fileName?.value.length ">
+                {{30 - riskForm.controls.fileName.value.length}} characters left
+              </mat-hint>
+              <mat-hint *ngIf="   riskForm.get('fileName')?.value?.length == 0 && riskForm.controls.fileName?.value.length >30">
+                Minimum 1 and maximum 30 alphanumeric characters allowed
+              </mat-hint>
+      
+        </mat-form-field>
+      </div>
+      </div>
+
+      <div class="card-row">
+        <div class="card-column">
+
+        <mat-form-field appearance="outline"> 
+          <mat-label> Date of risk assessment</mat-label>
+      <input matInput [matDatepicker]="dataOfRiskAssessment" [min]="minEndDate" [max]="maxStartDate"
+        formControlName="dataOfRiskAssessment" placeholder="Date of risk assessment" id="dataOfRiskAssessment">
+    
+    <mat-datepicker-toggle matSuffix [for]="dataOfRiskAssessment"></mat-datepicker-toggle>
+    <mat-datepicker #dataOfRiskAssessment></mat-datepicker>
+    <mat-error *ngIf="riskForm.get('dataOfRiskAssessment').hasError('matDatepickerMax')
+    && !riskForm.get('dataOfRiskAssessment').hasError('required')
+    && !riskForm.get('dataOfRiskAssessment').hasError('matDatepickerParse')">
+     Date of risk assessment cannot be in future</mat-error>
+     <mat-error *ngIf="riskForm.get('dataOfRiskAssessment').hasError('required')">
+      Date of risk assessment is required</mat-error>
+      <mat-error *ngIf="riskForm.get('dataOfRiskAssessment').hasError('matDatepickerParse') 
+      && !riskForm.get('dataOfRiskAssessment').hasError('required') ">
+        Invalid date of risk assessment</mat-error>
+     </mat-form-field> 
+     </div>
+     </div>   
+      <div class="lable-question"> <span>Date of risk assessment review</span> </div>
+      <div *ngIf="dataOfRiskAssessment!=null "><input matInput [value]="reviewDate() | date : 'dd MMMM yyyy'" readonly></div>
+      
+
+
+
+      <mat-card-footer>
+        <span class="spacer"></span>
+        <span>
+          <button *ngIf="isNew" id="save_risk_button" mat-flat-button color="primary" (click)="onSubmit(riskForm)"
+            type="button" [disabled]="saveButtonDisabled() ">Save</button>
+          <button *ngIf="!isNew" id="save_risk_button" mat-flat-button color="primary" (click)="onSubmit(riskForm)"
+            type="button" [disabled]="saveButtonDisabled()">Update</button>
+        </span>
+      </mat-card-footer>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,122 @@
+<div class="header">
+    <div class="tabWrapper">
+        <ul>
+            <li class="tabHead active" (click)= "goToDigitalCourse()" routerLinkActive="active" >
+                <a class="tab-item" id="usefulContacts" attr.aria-label="tab Month">Digital course progress</a>
+            </li>
+            <li class="tabHead "  *ngIf="isAuthorized(50,2)" (click)= "goToProgramInfo()" routerLinkActive="active">
+                <a class="tab-item" id="usefulContacts" attr.aria-label="tab Month">Programme enrolment</a>
+            </li>
+            <li class="tabHead"  *ngIf="isAuthorized(50,2)" (click)="goToProgramOutcome()" routerLinkActive="active" >
+                <a class="tab-item" id="usefulContacts" attr.aria-label="tab Month">Programme outcomes</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<mat-card>
+
+    <mat-card-content class="moodleCourses_container">
+
+        <mat-card-header>
+            <div class="search-container example-form" style="margin-right: 10px;">
+                <mat-form-field id="search_service_user_form" appearance="fill" class="example-full-width">
+                    <mat-label>Search by course</mat-label>
+                    <input id="search_service_user_input" autocomplete="off"
+                        (keydown.enter)="onFilter(search_service_user_input.value)" matInput
+                        #search_service_user_input aria-label="Search a user">
+                    <button id="do_search_button" mat-button matSuffix mat-icon-button aria-label="Search"
+                        (click)="onFilter(search_service_user_input.value)">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                    <button id="clear_search_button" *ngIf="search_service_user_input.value !==''" mat-button matSuffix
+                        mat-icon-button aria-label="Clear" (click)="onFilter(''); search_service_user_input.value=''">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+
+            <div class="search-container">
+                <mat-form-field class="search_by_lr" style="align-self: flex-start;">
+                    <mat-select (selectionChange)="onStatusChange()" [(ngModel)]="selectStatus">
+                        <mat-option value="allCourses">All courses</mat-option>
+                        <mat-option value="Completed">Completed</mat-option>
+                        <mat-option value="In Progress">In progress</mat-option>
+                        <mat-option value="Not Started">Not started</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <span class="spacer"></span>
+            <span>
+                <button type="button" id="exit_page" mat-stroked-button class="right" color="primary"
+                    (click)="onExitClicked()">Exit</button>
+            </span>
+        </mat-card-header>
+
+        <mat-table id="moodleCourses_table" #table [dataSource]="dataSource" class="isMobile" matSort>
+
+            <ng-container matColumnDef="fullName">
+                <mat-header-cell *matHeaderCellDef id="template_name_button" class="moodleCourses" mat-sort-header>
+                    Moodle courses
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element" class="moodleCourses"><span class="mobile-label">Moodle course:
+                    </span>
+                    {{element.fullname}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="enrolmentDate">
+                <mat-header-cell *matHeaderCellDef id="date_created_button">
+                    Enrolment date
+                </mat-header-cell>
+                <mat-cell class="width-15" *matCellDef="let element"><span class="mobile-label">Enrolment date: </span>
+                    {{element.enrollmentdate | customMonthFormat }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="progress">
+                <mat-header-cell *matHeaderCellDef id="progress">
+                    {{progressFeild}}
+                </mat-header-cell>
+                <mat-cell class="width-15" *matCellDef="let element"><span class="mobile-label">{{progressFeild}}
+                    </span>
+                    {{element.progress}}% Completed</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <mat-header-cell class="width-15" *matHeaderCellDef id="date_created_button"> Status
+                </mat-header-cell>
+                <mat-cell class="width-15" *matCellDef="let element"><span
+                        class="mobile-label call-status-label">Status: </span>
+                    <span class="status"> {{element.status}}</span>
+
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef class="actions-column">Actions</mat-header-cell>
+                <mat-cell *matCellDef="let element" class="actions-column"> <span class="mobile-label"></span>
+
+                    <button *ngIf="isAuthorized(86,2)" id="view_course_button_{{element.fullname}}" mat-icon-button
+                    (click)="courseLaunch(element.id,'')" color="primary" title="View" attr.aria-label="View">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+
+                    <button *ngIf=" isAuthorized(86,4)" id="unenroll_button_{{element.fullname}}" mat-icon-button title="Unenroll"
+                       (click)="onUnenroll(element.id,element.fullname)"
+                        attr.aria-label="Unenroll {{element.fullname}}" color="secondary">
+                        <mat-icon color="primary">person</mat-icon>
+                        <mat-icon color="primary" class="unenroll">remove</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+
+        <mat-paginator id="courses_pagination" [pageSize]="pageSize" [showFirstLastButtons]='true'
+            [hidePageSize]="true">
+        </mat-paginator>
+    </mat-card-content>
+
+</mat-card>

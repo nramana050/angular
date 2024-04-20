@@ -1,0 +1,423 @@
+<mat-card id='edit_learners' *ngIf="refData">
+
+    <mat-card-header>
+        <span *ngIf="!isNew">
+            <app-stepper-navigation></app-stepper-navigation>
+        </span>
+        <span class="spacer"></span>
+        <div>
+            <span class="action-buttons">
+                <button id="exit_user_button" mat-stroked-button color="primary"
+                    [routerLink]="['/captr-learner']">Exit</button>
+            </span>
+        </div>
+    </mat-card-header>
+
+    <mat-card-content>
+        <form [formGroup]="learnersForm" (ngSubmit)="onSubmit()" validate autocomplete="off">
+            <div class="label-hr"> <span> Referral information </span> </div>
+            <div formGroupName="referalInformation">
+                <div class="card-row">
+                    <div class="card-column">
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>
+                                Who made the referral
+                            </mat-label>
+                            <mat-select placeholder="Who made the referral" formControlName="referalTypeId" required>
+                                <mat-option *ngFor="let item of refData?.referralType" [value]="item.id"
+                                    id="referalTypeId">
+                                    {{item.value}}</mat-option>
+                            </mat-select>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('referalTypeId').hasError('required')">
+                                Who made the referral is required
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+                    <div class="card-column">
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>Referral details</mat-label>
+                            <input matInput placeholder="Referral details" formControlName="referalDetails"
+                                id="referalDetails" required>
+                            <mat-hint align="start">Maximum 100 characters are allowed</mat-hint>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('referalDetails').hasError('required')">
+                                Referral detail is required</mat-error>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('referalDetails').hasError('pattern')">
+                                Invalid Referral details</mat-error>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('referalDetails').hasError('maxlength')">
+                                Referral details should be 100 characters or less
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+                </div>
+
+                <div class="card-row">
+                    <div class="card-column">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Referrer name</mat-label>
+                            <input matInput formControlName="referalName" placeholder="Referrer name" id="referalName"
+                                required>
+                            <mat-hint align="start">Maximum 100 characters are allowed</mat-hint>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('referalName').errors?.required">
+                                Referrer name is required
+                            </mat-error>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('referalName').hasError('maxlength')">
+                                Referrer name should be 100 characters or less
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card-column">
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>Referral organisation</mat-label>
+                            <input matInput formControlName="referalOrganization" id="referalOrganization"
+                                placeholder="Referral organisation" required>
+                            <mat-hint align="start">Maximum 100 characters are allowed</mat-hint>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('referalOrganization').hasError('pattern')">
+                                Invalid referral organisation</mat-error>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('referalOrganization').errors?.required">
+                                Referral organisation is required
+                            </mat-error>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('referalOrganization').hasError('maxlength')">
+                                Referrer organisation should be 100 characters or less
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+                </div>
+                <div class="card-row">
+                    <div class="card-column">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Contact number</mat-label>
+                            <input matInput formControlName="contactNumber" id="contactNumber"
+                                placeholder="Contact Number" required>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('contactNumber').hasError('pattern')">
+                                Contact number is Invalid
+                            </mat-error>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('contactNumber').hasError('required')">
+                                Contact number is required</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card-column">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Contact email</mat-label>
+                            <input matInput formControlName="contactEmail" id="contactEmail"
+                                placeholder="Please enter an Email address" required>
+                            <mat-error>
+                                <mat-error
+                                    *ngIf="learnersForm.get('referalInformation').get('contactEmail').hasError('pattern')">
+                                    Invalid email address
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="learnersForm.get('referalInformation').get('contactEmail').hasError('required')">
+                                    Email address is required
+                                </mat-error>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="card-row">
+                    <div class="card-column">
+                        <mat-form-field appearance="fill">
+                            <mat-label>
+                                How did the participant hear about the service?
+                            </mat-label>
+                            <input matInput formControlName="hearAboutService" id="hearAboutService"
+                                placeholder="How did the participant hear about the service?" required>
+                            <mat-hint align="start">Maximum 100 characters are allowed</mat-hint>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('hearAboutService').hasError('pattern')">
+                                Invalid email address
+                            </mat-error>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('hearAboutService').errors?.required">
+                                How did the participant hear about the service is required
+                            </mat-error>
+                            <mat-error
+                                *ngIf="learnersForm.get('referalInformation').get('hearAboutService').hasError('maxlength')">
+                                How did the participant hear about the service should be 100 characters or less
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="label-hr"> <span> Prison information </span> </div>
+            <div formGroupName="prisonInformation">
+                <div class="card-row">
+                    <div class="card-column">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Released from prison in the last two years?</mat-label>
+                            <mat-select placeholder="Released from prison in the last two years?"
+                                formControlName='isReleasedFromPrisonInLastTwoYears'>
+                                <mat-option [value]="true">Yes</mat-option>
+                                <mat-option [value]="false">No</mat-option>
+                                <mat-option [value]="null" id="isReleasedFromPrisonInLastTwoYearss-null"> Clear
+                                    Selection </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="card-column"
+                        *ngIf="learnersForm.get('prisonInformation').get('isReleasedFromPrisonInLastTwoYears').value">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Prison released from</mat-label>
+                            <input matInput placeholder="Prison released from" formControlName="prisonReleasedFrom"
+                                id="prisonReleasedFrom" required>
+                            <mat-hint align="start">Maximum 150 characters are allowed</mat-hint>
+                            <mat-error
+                                *ngIf="learnersForm.get('prisonInformation').get('prisonReleasedFrom').hasError('required')">
+                                Prison released from is required.
+                            </mat-error>
+                            <mat-error
+                                *ngIf="learnersForm.get('prisonInformation').get('prisonReleasedFrom').hasError('maxlength')">
+                                Prison released from should be less than 150 chars.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="card-row"
+                    *ngIf="learnersForm.get('prisonInformation').get('isReleasedFromPrisonInLastTwoYears').value">
+                    <div class="card-column">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Date of release</mat-label>
+                            <input matInput [matDatepicker]="dateOfRelease" formControlName="dateOfRelease"
+                                placeholder="Date of release" id="dateOfRelease" required>
+                            <mat-datepicker-toggle matSuffix [for]="dateOfRelease"></mat-datepicker-toggle>
+                            <mat-datepicker #dateOfRelease></mat-datepicker>
+                            <mat-error
+                                *ngIf="learnersForm.get('prisonInformation').get('dateOfRelease').getError('matDatepickerParse')">
+                                Invaliid Date of release
+                            </mat-error>
+                            <mat-error
+                                *ngIf="learnersForm.get('prisonInformation').get('dateOfRelease').errors?.required && !learnersForm.get('prisonInformation').get('dateOfRelease').getError('matDatepickerParse')">
+                                Date of release is required
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="card-column">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Licence/bail conditions</mat-label>
+                            <input matInput placeholder="Licence/bail conditions" formControlName="licenceBailCondition"
+                                id="licenceBailCondition" required>
+                            <mat-hint align="start">Maximum 500 characters are allowed</mat-hint>
+                            <mat-error
+                                *ngIf="learnersForm.get('prisonInformation').get('licenceBailCondition').hasError('maxlength')">
+                                Licence/bail condition should be less than 500 chars.
+                            </mat-error>
+                            <mat-error
+                                *ngIf="learnersForm.get('prisonInformation').get('licenceBailCondition').hasError('required')">
+                                Licence/bail condition is required.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="label-hr">
+                <span>External support</span>
+            </div>
+            <div formGroupName="externalSupports">
+                <ng-container formArrayName="externalSupportList">
+                    <ng-container *ngFor="let item of refData?.supportArea; let i=index">
+
+                        <div class="card-row" [formGroupName]="i">
+                            <div class="card-column-33">
+                                <mat-checkbox color="primary" formControlName="supportAreaId" (change)="checkSupportId(i,item)"
+                                    [value]="item?.id">
+                                    {{item?.value}}
+                                </mat-checkbox>
+                            </div>
+                            <div class="card-column-33"
+                                *ngIf="learnersForm.get('externalSupports').get('externalSupportList').at(i)?.get('supportAreaId')?.value">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Who is providing support</mat-label>
+                                    <input matInput formControlName="providingSupport" id="providingSupport"
+                                        placeholder="Who is providing support" required>
+                                    <mat-hint align="start">Maximum 50 characters are allowed</mat-hint>
+                                    <mat-error
+                                        *ngIf="learnersForm.get('externalSupports').get('externalSupportList').at(i)?.get('providingSupport')?.hasError('required')">
+                                        Providing support is required.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="learnersForm.get('externalSupports').get('externalSupportList').at(i)?.get('providingSupport')?.hasError('maxlength')">
+                                        Providing support should be less than 50 chars.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="card-column-33"
+                                *ngIf="learnersForm.get('externalSupports').get('externalSupportList').at(i)?.get('supportAreaId')?.value">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Support details</mat-label>
+                                    <input matInput formControlName="supportDetails" id="supportDetails"
+                                        placeholder="Suppot details" required>
+                                    <mat-hint align="start">Maximum 100 characters are allowed</mat-hint>
+                                    <mat-error
+                                        *ngIf="learnersForm.get('externalSupports').get('externalSupportList').at(i)?.get('supportDetails')?.hasError('required')">
+                                        Support detail is required.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="learnersForm.get('externalSupports').get('externalSupportList').at(i)?.get('supportDetails')?.hasError('maxlength')">
+                                        Support detail should be less than 100 chars.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+
+
+
+            <div class="label-hr">
+                <span>ID and Documents</span>
+            </div>
+            <div formGroupName="idAndDocuments">
+                <ng-container formArrayName="idAndDocumentList">
+                    <ng-container *ngFor="let item of refData?.document; let i=index">
+
+                        <div class="card-row" [formGroupName]="i">
+                            <div class="card-column-33">
+                                <mat-checkbox color="primary" formControlName="documentId" [value]="item.id"
+                                    (change)="checkIdAndDoc(i,item)">
+                                    {{item?.value}}
+                                </mat-checkbox>
+                            </div>
+                            <div class="card-column-33"
+                                *ngIf="learnersForm.get('idAndDocuments').get('idAndDocumentList').at(i)?.get('documentId')?.value">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Is this current?</mat-label>
+                                    <input matInput formControlName="documentDescription" id="documentDescription"
+                                        placeholder="Is this current?" required>
+                                    <mat-hint align="start">Maximum 50 characters are allowed</mat-hint>
+                                    <mat-error
+                                        *ngIf="learnersForm.get('idAndDocuments').get('idAndDocumentList').at(i)?.get('documentDescription')?.hasError('required')">
+                                        Is this current is required.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="learnersForm.get('idAndDocuments').get('idAndDocumentList').at(i)?.get('documentDescription')?.hasError('maxlength')">
+                                        Is this current should be less than 50 chars.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="card-column-33"
+                                *ngIf="learnersForm.get('idAndDocuments').get('idAndDocumentList').at(i)?.get('documentId')?.value">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Where is it held?</mat-label>
+                                    <input matInput formControlName="documentLocation" id="documentLocation"
+                                        placeholder="Where is it held?" required>
+                                    <mat-hint align="start">Maximum 50 characters are allowed</mat-hint>
+                                    <mat-error
+                                        *ngIf="learnersForm.get('idAndDocuments').get('idAndDocumentList').at(i)?.get('documentLocation')?.hasError('required')">
+                                        Where is it held is required.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="learnersForm.get('idAndDocuments').get('idAndDocumentList').at(i)?.get('documentLocation')?.hasError('maxlength')">
+                                        Where is it held should be less than 50 chars.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+
+            <div class="label-hr"> <span> Self employment </span> </div>
+            <div formGroupName="selfEmployment">
+
+                <div class="card-row">
+                    <div class="card-column">
+                        <mat-form-field appearance="fill">
+                            <mat-label>In 2000 words or less, describe your business ideas</mat-label>
+                            <input matInput formControlName="businessIdea" id="businessIdea"
+                                placeholder="Describe your business ideas" required>
+                            <mat-hint align="start">Maximum 2000 characters are allowed</mat-hint>
+                            <mat-error
+                                *ngIf="learnersForm.get('selfEmployment').get('businessIdea').hasError('required')">
+                                Description is required.
+                            </mat-error>
+                            <mat-error
+                                *ngIf="learnersForm.get('selfEmployment').get('businessIdea').hasError('maxlength')">
+                                Description should be less than 2000 chars.
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>
+                                Have you previously been self employed?
+                            </mat-label>
+                            <mat-select placeholder="Have you previously been self employed?"
+                                formControlName="isPreviouslySelfEmployed">
+                                <mat-option *ngFor="let item of refAnswer" [value]="item?.id" id="item">
+                                    {{item.answerName}}</mat-option>
+                                <mat-option [value]="null" id="isPreviouslySelfEmployed-null"> Clear Selection
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <p>What is the current status?</p>
+                        <mat-radio-group aria-label="Select an option" formControlName="tradingStatus">
+                            <mat-radio-button *ngFor="let item of refData?.tradingStatus"
+                                [value]="item?.id">{{item?.value}}
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+
+                    <div class="card-column">
+                        <mat-form-field appearance="fill">
+                            <mat-label>
+                                If still on probation, are they aware of the intention to become self employed?
+                            </mat-label>
+                            <mat-select
+                                placeholder="If still on probation, are they aware of the intention to become self employed?"
+                                formControlName="isProbation">
+                                <mat-option *ngFor="let item of refAnswer" [value]="item?.id" id="item">
+                                    {{item.answerName}}</mat-option>
+                                <mat-option [value]="null" id="isProbation-null"> Clear Selection </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>
+                                What is your UTR number?(unique tax reference number)
+                            </mat-label>
+                            <input matInput placeholder="What is your UTR number?" formControlName="utrNumber"
+                                id="utrNumber">
+                            <mat-hint align="start">Example: 1000000000 (10-digit number)</mat-hint>
+                            <mat-error
+                                *ngIf="learnersForm.get('selfEmployment').get('utrNumber').hasError('maxlength')">
+                                UTR number should be less than 9999999999
+                            </mat-error>
+                            <mat-error
+                                *ngIf="learnersForm.get('selfEmployment').get('utrNumber').hasError('minlength')">
+                                UTR number should be greater than 999999999
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <mat-card-footer>
+                <span class="spacer"></span>
+                <span>
+                    <button type="submit" id="save_user_button" mat-flat-button color="primary"
+                        [disabled]="learnersForm.invalid">Save</button>
+                </span>
+            </mat-card-footer>
+
+        </form>
+    </mat-card-content>
+</mat-card>

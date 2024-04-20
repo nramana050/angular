@@ -1,0 +1,37 @@
+#image_uploads {
+  display: none
+}
+span {
+  display: inline-block;
+  margin-right: 1rem;
+}
+p {
+  margin: 4px 0 7px 0 !important;
+}
+.uploadImg {
+  margin: 0 0 20px 0;
+}
+.preview {
+  display: inline-block;
+  margin: 0 0 0 10px;
+}
+.example-chip-list {
+  width: 100%;
+}
+.profileImage {
+  margin: 12px 0 0 0;
+  width: 120px;
+  display: block;
+}
+.custom-hint {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.54);;
+  margin-top: 0.54166667em;
+}
+.showUploadImg {
+  display: block;
+}
+.hideUploadImg {
+  display: none;
+}

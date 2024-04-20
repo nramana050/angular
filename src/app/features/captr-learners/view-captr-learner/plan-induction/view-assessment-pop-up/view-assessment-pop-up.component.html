@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>{{fname | titlecase }} answers</h2>
+<mat-dialog-content class="mat-typography">
+    <mat-card-content class="assessments_container">
+        <div id='assessment_container' class="assessments_container">
+            <div [ngClass]='"fade"' id="surveyElement"></div>
+        </div>
+    </mat-card-content>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button class="gds-button button-secondary" mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

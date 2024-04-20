@@ -1,0 +1,62 @@
+<mat-card id='view_job'>
+  <mat-card-header>
+    <span id="title" > {{jobData.jobTitle}} </span>
+    <span class="spacer"></span>
+    <span>
+      <button id="edit_view_button" mat-stroked-button color="primary" (click)="onExitClicked()">Exit</button>
+    </span>
+  </mat-card-header>
+
+  <mat-card-content class="view_user-plan_container">
+    <div class="card-row mb20">
+      <div class="card-column">
+        <div class="card-row" *ngIf="jobData?.jobTitle">
+          <p class="info">
+            <span class="details_label">Job Title</span>
+            <span id="job_title">{{jobData.jobTitle}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="jobData?.pay">
+          <p class="info">
+            <span class="details_label">Pay</span>
+            <span id="pay">{{jobData.pay}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="jobData?.location">
+          <p class="info">
+            <span class="details_label">Location</span>
+            <span id="location">{{jobData.location}}</span>
+          </p>
+        </div>
+      </div>
+      <div class="card-column">
+        <div class="card-row" *ngIf="jobData?.postingDate">
+          <p class="info">
+            <span class="details_label">Posting Date</span>
+            <span id="posting_date">{{jobData.postingDate |date:'dd MMM yyyy'}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="jobData?.closingDate">
+          <p class="info">
+            <span class="details_label">Closing Date</span>
+            <span id="closing_date">{{jobData.closingDate |date:'dd MMM yyyy'}}</span>
+          </p>
+        </div>
+        
+        
+      </div>
+    </div>
+    <div class="card-row">
+      <div class="card-column-100">
+        <div class="label-hr">
+          <span id="coursesId">
+            <a>Job Description</a>
+          </span>
+        </div>
+        <p class="info"> <span id="job_description">{{jobData.jobDescription}}</span></p>
+
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+

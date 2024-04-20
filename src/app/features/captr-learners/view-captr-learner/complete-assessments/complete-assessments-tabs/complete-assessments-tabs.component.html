@@ -1,0 +1,14 @@
+<div class="header">
+    <div class="tabWrapper">
+        <ul>
+            <li class="tabHead" [routerLink]="['./todo']" routerLinkActive="active" queryParamsHandling="preserve">
+                <a class="tab-item" id="year-tab" attr.aria-label="To-do">To-do</a>
+            </li>
+            <li class="tabHead" [routerLink]="['./completed']" routerLinkActive="active" queryParamsHandling="preserve">
+                <a class="tab-item" id="year-tab" attr.aria-label="Completed">Completed</a>
+            </li>
+        </ul>
+  
+    </div>
+  </div>
+  <router-outlet></router-outlet>

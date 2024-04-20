@@ -1,0 +1,76 @@
+<mat-dialog-content class="modal-container">
+    <label id="add-intervention-label">Print Case Notes</label>
+    <form [formGroup]="printcaseNoteForm" (submit)="onPrintCase(printcaseNoteForm)">
+        <div class="card-row">
+            <div class="card-column">
+                <mat-form-field appearance="outline">
+                    <mat-label>Activity</mat-label>
+                    <mat-select placeholder="Activity" formControlName="activityIdList" required multiple>
+                        <mat-option #allSelectedF (click)="toggleAllActivitySelection(allSelectedF)">
+                            Select All
+                        </mat-option>
+                        <mat-option *ngFor="let activity of caseNoteActivityList" [value]="activity.id"
+                            id="activity">{{activity.description}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="printcaseNoteForm.get('activityIdList').hasError('required')"> Activity name is
+                        required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card-column">
+                <mat-form-field appearance="outline">
+
+                    <mat-label>Worker</mat-label>
+                    <mat-select placeholder="Worker" formControlName="noteSenderId" required multiple>
+                        <mat-option #allSelectedFW (click)="toggleAllWorkerSelection(allSelectedFW)">
+                            Select All
+                        </mat-option>
+                        <mat-option *ngFor="let worker of workerList" [value]="worker.id"
+                            id="worker">{{worker.userFullName}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="printcaseNoteForm.get('noteSenderId').hasError('required')"> Worker name is
+                        required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="card-row">
+            <div class="card-column flex-row">
+                <mat-form-field appearance="outline">
+                    <mat-label> Start Date</mat-label>
+                    <input matInput [matDatepicker]="datePicker" formControlName="startDate" placeholder="Date"
+                        id="date" [max]="calculateMaxStartDate()">
+                    <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #datePicker></mat-datepicker>
+                    <mat-error *ngIf="printcaseNoteForm.get('startDate').hasError('required')">
+                        Date is required
+                    </mat-error>
+                    <mat-error *ngIf="printcaseNoteForm.get('startDate').errors?.matDatepickerParse">
+                        Invalid date
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label> End Date</mat-label>
+                    <input matInput [matDatepicker]="Picker" formControlName="endDate" placeholder="Date" id="date"
+                        [min]="calculateMinPlannedEndDate()">
+                    <mat-datepicker-toggle matSuffix [for]="Picker"></mat-datepicker-toggle>
+                    <mat-datepicker #Picker></mat-datepicker>
+                    <mat-error *ngIf="printcaseNoteForm.get('endDate').hasError('required')">
+                        Date is required
+                    </mat-error>
+                    <mat-error *ngIf="printcaseNoteForm.get('endDate').errors?.matDatepickerParse">
+                        Invalid date
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div mat-dialog-actions>
+            <button type="submit" mat-flat-button color="primary" [disabled]="printButtonDisabled()">Print</button>
+            <button type="button" id="cancel_button" mat-stroked-button color="primary"
+                (click)="cancelPrint()">Cancel</button>
+        </div>
+    </form>
+</mat-dialog-content>

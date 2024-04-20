@@ -1,0 +1,114 @@
+<mat-card id='view_user-plan'>
+
+  <mat-card-header>
+    <span>{{job?.job_title}}</span>
+    <span class="spacer"></span>
+    <span>
+      <button 
+        id="exit_view_button" 
+        mat-stroked-button color="primary"
+        [routerLink]="['..']"
+        (click)="goBack()"
+      >Exit</button>
+    </span>
+  </mat-card-header>
+
+  <mat-card-content class="view_user-plan_container">
+
+    <div class="card-row mb20">
+      <div class="card-column">
+        <div class="card-row" *ngIf="job?.date">
+          <p class="info">
+            <span class="details_label">Posting date</span>
+            <span id="postdateId">{{job?.date| date : 'dd MMMM yyyy'}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.location_name">
+          <p class="info">
+            <span class="details_label">Location</span>
+            <span id="locationId">{{job?.location_name}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.contract_type">
+          <p class="info">
+            <span class="details_label">Contract type</span>
+            <span id="contacttypeId">{{job?.contract_type}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.advertiser_website">
+          <p class="info">
+            <span class="details_label">Advertiser website</span>
+            <span id="sourceWebsite">{{job?.advertiser_website}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.advertiser_type">
+          <p class="info">
+            <span class="details_label">Advertiser type</span>
+            <span id="sourceUrl">{{job?.advertiser_type}}</span>
+          </p>
+        </div>
+      </div> 
+      
+      <div class="card-column">
+        <div class="card-row" *ngIf="job?.organization_name">
+          <p class="info">
+            <span class="details_label">Company name</span>
+            <span id="companynameId">{{job?.organization_name}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.advertiser_reference_number">
+          <p class="info">
+            <span class="details_label">Job reference</span>
+            <span id="jobreferenceId">{{job?.advertiser_reference_number}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.salary">
+          <p class="info">
+            <span class="details_label">Salary</span>
+            <span id="salaryId">{{job?.salary | currency: 'GBP' : 'symbol' : '3.0'}}</span>
+          </p>
+        </div>
+        
+        <div class="card-row" *ngIf="job?.advertiser_email">
+          <p class="info">
+            <span class="details_label">Advertiser email</span>
+            <span id="advertiserEmail">{{job?.advertiser_email}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.advertiser_reference_number">
+          <p class="info">
+            <span class="details_label">Advertiser reference number</span>
+            <span id="advertiserReferenceNumber">{{job?.advertiser_reference_number}}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-row mb20 flex-column" *ngIf="job?.job_description">
+      <div class="label-hr">
+        <span>Brief job description</span>
+      </div>
+      <span id="brifjobdescriptionId">{{job?.job_description }}</span>
+    </div>
+    <div class="card-row mb20 flex-column" *ngIf="job?.candidate_description">
+      <div class="label-hr">
+        <span>Candidate description</span>
+      </div>
+      <span id="candidatejobdescriptionId">{{job?.candidate_description}}</span>
+    </div>
+    <div class="card-row mb20 flex-column" *ngIf="job?.employer_description">
+      <div class="label-hr">
+        <span>Employer description</span>
+      </div>
+      <span id="employerjobdescriptionId">{{job?.employer_description}}</span>
+    </div>
+    <div class="card-row mb20 flex-column" *ngIf="job?.conditions_description">
+      <div class="label-hr">
+        <span>Conditions and benefits description</span>
+      </div>
+      <span id="conditionandbenefitsdescriptionId">{{job?.conditions_description}}</span>
+    </div>
+
+  </mat-card-content>
+
+</mat-card>

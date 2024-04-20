@@ -1,0 +1,105 @@
+<mat-card id="progress-completion-card">
+    <mat-card-header>
+        <app-stepper-navigation></app-stepper-navigation>
+        <span class="spacer"></span>
+        <button id="exit_user_button" mat-stroked-button color="primary"
+            [routerLink]="['/programme-management/programme-delivery']">Exit</button>
+    </mat-card-header>
+    <mat-card class="container no-border-card ">
+        <mat-card-content class="course-menu-section">
+            <li class="course-menu-item" *ngFor="let course of courseDetails"
+                [ngClass]="{ 'disabled': !course.isCourseCompleted }" (click)="onCourseClick(course)">{{
+                course.courseName
+                }}</li>
+        </mat-card-content>
+        <ng-container *ngIf="selectedCourse && learnerCourseDetails.length>0">
+            <mat-card-content class="course-details-section">
+                <span class="course-title">{{selectedCourse.courseName}}</span>
+                <div class="label-hr">
+                    <span>Learner Details</span>
+                </div>
+                <mat-accordion class="example-headers-align" multi>
+                    <mat-expansion-panel class="mat-elevation-z0" disabled>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title class="header-width">
+                                Learner name
+                            </mat-panel-title>
+                            <mat-panel-title class="header-width">
+                                Course completed
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel *ngFor="let element of learnerCourseDetails"
+                        [disabled]="!element?.isCompleted || element?.qualificationOutcome.length == 0">
+                        <mat-expansion-panel-header
+                            [ngClass]="{'disabled-mat-expansion': !element?.isCompleted || element?.qualificationOutcome.length == 0}">
+                            <mat-panel-title class="width-30">
+                                {{ element.firstName }} {{ element?.lastName}}
+                            </mat-panel-title>
+                            <mat-panel-title class="width-30">
+                                {{ element?.isCompleted ? '&nbsp;Yes' : '&nbsp;No'}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <mat-card class="no-border-card " *ngIf="element?.qualificationOutcome.length > 0">
+                            <mat-card-content>
+                                <mat-table [dataSource]="element.qualificationOutcome" multiTemplateDataRows>
+                                    <ng-container matColumnDef="attemptDate">
+                                        <mat-header-cell class="align-mat-header-cell" *matHeaderCellDef
+                                            id="workerName_button"> Attempt Date
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let item">
+                                            {{item.attemptDate | date:'dd MMM yyyy' || "N/A"}}
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="qualificationOutcome">
+                                        <mat-header-cell class="align-mat-header-cell" *matHeaderCellDef
+                                            id="workerName_button"> Qualification outcome
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let item">
+                                            {{item?.value || "N/A"}}
+                                        </mat-cell>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="expiryDate">
+                                        <mat-header-cell class="align-mat-header-cell" *matHeaderCellDef
+                                            id="workerName_button"> Qualification expiry date
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let item">
+                                            <span *ngIf="item?.qualificationExpiryDate; else na">
+                                                {{item?.qualificationExpiryDate | date:'dd MMM yyyy'}}</span>
+                                            <ng-template #na>N/A</ng-template>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="referenceId">
+                                        <mat-header-cell class="align-mat-header-cell" *matHeaderCellDef
+                                            id="workerName_button"> Qualification reference id
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let item">
+                                            <span> {{item?.qualificationReferenceNumber || "N/A"}}</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <mat-header-row *matHeaderRowDef="qualificationColumns"></mat-header-row>
+                                    <mat-row *matRowDef="let item; columns: qualificationColumns;"
+                                        class="example-element-row">
+                                    </mat-row>
+
+                                </mat-table>
+                            </mat-card-content>
+                        </mat-card>
+
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </mat-card-content>
+        </ng-container>
+        <ng-container *ngIf="!selectedCourse">
+            <mat-card-content class="course-details-section">
+                <span>No courses have yet been marked complete.</span>
+            </mat-card-content>
+        </ng-container>
+        <ng-container *ngIf="selectedCourse && learnerCourseDetails?.length<=0">
+            <mat-card-content class="course-details-section">
+                <span>No active learners present in this course.</span>
+            </mat-card-content>
+        </ng-container>
+    </mat-card>
+</mat-card>

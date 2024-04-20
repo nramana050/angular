@@ -1,0 +1,73 @@
+<mat-card-content class="dialog-container">
+  <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" autocomplete="off">
+    <h1 mat-dialog-title>Plan Review</h1>
+    <div class="card-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Select an option</mat-label>
+        <mat-select formControlName="reviewTypeId" matInput>
+          <mat-option *ngFor="let review of reviewType" [value]="review?.id"  (click)="onOptionSelectd(review)"  >
+            {{ review.description }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="reviewForm.get('reviewTypeId').hasError('required')">
+          Review type is required</mat-error>
+      </mat-form-field>
+    
+      <div  *ngIf="!isCompleate">
+        <span class="goLink">Goals and actions should be completed before adding End of Course Review. Please <a href="javascript:void(0)" (click)="addGoals()">click here</a> to complete the action.</span>
+      </div>
+
+      <div *ngIf="reviewForm.get('reviewTypeId').value !== 3 && isAction==true">
+        <mat-form-field   appearance="outline">
+          <mat-label>Person supported thoughts on progress</mat-label>
+          <textarea matInput formControlName="personSupportedThoughts"></textarea>
+          <mat-hint>Maximum 500 characters are allowed</mat-hint>
+          <mat-error *ngIf="reviewForm.get('personSupportedThoughts').hasError('maxlength')">
+            Person supported thoughts should be 500 characters or less
+          </mat-error>
+          <mat-error *ngIf="reviewForm.get('personSupportedThoughts').hasError('required')">
+            Person supported thoughts are required</mat-error>
+        </mat-form-field> 
+  
+         <mat-form-field   appearance="outline">
+          <mat-label>Staff's thoughts on progress</mat-label>
+          <textarea matInput formControlName="staffThoughtd"></textarea>
+          <mat-hint>Maximum 500 characters are allowed</mat-hint>
+          <mat-error *ngIf="reviewForm.get('staffThoughtd').hasError('maxlength')">
+            Staff's thoughts should be 500 characters or less
+          </mat-error>
+          <mat-error *ngIf="reviewForm.get('staffThoughtd').hasError('required')">
+            Staff's thoughts are required</mat-error>
+        </mat-form-field>
+  
+        <mat-form-field  appearance="outline">
+          <mat-label for="dateOfBirth">Next review date?</mat-label>
+        <input matInput [matDatepicker]="addByWhenControl"  [min]="minStartDate"
+          formControlName="reviewDate" required>
+        <mat-datepicker-toggle matSuffix [for]="addByWhenControl"></mat-datepicker-toggle>
+        <mat-datepicker #addByWhenControl></mat-datepicker>
+        <mat-error *ngIf="reviewForm.get('reviewDate').hasError('required')">
+          Next review date is required </mat-error>
+          <mat-error *ngIf="reviewForm.get('reviewDate').getError('matDatepickerMin')
+          && !reviewForm.get('reviewDate').getError('matDatepickerParse')
+          && !reviewForm.get('reviewDate').getError('required')"> Invalid Date. Date cannot be in past </mat-error>
+    </mat-form-field>
+      </div>
+    </div>
+   
+    <div class="card-row">
+      <mat-dialog-actions align="end">
+        <button mat-button type="button" (click)="dialogClose()">Cancel</button>
+        <button type="submit" mat-flat-button color="primary" [disabled]="!reviewForm.valid"
+          *ngIf="reviewForm.get('reviewTypeId').value !== 3">
+          Submit
+        </button>
+        <button type="button" (click)="feedBackForm()" mat-flat-button color="primary" *ngIf="reviewForm.get('reviewTypeId').value === 3 && isCompleate">
+          Continue
+        </button>
+      </mat-dialog-actions>
+    </div>
+  </form>
+ 
+
+</mat-card-content>

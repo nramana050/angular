@@ -1,0 +1,79 @@
+<mat-card id='service-user-documents'>
+
+    <mat-card-header>
+      <span>
+        Documents
+      </span>
+      <span class="spacer"></span>
+      <span>
+        <button *ngIf="isAuthorized(57,1)" id="create_service_user_button" mat-stroked-button class="right" color="primary"
+        (click)="onUploadClicked()">Add
+        </button>
+      </span>
+      <span>
+        <button id="exit_page" mat-stroked-button class="right" color="primary" (click)="onExitClicked()">Exit</button>
+      </span>
+    </mat-card-header>
+  
+    <mat-card-content class="users_container">
+  
+      <mat-table id="user_table" #table [dataSource]="dataSource" class="isMobile" matSort>
+  
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef id="filename_button" class="name width-30"> File Name</mat-header-cell>
+          <mat-cell class="width-30" *matCellDef="let element"> <span class="mobile-label">File Name: </span>
+            {{element.name}}
+          </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="createdDate">
+          <mat-header-cell class="width-20" *matHeaderCellDef id="prn_button"> Uploaded / Generated Date
+          </mat-header-cell>
+          <mat-cell class="width-20" *matCellDef="let element"> <span class="mobile-label">Uploaded / Generated Date:
+            </span>{{element.createdDate | date : 'mediumDate'}}
+          </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="description">
+          <mat-header-cell class="width-20" *matHeaderCellDef id="desc_button"> Description </mat-header-cell>
+          <mat-cell class="width-20" *matCellDef="let element"> <span class="mobile-label">Description:
+            </span>{{element.description}}
+          </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="actions">
+  
+          <mat-header-cell *matHeaderCellDef class="actions-column">Action</mat-header-cell>
+          <mat-cell *matCellDef="let element" class="actions-column"> <span class="mobile-label"></span>
+  
+            <button *ngIf="isAuthorized(57,3)" id="edit_document_button_{{element.id}}" mat-icon-button color="primary"
+              [routerLink]="['./upload-doc/']" [queryParams]="{ doc: element.id }" queryParamsHandling='merge' title="Edit"
+              attr.aria-label="Edit {{element.name}}">
+              <mat-icon>edit</mat-icon>
+            </button>
+  
+            <button *ngIf="isAuthorized(57,4)" id="delete_document_button_{{element.id}}" mat-icon-button
+              (click)="deleteDoc(element)" title="Delete" color="accent"
+              attr.aria-label="Delete {{element.name}}">
+              <mat-icon>delete</mat-icon>
+            </button>
+  
+            <button *ngIf="isAuthorized(57,12)" id="downlaod_doc_button_{{element.id}}" mat-icon-button color="primary"
+            (click)="download(element.id)"  title="Download" attr.aria-label="Download {{element.name}}">
+            <mat-icon>get_app</mat-icon>
+            <div id="form_holder" style="display: none;"></div>
+            </button>
+  
+          </mat-cell>
+        </ng-container>
+  
+        <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+      </mat-table>
+  
+      <mat-paginator id="documents_pagination" [pageSize]="pageSize" [showFirstLastButtons]='true' [hidePageSize]="true">
+      </mat-paginator>
+  
+    </mat-card-content>
+  
+  </mat-card>

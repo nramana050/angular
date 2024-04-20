@@ -1,0 +1,101 @@
+<div class="header">
+  <div class="tabWrapper">
+    <ul>
+      <li class="tabHead active" routerLink="/captr-learner/performance-review" queryParamsHandling="merge">
+        <a class="tab-item" id="profile-tab" attr.aria-label="tab Profile">My Performance Review</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="grid-row nomargin">
+  <mat-card id='assessments'>
+    <mat-card-header>
+      <span *ngIf="allAssessments.length > 0"> My Performance Review </span>
+      <span  *ngIf="allAssessments.length == 0"> There is no assessment assigned to you </span>
+      <span class="spacer"></span>
+      <span>
+        <button id="edit_view_button" mat-stroked-button color="primary" (click)="onExitClicked()">Exit</button>
+      </span>
+    </mat-card-header>
+    <mat-card-content class="assessments_container">
+
+      <mat-table *ngIf="allAssessments.length > 0" id="assessment_table" #table [dataSource]="dataSource" class="isMobile">
+
+        <ng-container matColumnDef="assessmentName">
+          <mat-header-cell *matHeaderCellDef id="template_name_button" class="assessmentName width-40">
+            Assessments
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="assessmentName width-40"><span class="mobile-label">Assessments:
+            </span>
+            {{element.assessmentName}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="createdDate">
+          <mat-header-cell class="width-15" *matHeaderCellDef id="date_created_button"> Date Assigned
+          </mat-header-cell>
+          <mat-cell class="width-15" *matCellDef="let element"><span class="mobile-label">Date Assigned: </span>
+            {{element.createdDate | customMonthFormat }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="modifiedDate">
+          <mat-header-cell class="width-15" *matHeaderCellDef id="date_created_button"> Last Updated
+          </mat-header-cell>
+          <mat-cell class="width-15" *matCellDef="let element"><span class="mobile-label">Last Updated: </span>
+            {{element.updatedDate | customMonthFormat }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <mat-header-cell class="width-15" *matHeaderCellDef id="date_created_button">Employee Status
+          </mat-header-cell>
+          <mat-cell class="width-15" *matCellDef="let element"><span class="mobile-label call-status-label">Employee status:
+            </span>
+            <span *ngIf="element.isCompleted" class="status">COMPLETED</span>
+            <span *ngIf="!element.isCompleted && (element.isPartiallyCompleted || element.updatedDate)"
+              class="status">IN PROGRESS</span>
+            <span *ngIf="!element.isCompleted && !element.isPartiallyCompleted && !element.updatedDate"
+              class="status">NOT STARTED</span>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="managerStatus">
+          <mat-header-cell class="width-15" *matHeaderCellDef id="date_created_button">Manager Status
+          </mat-header-cell>
+          <mat-cell class="width-15" *matCellDef="let element"><span class="mobile-label call-status-label">Manager
+              status: </span>
+            <span *ngIf="element.staffIsCompleted" class="status">COMPLETED</span>
+            <span *ngIf="!element.staffIsCompleted && element.staffIsPartiallyCompleted "
+              class="status">IN PROGRESS</span>
+            <span *ngIf="!element.staffIsCompleted && !element.staffIsPartiallyCompleted "
+              class="status">NOT STARTED</span>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef class="actions-column">Action</mat-header-cell>
+          <mat-cell *matCellDef="let element" class="actions-column"> <span class="mobile-label"></span>
+
+            <button id="view_assessment_button_{{element.assessmentTemplateUserId}}" mat-icon-button color="primary"
+            (click)="onViewClicked(element)" title="View" attr.aria-label="View {{element.assessmentName}} ">
+              <mat-icon>visibility</mat-icon>
+            </button>
+
+            <button *ngIf="!element.staffIsCompleted && element.isCompleted" id="edit_assessment_button_{{element.assessmentTemplateUserId}}"
+              mat-icon-button color="primary" (click)="onEditClicked(element)"
+              title="Edit" attr.aria-label="Edit {{element.assessmentName}}">
+              <mat-icon>create</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+
+      <mat-paginator id="assessments_pagination" [showFirstLastButtons]='true' [hidePageSize]="true">
+      </mat-paginator>
+    </mat-card-content>
+
+  </mat-card>
+</div>

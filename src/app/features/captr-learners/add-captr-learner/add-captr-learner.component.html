@@ -1,0 +1,903 @@
+<mat-card id='edit_learners'>
+
+  <mat-card-header>
+    <span *ngIf="!isNew">
+      <app-stepper-navigation></app-stepper-navigation>
+    </span>
+    <span class="spacer"></span>
+    <div>
+      <span class="action-buttons">
+        <button id="exit_user_button" mat-stroked-button color="primary" [routerLink]="['/captr-learner']">Exit</button>
+      </span>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+
+
+    <form [formGroup]="learnersForm" (ngSubmit)="onSubmit()" validate autocomplete="off">
+
+      <div class="label-hr"> <span> Participant details </span> </div>
+      <div formGroupName="primaryLearnerDetails">
+        <div class="card-row">
+          <div class="card-column">
+
+            <mat-form-field appearance="fill">
+              <mat-label>First name</mat-label>
+              <input matInput placeholder="First Name" formControlName="firstName" id="firstName" required>
+              <mat-hint>Maximum 100 characters are allowed</mat-hint>
+              <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('firstName').hasError('pattern')">
+                Invalid first name</mat-error>
+              <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('firstName').hasError('required')">
+                First name is required</mat-error>
+              <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('firstName').hasError('maxlength')">
+                First name should be 100 characters or less
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+          <div class="card-column">
+
+            <mat-form-field appearance="fill">
+              <mat-label>Family/Surname</mat-label>
+              <input matInput placeholder="Family/Surname" formControlName="lastName" id="lastName" required>
+              <mat-hint>Maximum 100 characters are allowed</mat-hint>
+              <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('lastName').hasError('required')">
+                Family/Surname is required</mat-error>
+              <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('lastName').hasError('pattern')">
+                Invalid Family/Surname Name</mat-error>
+              <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('lastName').hasError('maxlength')">
+                Family/Surname should be 100
+                characters or less
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+        </div>
+
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Date of birth (DOB)</mat-label>
+              <input matInput [matDatepicker]="dateOfBirthPicker" [max]="maxDateOfBirth" [min]="minDateOfBirth"
+                formControlName="dateOfBirth" placeholder="Date of Birth (minimum age is 16)" id="dateOfBirth" required>
+              <mat-datepicker-toggle matSuffix [for]="dateOfBirthPicker"></mat-datepicker-toggle>
+              <mat-datepicker #dateOfBirthPicker></mat-datepicker>
+              <mat-error
+                *ngIf="learnersForm.get('primaryLearnerDetails').get('dateOfBirth').getError('matDatepickerMax')
+                                      && !learnersForm.get('primaryLearnerDetails').get('dateOfBirth').getError('matDatepickerParse')
+                                      && !learnersForm.get('primaryLearnerDetails').get('dateOfBirth').getError('required')">
+                Invalid date of birth.
+                Participant must be 16 years or older </mat-error>
+              <mat-error
+                *ngIf="learnersForm.get('primaryLearnerDetails').get('dateOfBirth').getError('matDatepickerMin')
+                                      && !learnersForm.get('primaryLearnerDetails').get('dateOfBirth').getError('matDatepickerParse')
+                                      && !learnersForm.get('primaryLearnerDetails').get('dateOfBirth').getError('required')">
+                Invalid date of birth.
+                Participant must be less than 100 years </mat-error>
+              <mat-error
+                *ngIf="!learnersForm.get('primaryLearnerDetails').get('dateOfBirth').getError('matDatepickerMax')
+                                        && !learnersForm.get('primaryLearnerDetails').get('dateOfBirth').getError('matDatepickerParse')
+                                        && learnersForm.get('primaryLearnerDetails').get('dateOfBirth').getError('required')">
+                Date of birth (DOB) is
+                required
+              </mat-error>
+              <mat-error
+                *ngIf="learnersForm.get('primaryLearnerDetails').get('dateOfBirth').errors?.matDatepickerParse">Invalid
+                date
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="card-column">
+
+            <mat-form-field appearance="fill">
+              <mat-label>National insurance number</mat-label>
+              <input matInput formControlName="niNumber" id="niNumber" placeholder="National Insurance Number">
+              <mat-hint align="start">example: AA 12 34 56 B</mat-hint>
+              <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('niNumber').hasError('pattern')">Invalid
+                NI Number</mat-error>
+            </mat-form-field>
+
+          </div>
+        </div>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Gender</mat-label>
+              <mat-select placeholder="Gender" formControlName="gender">
+                <mat-option *ngFor="let gender of refData?.genders" [value]="gender.id" id="gender"
+                  [disabled]="gender.isDisabled"(click)="selectedGender(gender.value)">{{gender.value}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="card-column">
+            <mat-form-field appearance="fill" *ngIf="selectedGenderisOther">
+              <mat-label>Other or Prefers to self-describe</mat-label>
+              <input matInput placeholder="Other or Prefers to self-describe" formControlName="otherGender" id="otherGender" required>
+              <mat-hint>Maximum 100 characters are allowed</mat-hint>
+              <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('otherGender').hasError('pattern')">
+                Invalid Other or Prefers to self describe</mat-error>
+              <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('otherGender').hasError('required')">
+                Other or Prefers to self describe name is required</mat-error>
+              <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('otherGender').hasError('maxlength') && !learnersForm.get('primaryLearnerDetails').get('otherGender').hasError('pattern')">
+                Other or Prefers to self describe should be 100 characters or less
+              </mat-error>
+              <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('otherGender').hasError('minlength') && !learnersForm.get('primaryLearnerDetails').get('otherGender').hasError('pattern')">
+                Other or Prefers to self describe should be 3 characters or more
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <br>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Preferred pronouns</mat-label>
+              <mat-select placeholder="Preferred pronouns" formControlName="preferredPronouns">
+                <mat-option *ngFor="let preferredPronoun of refData?.preferredPronouns" [value]="preferredPronoun.id" id="preferredPronouns"
+                  >{{preferredPronoun.value}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>ULN</mat-label>
+              <input matInput formControlName="uln" id="uln" placeholder="ULN">
+              <mat-hint align="start">example: 1000000000</mat-hint>
+              <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('uln').hasError('pattern')">Invalid
+                ULN</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <br>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>
+                British national?
+              </mat-label>
+              <mat-select placeholder="British national?" formControlName="isBritishNational">
+                <mat-option *ngFor="let item of refAnswer" [value]="item?.id" id="item">{{item.answerName}}</mat-option>
+                <mat-option [value]="null" id="isBritishNational-null"> Clear Selection </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>
+                Allocated worker
+              </mat-label>
+              <mat-select placeholder="Allocated worker" formControlName="workerId" required>
+                <mat-option *ngFor="let item of userList" [value]="item?.id" id="item">{{item.userFullName}}</mat-option>
+                <mat-option [value]="null" id="isBritishNational-null"> Clear Selection </mat-option>
+              </mat-select>
+              <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('workerId').hasError('required')">
+                Allocated worker is required</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>
+                Resident in UK or EEA for the last three years?
+              </mat-label>
+              <mat-select placeholder="Resident in UK or EEA for the last three years?"
+                formControlName="isResidentOfUKorEEA">
+                <mat-option *ngFor="let item of refAnswer" [value]="item?.id" id="item">{{item.answerName}}</mat-option>
+                <mat-option [value]="null" id="isResidentOfUKorEEA-null"> Clear Selection </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-hint>Countries in EEA: Austria, Belgium, Bulgaria, Croatia, Republic of Cyprus, Czech Republic,
+              Denmark,
+              Estonia, Finland, France, Germany, Greece, Hungary, Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta,
+              Netherlands, Poland, Portugal, Romania, Slovakia, Slovenia, Spain and Sweden.</mat-hint>
+          </div>
+        </div>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Allocated worker number</mat-label>
+              <input matInput formControlName="workerTelephoneNo" id="workerTelephoneNo"
+                placeholder="Allocated worker Number">
+                <mat-error *ngIf="learnersForm.get('primaryLearnerDetails').get('workerTelephoneNo').hasError('pattern')">                
+                  Worker telephone number is Invalid
+                </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <div class="label-hr"> <span> Contact details </span> </div>
+      <div formGroupName="contactDetails">
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Address line 1</mat-label>
+              <input matInput placeholder="Address Line 1" formControlName="addressLine1" id="addressLine1">
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('addressLine1').hasError('maxlength')">
+                Address line 1 should be less than 100 chars.
+              </mat-error>
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('addressLine1').hasError('minlength')">
+                Address line 1 should be greater than 3 chars.
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Address line 2</mat-label>
+              <input matInput placeholder="Address Line 2" formControlName="addressLine2" id="addressLine2">
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('addressLine2').hasError('maxlength')">
+                Address line 2 should be less than 100 chars.
+              </mat-error>
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('addressLine2').hasError('minlength')">
+                Address line 2 should be greater than 3 chars.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Town/City</mat-label>
+              <input matInput placeholder="Town/City" formControlName="townOrCity" id="townOrCity">
+              <mat-error
+                *ngIf="learnersForm.get('contactDetails').get('townOrCity').hasError('maxlength') && !learnersForm.get('contactDetails').get('townOrCity').hasError('pattern')">
+                Town/City should be less than 100 chars.
+              </mat-error>
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('townOrCity').hasError('pattern')">
+                Invalid Town/City name
+              </mat-error>
+              <mat-error
+                *ngIf="learnersForm.get('contactDetails').get('townOrCity').hasError('minlength') && !learnersForm.get('contactDetails').get('townOrCity').hasError('pattern')">
+                Town/City name should be greater than 3 chars.
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>County</mat-label>
+              <input matInput placeholder="County" formControlName="county" id="county">
+              <mat-error
+                *ngIf="learnersForm.get('contactDetails').get('county').hasError('maxlength') && !learnersForm.get('contactDetails').get('county').hasError('pattern')">
+                County should be less than 100 chars.
+              </mat-error>
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('county').hasError('pattern')">
+                Invalid county name
+              </mat-error>
+              <mat-error
+                *ngIf="learnersForm.get('contactDetails').get('county').hasError('minlength') && !learnersForm.get('contactDetails').get('county').hasError('pattern')">
+                County name should be greater than 3 chars.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+        </div>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Postcode</mat-label>
+              <input matInput formControlName="postCode" id="postCode" placeholder="Postcode" >
+              <mat-hint align="start">Example: SW1A 1AA</mat-hint>
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('postCode').hasError('pattern')">
+                Invalid postcode
+              </mat-error>
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('postCode').hasError('required')">
+                Postcode is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Email address</mat-label>
+              <input matInput formControlName="emailAddress" id="emailAddress"
+                placeholder="Please Enter a Valid Email Address" required>
+              <mat-error>
+                <mat-error *ngIf="learnersForm.get('contactDetails').get('emailAddress').hasError('pattern')">
+                  Invalid email address
+                </mat-error>
+                <mat-error *ngIf="learnersForm.get('contactDetails').get('emailAddress').hasError('required')">
+                  Email address is required
+                </mat-error>
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Contact number</mat-label>
+              <input matInput formControlName="contactNo" id="contactNo" placeholder="Contact Number" >
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('contactNo').hasError('pattern')">
+                Contact number is Invalid
+              </mat-error>
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('contactNo').hasError('required')">
+                Contact number is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>How long at this address(years)</mat-label>
+              <input matInput placeholder="How long at this Address(Years)" formControlName="addressTenureInyear"
+                id="addressTenureInyear">
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('addressTenureInyear').hasError('pattern')">
+                Only numbers allowed
+              </mat-error>
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('addressTenureInyear').hasError('max')">
+                Years should be less than 100 years
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>How long at this address(months)</mat-label>
+              <input matInput formControlName="addressTenureInMonth" id="addressTenureInMonth"
+                placeholder="How long at this Address(Months)">
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('addressTenureInMonth').hasError('max')">
+                Months should be less than 12 months
+              </mat-error>
+              <mat-error *ngIf="learnersForm.get('contactDetails').get('addressTenureInMonth').hasError('pattern')">
+                Only numbers allowed
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="label-hr"> <span> Emergency contact </span> </div>
+      <div formGroupName="emergencyContact">
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Name</mat-label>
+              <input matInput placeholder="Name" formControlName="firstName" id="first_Name">
+              <mat-hint align="start">Maximum 100 characters allowed</mat-hint>
+              <mat-error *ngIf="learnersForm.get('emergencyContact').get('firstName').hasError('pattern')">
+                Invalid name</mat-error>
+              <mat-error *ngIf="learnersForm.get('emergencyContact').get('firstName').hasError('maxlength')">
+                Name should be 100 characters or less
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Contact number</mat-label>
+              <input matInput formControlName="contactNo" id="contact_No" placeholder="Contact Number">
+              <mat-error *ngIf="learnersForm.get('emergencyContact').get('contactNo').hasError('pattern')">
+                Invalid contact number
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Relationship to customer</mat-label>
+              <input matInput formControlName="relationshipWithUser" id="relationshipWithUser"
+                placeholder="Relationship to Customer">
+              <mat-hint align="start">Maximum 100 characters allowed</mat-hint>
+              <mat-error *ngIf="learnersForm.get('emergencyContact').get('relationshipWithUser').hasError('maxlength')">
+                Relationship to customer should be 100 characters or less
+              </mat-error>
+              <mat-error *ngIf="learnersForm.get('emergencyContact').get('relationshipWithUser').hasError('minlength')">
+                Relationship to customer should be greater than 1 char
+              </mat-error>
+              <mat-error *ngIf="learnersForm.get('emergencyContact').get('relationshipWithUser').hasError('pattern')">
+                Invalid field value
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="label-hr"> <span> Unemployment status </span> </div>
+      <div formGroupName="unEmploymentStatus">
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>
+                Unemployed,looking for work and available to start?
+              </mat-label>
+              <mat-select placeholder="Unemployed,looking for work and available to start?"
+                formControlName="isLookingForWork">
+                <mat-option *ngFor="let item of refAnswer" [value]="item?.id" id="item">{{item.answerName}}</mat-option>
+                <mat-option [value]="null" id="isLookingForWork-null"> Clear Selection </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <br>
+        <div *ngIf="showUnEmploymentStatusField('unEmploymentStatus', 'isLookingForWork')">
+          <div class="card-row">
+            <div class="card-column">
+              <mat-form-field appearance="fill">
+                <mat-label>Length of unemployment</mat-label>
+                <mat-select placeholder="Length of Unemployment" formControlName="lengthOfUnemployment" required>
+                  <mat-option *ngFor="let lengthOfUnemployments of refData?.lengthOfUnemployments"
+                    [value]="lengthOfUnemployments.id" id="lengthOfUnemployments"
+                    [disabled]="lengthOfUnemployments.isDisabled">{{lengthOfUnemployments.value}}</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="learnersForm.get('unEmploymentStatus').get('lengthOfUnemployment').hasError('required')">
+                  Length of unemployment is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="card-column">
+              <mat-form-field appearance="fill">
+                <mat-label>Job center location</mat-label>
+                <input matInput formControlName="jobCentreLocation" id="jobCentreLocation"
+                  placeholder="Job center location" required>
+                <mat-hint align="start">Maximum 50 characters allowed</mat-hint>
+                <mat-error
+                  *ngIf="learnersForm.get('unEmploymentStatus').get('jobCentreLocation').hasError('maxlength')">
+                  Job center location should be less than 50 chars
+                </mat-error>
+                <mat-error *ngIf="learnersForm.get('unEmploymentStatus').get('jobCentreLocation').hasError('pattern')">
+                  Invalid field value
+                </mat-error>
+                <mat-error
+                  *ngIf="learnersForm.get('unEmploymentStatus').get('jobCentreLocation').hasError('minlength')">
+                  Job center location should be more than 3 chars
+                </mat-error>
+                <mat-error *ngIf="learnersForm.get('unEmploymentStatus').get('jobCentreLocation').hasError('required')">
+                  Job center location is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="card-row">
+            <div class="card-column">
+              <mat-form-field appearance="fill">
+                <mat-label>Work coach</mat-label>
+                <input matInput formControlName="workCoach" id="workCoach" placeholder="Work coach" required>
+                <mat-hint align="start">Maximum 50 characters allowed</mat-hint>
+                <mat-error *ngIf="learnersForm.get('unEmploymentStatus').get('workCoach').hasError('maxlength')">
+                  Work coach should be less than 50 chars
+                </mat-error>
+                <mat-error *ngIf="learnersForm.get('unEmploymentStatus').get('workCoach').hasError('pattern')">
+                  Invalid field value
+                </mat-error>
+                <mat-error *ngIf="learnersForm.get('unEmploymentStatus').get('workCoach').hasError('minlength')">
+                  Work coach should be more than 1 chars
+                </mat-error>
+                <mat-error *ngIf="learnersForm.get('unEmploymentStatus').get('workCoach').hasError('required')">
+                  Work coach is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="card-column">
+              <mat-form-field appearance="fill">
+                <mat-label>Benefit type</mat-label>
+                <mat-select placeholder="Benefit Type" formControlName="benefitType" required>
+                  <mat-option *ngFor="let benefits of refData?.benefits" [value]="benefits.id" id="benefits"
+                    [disabled]="benefits.isDisabled">{{benefits.value}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="learnersForm.get('unEmploymentStatus').get('benefitType').hasError('required')">
+                  Benefit type is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="label-hr"> <span> Equal opportunities monitoring </span> </div>
+      <div formGroupName="equalOpportunitiesMonitoring">
+        <div class="card-row">
+          <div class="card-column">
+            <mat-label>Participant considers themselves to have a disability or learning difficulty?</mat-label>
+            <mat-form-field appearance="fill">
+              <mat-select placeholder="Participant considers themselves to have a disability or learning difficulty?"
+                formControlName="disabilityOrLearningDifficultyId">
+                <mat-option *ngFor="let item of refAnswer" [value]="item?.id" id="item">{{item.answerName}}</mat-option>
+                <mat-option [value]="null" id="disabilityOrLearningDifficultyId-null"> Clear Selection </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br>
+          <div class="card-column">
+            <div
+              *ngIf="showUnEmploymentStatusField('equalOpportunitiesMonitoring', 'disabilityOrLearningDifficultyId')">
+            <mat-label class="hidden">Participant considers themselves to have a disability or learning difficulty?</mat-label>
+             
+              <mat-form-field appearance="fill">
+                <mat-label>Please specify learning disability or learning difficulty</mat-label>
+                <mat-select placeholder="Please specify learning disability or learning difficulty"
+                  formControlName="disabilityOrLearningDifficultyIds" multiple required>
+                  <mat-option *ngFor="let option of refData?.disabiltyOrLearningDifficulties" [value]="option.id"
+                    id="disabilityOrLearningDifficultyIds">
+                    {{option.value}}</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('disabilityOrLearningDifficultyIds').hasError('required')">
+                  Learning disability or learning difficulty is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-label>
+              Participant has a medical condition we need to be aware of?
+            </mat-label>
+            <mat-form-field appearance="fill">
+              <mat-select placeholder="Participant has a medical condition we need to be aware of?"
+                formControlName="isMedicalCondition">
+                <mat-option *ngFor="let item of refAnswer" [value]="item?.id" id="item">{{item.answerName}}</mat-option>
+                <mat-option [value]="null" id="isMedicalCondition-null"> Clear Selection </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br>
+          <div class="card-column">
+            <div *ngIf="showUnEmploymentStatusField('equalOpportunitiesMonitoring', 'isMedicalCondition')" class="margin-top">
+              <mat-form-field appearance="fill">
+                <mat-label>Please specify medical condition</mat-label>
+                <input matInput formControlName="medicalCondition" id="medicalCondition"
+                  placeholder="Please specify medical condition" required>
+                <mat-hint align="start">Maximum 100 characters allowed</mat-hint>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('medicalCondition').hasError('maxlength')">
+                  Medical condition should be less than 100 chars
+                </mat-error>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('medicalCondition').hasError('required')">
+                  Medical condition is required
+                </mat-error>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('medicalCondition').hasError('minlength')">
+                  Medical condition should be more than 3 chars
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-label>
+              Participant requires support in relation to literacy?
+            </mat-label>
+            <mat-form-field appearance="fill">
+              <mat-select placeholder="Participant requires support in relation to literacy?"
+                formControlName="isSupportToLiteracy">
+                <mat-option *ngFor="let item of refAnswer" [value]="item?.id" id="item">{{item.answerName}}</mat-option>
+                <mat-option [value]="null" id="isSupportToLiteracy-null"> Clear Selection </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br>
+          <div class="card-column">
+            <div *ngIf="showUnEmploymentStatusField('equalOpportunitiesMonitoring', 'isSupportToLiteracy')" class="margin-top">
+              <mat-form-field appearance="fill">
+                <mat-label>Please specify literacy support</mat-label>
+                <input matInput formControlName="literacySupport" id="literacySupport"
+                  placeholder="Please specify literacy Support" required>
+                <mat-hint align="start">Maximum 100 characters allowed</mat-hint>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('literacySupport').hasError('maxlength')">
+                  Literacy support should be less than 100 chars
+                </mat-error>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('literacySupport').hasError('required')">
+                  Literacy support is required
+                </mat-error>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('literacySupport').hasError('minlength')">
+                  Literacy support should be more than 3 chars
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-label>
+              Participant has any career needs or requirements?
+            </mat-label>
+            <mat-form-field appearance="fill">
+              <mat-select placeholder="Participant has career needs/requirements?" formControlName="isCareerRequirements">
+                <mat-option *ngFor="let item of refAnswer" [value]="item?.id" id="item">{{item.answerName}}</mat-option>
+                <mat-option [value]="null" id="isCareerRequirements-null"> Clear Selection </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br>
+          <div class="card-column">
+            <div *ngIf="showUnEmploymentStatusField('equalOpportunitiesMonitoring', 'isCareerRequirements')" class="margin-top">
+              <mat-form-field appearance="fill">
+                <mat-label>Please specify career needs/requirements</mat-label>
+                <input matInput formControlName="careerRequirements" id="careerRequirements"
+                  placeholder="Please specify career needs/requirements" required>
+                <mat-hint align="start">Maximum 100 characters allowed</mat-hint>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('careerRequirements').hasError('maxlength')">
+                  Career needs/requirements should be less than 100 chars
+                </mat-error>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('careerRequirements').hasError('minlength')">
+                  Career needs/requirements should be more than 3 chars
+                </mat-error>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('careerRequirements').hasError('required')">
+                  Career needs/requirements is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-label>
+              Participant requires support with motivation of self-esteem?
+            </mat-label>
+            <mat-form-field appearance="fill">
+              <mat-select placeholder="Participant requires support with motivation of self-esteem?"
+                formControlName="isMotivationOfselfEsteem">
+                <mat-option *ngFor="let item of refAnswer" [value]="item?.id" id="item">{{item.answerName}}</mat-option>
+                <mat-option [value]="null" id="isMotivationOfselfEsteem-null"> Clear Selection </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br>
+          <div class="card-column">
+            <div *ngIf="showUnEmploymentStatusField('equalOpportunitiesMonitoring', 'isMotivationOfselfEsteem')" class="margin-top">
+              <mat-form-field appearance="fill">
+                <mat-label>Please specify motivation support</mat-label>
+                <input matInput formControlName="motivationOfselfEsteem" id="motivationOfselfEsteem"
+                  placeholder="Please specify motivation support" required>
+                <mat-hint align="start">Maximum 100 characters allowed</mat-hint>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('motivationOfselfEsteem').hasError('maxlength')">
+                  Motivation support should be less than 100 chars
+                </mat-error>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('motivationOfselfEsteem').hasError('minlength')">
+                  Motivation support should be more than 3 chars
+                </mat-error>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('motivationOfselfEsteem').hasError('required')">
+                  Motivation support is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-label>
+              Participant has criminal convictions which have not been spent under the rehabilitation of offenders act
+              1974?
+            </mat-label>
+            <mat-form-field appearance="fill">
+              <mat-select placeholder="Participant has criminal convictions which have not been spent under the rehabilitation of offenders act
+                1974?" formControlName="isCriminalConvictions">
+                <mat-option *ngFor="let item of refAnswer" [value]="item?.id" id="item">{{item.answerName}}</mat-option>
+                <mat-option [value]="null" id="isCriminalConvictions-null"> Clear Selection </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br>
+          <div class="card-column">
+            <div *ngIf="showUnEmploymentStatusField('equalOpportunitiesMonitoring', 'isCriminalConvictions')" class="margin-tb2">
+              <mat-form-field appearance="fill">
+                <mat-label>Please specify unspent convictions</mat-label>
+                <input matInput formControlName="criminalConvictions" id="criminalConvictions"
+                  placeholder="Please specify unspent convictions" required>
+                <mat-hint align="start">Maximum 300 characters allowed</mat-hint>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('criminalConvictions').hasError('maxlength')">
+                  Unspent convictions should be less than 300 chars
+                </mat-error>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('criminalConvictions').hasError('minlength')">
+                  Unspent convictions should be more than 3 chars
+                </mat-error>
+                <mat-error
+                  *ngIf="learnersForm.get('equalOpportunitiesMonitoring').get('criminalConvictions').hasError('required')">
+                  Unspent convictions is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="label-hr"> <span> Equality and diversity </span> </div>
+      <div formGroupName="equalityAndDiversity">
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>
+                Participant OK to provide equality and diversity information?
+              </mat-label>
+              <mat-select placeholder="Participant OK to provide equality and diversity information?"
+                formControlName="isEqualityAndDiversityInformationId">
+                <mat-option *ngFor="let item of refAnswer" [value]="item?.id" id="item">{{item.answerName}}</mat-option>
+                <mat-option [value]="null" id="isEqualityAndDiversityInformationId-null"> Clear Selection </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <br>
+        <div *ngIf="showUnEmploymentStatusField('equalityAndDiversity', 'isEqualityAndDiversityInformationId')">
+          <div class="card-row">
+            <div class="card-column">
+              <mat-form-field appearance="fill">
+                <mat-label>Caring responsibilities</mat-label>
+                <mat-select placeholder="Caring responsibilities" formControlName="caringResposibilities" required>
+                  <mat-option *ngFor="let caringResponsibilities of refData?.caringResponsibilities"
+                    [value]="caringResponsibilities.id" id="caringResponsibilities"
+                    [disabled]="caringResponsibilities.isDisabled">{{caringResponsibilities.value}}</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="learnersForm.get('equalityAndDiversity').get('caringResposibilities').hasError('required')">
+                  Caring responsibilities is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="card-column">
+              <mat-form-field appearance="fill">
+                <mat-label>Household situation</mat-label>
+                <mat-select placeholder="Household situation" formControlName="householdSituation" required>
+                  <mat-option *ngFor="let householdSituations of refData?.householdSituations"
+                    [value]="householdSituations.id" id="householdSituations"
+                    [disabled]="householdSituations.isDisabled">{{householdSituations.value}}</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="learnersForm.get('equalityAndDiversity').get('householdSituation').hasError('required')">
+                  Household situation is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="card-row">
+            <div class="card-column">
+              <mat-form-field appearance="fill">
+                <mat-label>Married/Civil partnership?</mat-label>
+                <mat-select placeholder="Married/Civil partnership?" formControlName="marriedOrCivilParnership"
+                  required>
+                  <mat-option *ngFor="let marriedOrCivilPartnerships of refData?.marriedOrCivilPartnerships"
+                    [value]="marriedOrCivilPartnerships.id" id="marriedOrCivilPartnerships"
+                    [disabled]="marriedOrCivilPartnerships.isDisabled">{{marriedOrCivilPartnerships.value}}</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="learnersForm.get('equalityAndDiversity').get('marriedOrCivilParnership').hasError('required')">
+                  Married/Civil partnership is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="card-row">
+            <div class="card-column">
+              <mat-form-field appearance="fill">
+                <mat-label>Religion or beliefs</mat-label>
+                <mat-select placeholder="Religion or beliefs" formControlName="religionOrbeliefs" required>
+                  <mat-option *ngFor="let religionOrBeliefs of refData?.religionOrBeliefs"
+                    [value]="religionOrBeliefs.id" id="religionOrBeliefs" [disabled]="religionOrBeliefs.isDisabled">
+                    {{religionOrBeliefs.value}}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="learnersForm.get('equalityAndDiversity').get('religionOrbeliefs').hasError('required')">
+                  Religion or beliefs is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="card-column">
+              <div *ngIf="otherReligionOrBeliefsReset()">
+                <mat-form-field appearance="fill">
+                  <mat-label>Other religion or beliefs</mat-label>
+                  <input matInput formControlName="otherReligionOrBeliefs" id="otherReligionOrBeliefs"
+                    placeholder="Other Religion or beliefs" required>
+                  <mat-hint align="start">Maximum 100 characters allowed</mat-hint>
+                  <mat-error
+                    *ngIf="learnersForm.get('equalityAndDiversity').get('otherReligionOrBeliefs').hasError('maxlength')">
+                    Other Religion or beliefs should be less than 100 chars
+                  </mat-error>
+                  <mat-error
+                    *ngIf="learnersForm.get('equalityAndDiversity').get('otherReligionOrBeliefs').hasError('minlength')">
+                    Other religion or beliefs should be more than 3 chars
+                  </mat-error>
+                  <mat-error
+                    *ngIf="learnersForm.get('equalityAndDiversity').get('otherReligionOrBeliefs').hasError('required')">
+                    Other religion or beliefs is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="card-row">
+            <div class="card-column">
+              <mat-form-field appearance="fill">
+                <mat-label>Sexual orientation</mat-label>
+                <mat-select placeholder="Sexual orientation" formControlName="sexualOrientation" required>
+                  <mat-option *ngFor="let sexualOrientations of refData?.sexualOrientations"
+                    [value]="sexualOrientations.id" id="sexualOrientations" [disabled]="sexualOrientations.isDisabled">
+                    {{sexualOrientations.value}}</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="learnersForm.get('equalityAndDiversity').get('sexualOrientation').hasError('required')">
+                  Sexual orientation is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="card-column">
+              <div *ngIf="otherSexualOrientationReset()">
+                <mat-form-field appearance="fill">
+                  <mat-label>Other sexual orientation</mat-label>
+                  <input matInput formControlName="otherSexualOrientation" id="otherSexualOrientation"
+                    placeholder="Other Sexual Orientation" required>
+                  <mat-hint align="start">Maximum 100 characters allowed</mat-hint>
+                  <mat-error
+                    *ngIf="learnersForm.get('equalityAndDiversity').get('otherSexualOrientation').hasError('maxlength')">
+                    Other sexual orientation should be less than 100 chars
+                  </mat-error>
+                  <mat-error
+                    *ngIf="learnersForm.get('equalityAndDiversity').get('otherSexualOrientation').hasError('minlength')">
+                    Other sexual orientation should be more than 3 chars
+                  </mat-error>
+                  <mat-error
+                    *ngIf="learnersForm.get('equalityAndDiversity').get('otherSexualOrientation').hasError('required')">
+                    Other sexual orientation is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="card-row">
+            <div class="card-column">
+              <mat-form-field appearance="fill">
+                <mat-label>Ethnicity</mat-label>
+                <mat-select placeholder="Ethnicity" formControlName="ethnicity" required>
+                  <mat-option *ngFor="let ethnicities of refData?.ethnicities" [value]="ethnicities.id" id="ethnicities"
+                    [disabled]="ethnicities.isDisabled">{{ethnicities.value}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="learnersForm.get('equalityAndDiversity').get('ethnicity').hasError('required')">
+                  Ethnicity is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Working pattern</mat-label>
+              <mat-select placeholder="Working pattern" formControlName="workingpattern">
+                <mat-option *ngFor="let workingPatterns of refData?.workingPatterns" [value]="workingPatterns.id"
+                  id="workingPatterns" [disabled]="workingPatterns.isDisabled">{{workingPatterns.value}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Flexibility</mat-label>
+              <mat-select placeholder="Flexibility" formControlName="flexibility">
+                <mat-option *ngFor="let flexibilities of refData?.flexibilities" [value]="flexibilities.id"
+                  id="flexibilities" [disabled]="flexibilities.isDisabled">{{flexibilities.value}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+      </div>
+
+      <mat-card-footer>
+        <span class="spacer"></span>
+        <span>
+          <button type="submit" id="save_user_button" mat-flat-button color="primary"
+            [disabled]="learnersForm.invalid">Save</button>
+        </span>
+      </mat-card-footer>
+
+    </form>
+  </mat-card-content>
+</mat-card>

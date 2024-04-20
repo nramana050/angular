@@ -1,0 +1,408 @@
+<div class="header">
+    <div class="tabWrapper">
+        <ul>
+            <li class="tabHead active" routerLink="../profile" queryParamsHandling="merge">
+                <a class="tab-item" id="profile-tab" attr.aria-label="tab Profile">Profile</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<mat-card id="view-captr-learner" *ngIf="userList !==undefined">
+
+    <mat-card-header>
+
+        <div class="learnerName">
+            {{ user?.firstName }} {{user?.lastName}}
+        </div>
+
+        <div>
+            <button id="edit_view_buttodn" mat-stroked-button color="primary" [routerLink]="['../edit-participant']"
+                [queryParams]="{ id: user?.id }">
+                Edit
+            </button>
+
+            <button id="exit_view_button" mat-stroked-button color="primary"
+                [routerLink]="['../participant-professional-view']" queryParamsHandling="merge">
+                Exit
+            </button>
+        </div>
+    </mat-card-header>
+
+    <mat-card-content>
+        <div>
+            <dl>
+                <div class="label-hr">
+                    <span>Person Supported details</span>
+                </div>
+
+                <div class="card-row">
+                    <div class="card-column">
+                        <dt class="details-label">Unique identifier</dt>
+                        <dd>{{user?.id || "N/A"}}</dd>
+                
+                        <dt class="details-label">Person supported name</dt>
+                        <dd>{{user?.firstName}} {{user?.lastName || "N/A"}}</dd>
+                
+                        <dt class="details-label">Date Of Birth</dt>
+                        <dd>{{user?.dateOfBirth | date:'dd MMM yyyy'}}</dd>
+                
+                        <dt class="details-label">Gender</dt>
+                        <dd>{{user?.genderName || "N/A"}}</dd>
+                
+                        <div *ngIf="user?.otherGender !=null">
+                            <dt class="details-label">Other Gender</dt>
+                            <dd>{{user?.otherGender || "N/A"}}</dd>
+                        </div>
+                
+                        <dt class="details-label">Are you a British national?</dt>
+                        <dd>
+                            <div *ngIf="user?.participantV2Details.britishNational==1">Yes</div>
+                            <div *ngIf="user?.participantV2Details.britishNational==2">No</div>
+                            <div *ngIf="user?.participantV2Details.britishNational==null">N/A</div>
+                        </dd>
+                        <dt class="details-label">Who is your key staff member?</dt>
+                        <ng-container *ngIf="user?.workerId !== null">
+                            <ng-container *ngFor="let worker of userList">
+                                <span *ngIf="worker.id === user?.workerId">
+                                    {{ worker.firstName }} {{ worker.lastName }}
+                                </span>
+                            </ng-container>
+                        </ng-container>
+                        <div *ngIf="user?.workerId == null">N/A</div>
+
+                
+                        <div *ngIf="user?.participantV2Details?.otherEthnicity !=null">
+                            <dt class="details-label">Tell us other ethnicity as you've selected other?</dt>
+                            <dd>{{user?.participantV2Details.otherEthnicity || "N/A"}}</dd>
+                        </div>
+                        <dt class="details-label">Your key staff member phone number?</dt>
+                        <dd>{{user?.participantV2Details.keyMemberStaffPhoneNumber || "N/A"}}</dd>
+                
+                        <dt class="details-label">Borough of residence</dt>
+                        <dd>{{user?.participantV2Details.borough || "N/A"}}</dd>
+                
+                        <dt class="details-label">What person type is the person supported?</dt>
+                        <dd>
+                            <div *ngFor="let type of user?.participantV2Details?.personTypesData">
+                                {{ type }}
+                            </div>
+                            <div
+                                *ngIf="!user?.participantV2Details?.personTypes || user?.participantV2Details?.personTypes.length === 0">
+                                N/A</div>
+                        </dd>
+                
+                        <dt class="details-label">What is the supported persons programme?</dt>
+                        <dd>
+                            <div *ngFor="let program of user?.participantV2Details?.progmmeData">
+                                {{ program }}
+                            </div>
+                            <div *ngIf="!user?.participantV2Details?.progmmeIds || user?.participantV2Details?.progmmeIds.length === 0">
+                                N/A</div>
+                        </dd>
+                
+                        <dt class="details-label">On which contract or social enterprise is the person supported?</dt>
+                        <dd>
+                            <div *ngFor="let contract of user?.participantV2Details?.contractsData">
+                                {{ contract }}
+                            </div>
+                            <div *ngIf="!user?.participantV2Details?.contracts || user?.participantV2Details?.contracts.length === 0">
+                                N/A</div>
+                        </dd>
+                    </div>
+                
+                    <div class="card-column">
+                        <dt class="details-label">National insurance number</dt>
+                        <dd>{{user?.niNumber || "N/A"}}</dd>
+                
+                        <dt class="details-label">The date you joined unity works</dt>
+                        <dd>{{user?.participantV2Details.joinedDate | date:'dd MMM yyyy'|| "N/A"}}</dd>
+                
+                        <dt class="details-label">Have you been a resident of UK or EEA for the last 3 years?</dt>
+                        <dd>
+                            <div *ngIf="user?.participantV2Details.residentUKEEAlast3yrs==1">Yes</div>
+                            <div *ngIf="user?.participantV2Details.residentUKEEAlast3yrs==2">No</div>
+                            <div *ngIf="user?.participantV2Details.residentUKEEAlast3yrs==null">N/A</div>
+                        </dd>
+                
+                        <dt class="details-label">What is your preferred pronoun?</dt>
+                        <dd>{{user?.participantV2Details.preferredPronoun || "N/A"}}</dd>
+                
+                        <div *ngIf="user?.participantV2Details?.otherPreferredPronoun !=null">
+                            <dt class="details-label">Other preferred pronoun</dt>
+                            <dd>{{user?.participantV2Details?.otherPreferredPronoun || "N/A"}}</dd>
+                        </div>
+                
+                        <dt class="details-label">Ethnicity</dt>
+                        <dd>{{user?.ethnicityName || "N/A"}}</dd>
+                
+                        <dt class="details-label">Thera group number</dt>
+                        <dd>{{user?.participantV2Details.theraGroupNumber || "N/A"}}</dd>
+                
+                        <dt class="details-label">What benefits do you receive?</dt>
+                        <dd>{{user?.participantV2Details.benefitsReceived || "N/A"}}</dd>
+                
+                    </div>
+                </div>
+
+                <div class="label-hr">
+                    <span>Contact details</span>
+                </div>
+
+                <div class="card-row">
+                    <div class="card-column">
+                        <dt class="details-label">Address Line 1</dt>
+                        <dd>{{user?.contactDetails.addressLine1 || "N/A"}}</dd>
+
+                        <dt class="details-label">Address Line 2</dt>
+                        <dd>{{user?.contactDetails.addressLine2 || "N/A"}}</dd>
+
+                        <dt class="details-label">Town/City</dt>
+                        <dd>{{user?.contactDetails.townOrCity || "N/A"}}</dd>
+
+                        <dt class="details-label">County</dt>
+                        <dd>{{user?.contactDetails.county || "N/A"}}</dd>
+
+                        <dt class="details-label">Postcode</dt>
+                        <dd>{{user?.contactDetails.postCode || "N/A"}}</dd>
+                    </div>
+
+                    <div class="card-column">
+                        <dt class="details-label">Email Address</dt>
+                        <dd>{{user?.contactDetails.emailAddress || "N/A"}}</dd>
+
+                        <dt class="details-label">Your phone number</dt>
+                        <dd>{{user?.contactDetails.contactNo || "N/A"}}</dd>
+                    </div>
+                </div>
+
+                <div class="label-hr">
+                    <span>Emergency contact details</span>
+                </div>
+
+                <div class="card-row">
+                    <div class="card-column">
+                        <dt class="details-label">Name of emergency contact</dt>
+                        <dd>{{user?.emergencyContact.firstName || "N/A"}}</dd>
+
+                        <dt class="details-label">Relationship to you</dt>
+                        <dd>{{user?.emergencyContact.relationshipWithUser || "N/A"}}</dd>
+
+                        <dt class="details-label">Address Line 1</dt>
+                        <dd>{{user?.emergencyContact.addressLine1 || "N/A"}}</dd>
+
+                        <dt class="details-label">Address Line 2</dt>
+                        <dd>{{user?.emergencyContact.addressLine2 || "N/A"}}</dd>
+
+                        <dt class="details-label">Town</dt>
+                        <dd>{{user?.emergencyContact.townOrCity || "N/A"}}</dd>
+
+                        <dt class="details-label">County</dt>
+                        <dd>{{user?.emergencyContact.country || "N/A"}}</dd>
+
+                        <dt class="details-label">Postcode</dt>
+                        <dd>{{user?.emergencyContact.postcode || "N/A"}}</dd>
+                    </div>
+
+                    <div class="card-column">
+                        <dt class="details-label">Emergency contact number</dt>
+                        <dd>{{user?.emergencyContact.contactNo || "N/A"}}</dd>
+
+                        <dt class="details-label">Email Address</dt>
+                        <dd>{{user?.emergencyContact.mailAddress || "N/A"}}</dd>
+
+                        <dt class="details-label">Your phone number</dt>
+                        <dd>{{user?.contactDetails.contactNo || "N/A"}}</dd>
+                    </div>
+                </div>
+
+                <div class="label-hr">
+                    <span>Referral information</span>
+                </div>
+
+                <div class="card-row">
+                    <div class="card-column">
+                        <dt class="details-label">Who made the referral?</dt>
+                        <dd>{{user?.referralInfoV2.madeReferral || "N/A"}}</dd>
+
+                        <dt class="details-label">Contact number</dt>
+                        <dd>{{user?.referralInfoV2.contactNumber || "N/A"}}</dd>
+
+                        <dt class="details-label">How did you hear about the service?</dt>
+                        <dd>{{user?.referralInfoV2?.hearAboutService || "N/A"}}</dd>
+
+                        <dt class="details-label">Referral date</dt>
+                        <dd>{{user?.referralInfoV2?.referralDate | date:'dd MMM yyyy' || "N/A"}}</dd>
+
+                    </div>
+
+                    <div class="card-column">
+                        <dt class="details-label">How do you know them?</dt>
+                        <dd>{{user?.referralInfoV2.knowThemName || user?.referralInfoV2.other || "N/A"}}</dd>
+                        <div *ngIf="user?.referralInfoV2?.other !=null">
+                            <dt class="details-label">Tell us how do you know them as you've selected other?</dt>
+                            <dd>{{user?.referralInfoV2.other || "N/A"}}</dd>
+                        </div>
+                        <dt class="details-label">Contact email address</dt>
+                        <dd>{{user?.referralInfoV2?.contactEmail || "N/A"}}</dd>
+
+                        <!-- <dt class="details-label">Referral form identifier</dt> -->
+                        <!-- <dd>{{user?.referralInfoV2?.referralForm || "N/A"}}</dd> -->
+                    </div>
+                </div>
+
+                <div class="label-hr">
+                    <span>Disabilities and health conditions</span>
+                </div>
+
+                <div class="card-row">
+                    <div class="card-column">
+                        <dt class="details-label">Do you have a learning disability?</dt>
+                        <dd>{{user?.disabilityHealth.disabilityStatus || "N/A"}}</dd>
+                    </div>
+                </div>
+                <div class="card-row">
+                    <div class="card-column">
+                        <dt class="details-label">What are your disabilities?</dt>
+                        <dd>
+                            <div *ngFor="let program of user?.disabilityHealth?.disabiltylist">{{program}}</div>
+                            <div *ngIf="user?.disabilityHealth?.disabilityChoiceList==null">N/A</div>
+                        </dd>
+                    </div>
+                    <div class="card-column" > 
+                        <div *ngIf="user?.disabilityHealth?.disabilityOther !=null">
+                            <dt class="details-label">Tell us your disability as you've selected other?</dt>
+                            <dd>{{user?.disabilityHealth?.disabilityOther || "N/A"}}</dd>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-row">
+                    <div class="card-column">
+                        <dt class="details-label">Do you have any health conditions?</dt>
+                        <dd>{{user?.disabilityHealth.healthConditionStatus || "N/A"}}</dd>
+                        <div *ngIf="user?.disabilityHealth?.healthConditionOther !=null">
+                            <dt class="details-label">Tell us your health conditions as you've selected other?</dt>
+                            <dd>{{user?.disabilityHealth.healthConditionOther || "N/A"}}</dd>
+                        </div>
+                    </div>
+                    <div class="card-column" *ngIf="user?.disabilityHealth?.healthConditionChoiceList !=null">
+                        <dt class="details-label">What are your health conditions?</dt>
+                        <dd>
+                            <div *ngFor="let program of user?.disabilityHealth?.healthconditonslist">{{program}}</div>
+                            <div *ngIf="user?.disabilityHealth?.healthConditionChoiceList==null">N/A</div>
+                        </dd>
+                    </div>
+                </div>
+                <div class="card-row">
+                    <div class="card-column">
+                        <dt class="details-label">Do you have any mental health needs?</dt>
+                        <dd>{{user?.disabilityHealth.mentalHealthStatus || "N/A"}}</dd>
+                        <div *ngIf="user?.disabilityHealth?.mentalHealthOther !=null">
+                            <dt class="details-label">Tell us your mental health needs as you've selected other?</dt>
+                            <dd>{{user?.disabilityHealth.mentalHealthOther || "N/A"}}</dd>
+                        </div>
+                    </div>
+                    <div class="card-column" *ngIf="user?.disabilityHealth?.mentalHealthChoiceList !=null">
+                        <dt class="details-label">What are your mental health needs?</dt>
+                        <dd>
+                            <div *ngIf="user?.disabilityHealth?.mentalHealthChoiceList !=null">
+                                <div *ngFor="let program of user?.disabilityHealth?.mentalconditionslist">{{program}}
+                                </div>
+                            </div>
+                            <div *ngIf="user?.disabilityHealth?.mentalHealthChoiceList==null">N/A</div>
+                        </dd>
+                    </div>
+                </div>
+            </dl>
+
+            <div class="label-hr">
+                <span>Education and learning </span>
+            </div>
+            <div class="card-row">
+                <div class="card-column">
+                    <dt class="details-label">Do you have any previous qualifications?</dt>
+                    <dd>{{user?.participantV2Details.previousQualification || "N/A"}}</dd>
+                </div>
+            </div>
+            
+            <div *ngIf="user?.participantV2Details.previousQualification !=null  && user.previousQualifications.length > 0">
+                <dt class="details-label">Previous qualifications</dt>
+                <table mat-table [dataSource]="user.previousQualifications">
+                    <ng-container matColumnDef="Qualification">
+                        <th mat-header-cell *matHeaderCellDef>Qualification name</th>
+                        <td mat-cell *matCellDef="let element"><span class="mobile-label">Qualification name: </span>{{ element.qualification }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="Level">
+                        <th mat-header-cell *matHeaderCellDef>Level</th>
+                        <td mat-cell *matCellDef="let element"><span class="mobile-label">Level: </span>{{ element.levelName }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="Qualificationstartdate">
+                        <th mat-header-cell *matHeaderCellDef>Qualification start date</th>
+                        <td mat-cell *matCellDef="let element"><span class="mobile-label">Qualification start date: </span>{{ element.startDate | date:'dd MMM yyyy' }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="Datequalificationachived">
+                        <th mat-header-cell *matHeaderCellDef>Date qualification was achieved</th>
+                        <td mat-cell *matCellDef="let element"><span class="mobile-label">Date qualification was achieved: </span>{{ element.achievedDate | date:'dd MMM yyyy' }}</td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns2"></tr>
+                </table>
+            </div>
+
+            <div class="card-row">
+                <div class="card-column">
+                  <dt class="details-label">Are you currently working towards a qualification?</dt>
+                  <dd>{{ user?.participantV2Details.towardsQualification || "N/A" }}</dd>
+                </div>
+              </div>
+              
+              <div *ngIf="user?.participantV2Details.towardsQualification != null && nonAchievedQualifications.length > 0">
+                <dt class="details-label">Qualifications currently working towards</dt>
+                <table mat-table [dataSource]="nonAchievedQualifications">
+                  <ng-container matColumnDef="QualificationTowards">
+                    <th mat-header-cell *matHeaderCellDef>Qualification name</th>
+                    <td mat-cell *matCellDef="let element"><span class="mobile-label">Qualification name: </span>{{ element.qualificationTowardsName }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="QualificationStartDate">
+                    <th mat-header-cell *matHeaderCellDef>Qualification start date</th>
+                    <td mat-cell *matCellDef="let element"><span class="mobile-label">Qualification start date: </span>{{ element.startDate | date:'dd MMM yyyy' }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="DateQualificationAchieved">
+                    <th mat-header-cell *matHeaderCellDef>Date qualification was achieved</th>
+                    <td mat-cell *matCellDef="let element"><span class="mobile-label">Date qualification was achieved: </span>{{ element.achievedDate || 'Current working towards' }}</td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns3"></tr>
+                </table>
+              </div>
+
+              <div *ngIf="user?.participantV2Details.towardsQualification != null && achievedQualifications.length > 0">
+                <dt class="details-label">Qualification achived through Unity Works</dt>
+                <table mat-table [dataSource]="achievedQualifications">
+                  <ng-container matColumnDef="QualificationTowards">
+                    <th mat-header-cell *matHeaderCellDef>Qualification name</th>
+                    <td mat-cell *matCellDef="let element"><span class="mobile-label">Qualification name: </span>{{ element.qualificationTowardsName }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="QualificationStartDate">
+                    <th mat-header-cell *matHeaderCellDef>Qualification start date</th>
+                    <td mat-cell *matCellDef="let element"><span class="mobile-label">Qualification start date: </span>{{ element.startDate | date:'dd MMM yyyy' }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="DateQualificationAchieved">
+                    <th mat-header-cell *matHeaderCellDef>Date qualification was achieved</th>
+                    <td mat-cell *matCellDef="let element"><span class="mobile-label">Date qualification was achieved: </span>{{ element.achievedDate | date:'dd MMM yyyy' }}</td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns1"></tr>
+                </table>
+              </div>
+             
+        <dt class="details-label">What job sector are you interested in?</dt>
+        <dd>
+            <div *ngIf="user?.participantV2Details?.jobSectorInterestedList != null">
+                <div *ngFor="let sector of user?.participantV2Details?.jobSectorInterestedList">{{ sector }}
+                </div>
+            </div>
+            <div *ngIf="user?.participantV2Details?.jobSectorInterestedList == null">N/A</div>
+        </dd>
+        </div>
+    </mat-card-content>
+</mat-card>

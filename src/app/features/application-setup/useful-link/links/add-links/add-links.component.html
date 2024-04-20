@@ -1,0 +1,75 @@
+<mat-card id="edit-user" *ngIf="isLoaded">
+  <mat-card-header class="flex-end">
+    <span class="spacer"></span>
+    <div>
+      <span><button id="exit_user_button" mat-stroked-button class="right" color="primary"
+          [routerLink]="['/application-setup/links']">Exit</button></span>
+    </div>
+  </mat-card-header>
+  <span *ngIf=isNew class="label-hr">
+    <mat-card-title>
+      Add link</mat-card-title>
+  </span>
+  <span *ngIf=!isNew class="label-hr">
+    <mat-card-title>
+      Edit link</mat-card-title>
+  </span>
+  <mat-card-content>
+    <form [formGroup]="linkForm" (ngSubmit)="onSubmit()" autocomplete="off">
+      <div class="card-row">
+        <div class="card-column">
+          <mat-form-field appearance="fill">
+            <mat-label>Name of the link</mat-label>
+            <mat-hint>Minimum 1 Maximum 100 characters</mat-hint>
+            <input matInput formControlName="linkName" required>
+            <mat-error *ngIf="linkForm.controls.linkName.errors?.required">
+              Link name is required.
+            </mat-error>
+            <mat-error
+              *ngIf="linkForm.controls.linkName.errors?.maxlength && !linkForm.controls.linkName.errors?.pattern ">
+              Link name must be less than 100 characters.
+            </mat-error>
+            <mat-error *ngIf="linkForm.controls.linkName.errors?.pattern ">
+              Link name is invalid.
+            </mat-error>
+
+          </mat-form-field>
+        </div>
+        <div class="card-column">
+          <mat-form-field appearance="fill">
+            <mat-label>Tab</mat-label>
+            <mat-select formControlName="tab" required>
+              <mat-option *ngFor="let tab of tabs" [value]="tab.id">
+                {{tab.name}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="linkForm.controls.tab.errors?.required">
+              Tab is required.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="card-column">
+          <mat-form-field appearance="fill">
+            <mat-label>Website URL</mat-label>
+            <mat-hint>Please enter the full website address (URL) for the website you would like to add for example
+              https://www.google.com</mat-hint>
+            <input matInput formControlName="websiteURL" required>
+            <mat-error *ngIf="linkForm.controls.websiteURL.errors?.required">
+              URL is required.
+            </mat-error>
+            <mat-error *ngIf="linkForm.controls.websiteURL.errors?.pattern">
+              Invalid URL provided
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <mat-card-footer>
+        <span class="spacer"></span>
+        <span>
+          <button type="submit" id="save_user_button" mat-flat-button color="primary"
+            [disabled]="!linkForm.valid || disableSaveButton">{{isNew ? 'Save' : 'Update'}}</button>
+        </span>
+      </mat-card-footer>
+    </form>
+  </mat-card-content>
+</mat-card>

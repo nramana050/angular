@@ -1,0 +1,123 @@
+.highlight-expendable-table {
+  width: 100%;
+
+  .card-row {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    justify-content: start !important;
+  }
+}
+
+
+
+
+::ng-deep .seq-theme .mat-card .mat-row {
+  min-height: 30px !important;
+}
+
+.example-element-row {
+  border-bottom-color: rgba(0, 0, 0, 0.12);
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+
+}
+
+
+.example-element-description {
+  padding: 16px;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}
+
+.mat-cell {
+  display: block;
+}
+
+.mr-50 {
+  margin-right: 50px;
+}
+
+.qualificatioTable {
+  background-color: #f3f2f1;
+}
+
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.radioAlignment {
+  mat-radio-button {
+    margin: 0 5px !important;
+  }
+}
+
+.primaryColor {
+  color: var(--primary-color);
+}
+
+.header-center {
+  text-align: center;
+}
+
+.details_label {
+  display: block;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.54) !important;
+  font-weight: 600;
+}
+
+.header-align {
+  flex: 0 1 calc(39% - 12px);
+  width: calc(39% - 12px);
+}
+
+.header-width {
+  color: rgba(0, 0, 0, 0.54) !important;
+  padding-right: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  flex: 1 1 calc(29% - 12px);
+  width: calc(30% - 12px);
+}
+
+.header-color {
+  color: rgba(0, 0, 0, 0.54) !important;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.spacing {
+  margin-left: 18px;
+}
+
+.hideCell {
+  display: none;
+}
+
+.width-30 {
+  flex: 1 1 calc(30% - 12px);
+  width: calc(30% - 12px);
+}
+
+.mat-expansion-panel-header {
+  height: 52px
+}
+
+@media screen and (max-width: 767px) {
+  .mat-expansion-panel-header {
+    height: 120px;
+  }
+}
+
+.adjust-label{
+  @media screen and (max-width: 598px) {
+    overflow-x: auto;
+  }
+}

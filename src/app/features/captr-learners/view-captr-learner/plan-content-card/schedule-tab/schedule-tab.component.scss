@@ -1,0 +1,630 @@
+@import "~src/styles/helpers/mixins/grid";
+@import "~src/styles/helpers/variables/palette";
+@import "~src/styles/helpers/mixins/typography";
+
+$employment-base-color: #F47738;
+$education-base-color: #28a197;
+$health-and-wellbeing-base-color: #5694CA;
+$training-base-color: #F499BE;
+$drugs-and-alcohol-base-color: #85994B;
+$community-base-color: #6f72af;
+$behaviour-and-attitudes-base-color: #912b88;
+
+$employment-opacity-color: rgba(244, 119, 56, 0.33);
+$education-opacity-color: rgba(40, 161, 151, 0.33);
+$health-and-wellbeing-opacity-color: rgba(86, 148, 202, 0.33);
+$training-opacity-color: rgba(243, 153, 190, 0.33);
+$drugs-and-alcohol-opacity-color: rgba(133, 153, 75, 0.33);
+$community-opacity-color: rgba(111, 114, 175, 0.33);
+$behaviour-and-attitudes-opacity-color: rgba(145, 43, 136, 0.33);
+
+$today-line-color: #d53880;
+$focus-color: #ffdd00;
+
+.current-container {
+  width: calc(100% - 2px);
+  margin-left: 0px;
+  border-left: 1px solid #bfc1c3;
+  border-right: 1px solid #bfc1c3;
+  border-bottom: 1px solid #bfc1c3;
+
+}
+
+.gantt-container {
+  max-width: 988px;
+  margin: 0px auto 10px auto;
+  padding-top: 10px;
+}
+
+.pathway-container {
+  display: flex;
+  height: 90px;
+  width: 100%;
+  margin-bottom: 5px;
+
+  &:focus {
+    outline: 3px solid #ffdd00;
+  }
+}
+
+.pathway-label-container {
+  height: 100%;
+  width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+
+  img {
+    display: none;
+  }
+}
+
+.pathway-label-employment {
+  background-color: $employment-base-color;
+}
+
+.pathway-label-education {
+  background-color: $education-base-color;
+}
+
+.pathway-label-health-and-wellbeing {
+  background-color: $health-and-wellbeing-base-color;
+}
+
+.pathway-label-training {
+  background-color: $training-base-color;
+}
+
+.pathway-label-drugs-and-alcohol {
+  background-color: $drugs-and-alcohol-base-color
+}
+
+.pathway-label-community {
+  background-color: $community-base-color
+}
+
+.pathway-label-behaviour-and-attitudes {
+  background-color: $behaviour-and-attitudes-base-color
+}
+
+.pathway-timeline-employment {
+  background-color: $employment-opacity-color;
+  filter: opacity(1);
+}
+
+.key-information-panel {
+  filter: opacity(1) !important;
+}
+
+.pathway-timeline-education {
+  background-color: $education-opacity-color;
+  filter: opacity(1);
+}
+
+.pathway-timeline-health-and-wellbeing {
+  background-color: $health-and-wellbeing-opacity-color;
+  filter: opacity(1);
+}
+
+.pathway-timeline-training {
+  background-color: $training-opacity-color;
+  filter: opacity(1);
+}
+
+.pathway-timeline-drugs-and-alcohol {
+  background-color: $drugs-and-alcohol-opacity-color;
+  // filter: opacity(1);
+}
+
+.pathway-timeline-community {
+  background-color: $community-opacity-color;
+  filter: opacity(1);
+}
+
+.pathway-timeline-behaviour-and-attitudes {
+  background-color: $behaviour-and-attitudes-opacity-color;
+  filter: opacity(1);
+}
+
+.pathway-timeline-exploring-self-employment {
+  opacity: 0.33 !important;
+  filter: opacity(1) !important;
+}
+
+.pathway-timeline-construction-subcontracting {
+  opacity: 0.33 !important;
+  filter: opacity(1) !important;
+}
+
+.pathway-timeline-getting-ready-to-trade {
+  opacity: 0.33 !important;
+  filter: opacity(1) !important;
+}
+
+.pathway-timeline {
+  height: 100%;
+  width: calc(100% - 135px);
+  border-left: 5px solid white;
+
+  .timeline-decorator-container {
+    position: absolute;
+    display: flex;
+    height: 90px;
+    width: 100%;
+    max-width: 885px;
+  }
+}
+
+.pathway-label {
+  text-align: center;
+  color: white;
+  font-weight: 700;
+  // font-family: 'helvetica_bold';
+  font-size: 14px;
+  line-height: 17px;
+  vertical-align: middle;
+  margin: 0 5px;
+  padding: 0;
+}
+
+/* for edge browser */
+@supports (-ms-ime-align: auto) {
+  .timeline-decorator-container {
+    max-width: 885px;
+    overflow: hidden;
+  }
+
+  .timeline-entry-container {
+    max-width: 885px;
+    overflow: hidden;
+  }
+
+  .entry-details-container {
+    margin-top: 25px;
+  }
+}
+
+.upper-container {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  margin-bottom: 2px;
+
+  .above-pathway-container {
+    width: 130px;
+  }
+
+  .months-container {
+    height: 100%;
+    width: calc(100% - 130px);
+    display: flex;
+
+    .previous-month {
+      height: 100%;
+      width: 33%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      // font-family: 'helvetica_bold';
+      border-left: 5px solid white;
+
+      &:focus {
+        outline: 3px solid #ffdd00 !important;
+      }
+    }
+
+    .current-month {
+      height: 100%;
+      width: 33%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+
+      // font-family: 'helvetica_bold';
+      &:focus {
+        outline: 3px solid #ffdd00 !important;
+      }
+    }
+
+    .next-month {
+      height: 100%;
+      width: 33%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+
+      // font-family: 'helvetica_bold';
+      &:focus {
+        outline: 3px solid #ffdd00 !important;
+      }
+    }
+  }
+}
+
+.gantt-previous-month {
+  width: 33.3%;
+  height: 100%;
+  display: flex;
+}
+
+.gantt-current-month {
+  width: 33.3%;
+  border-left: 5px solid white;
+  height: 100%;
+  display: flex;
+  position: relative;
+
+  .gantt-today-span {
+    display: inline-flex;
+    position: relative;
+    left: initial;
+    border-right: 1px solid $today-line-color;
+    height: calc(100% + 5px);
+  }
+}
+
+.pathway-container:last-of-type {
+  .gantt-today-span {
+    display: inline-flex;
+    position: relative;
+    left: initial;
+    border-right: 1px solid $today-line-color;
+    height: 100%;
+  }
+}
+
+.gantt-next-month {
+  width: 33.3%;
+  border-left: 5px solid white;
+  height: 100%;
+  display: flex;
+}
+
+.today-label-container {
+  width: 100%;
+  height: 20px;
+  padding-bottom: 5px;
+
+  .today-label {
+    display: inline-flex;
+    position: relative;
+    color: $today-line-color;
+    font-weight: 700;
+    // font-family: 'helvetica_bold';
+  }
+}
+
+.timeline-entry-container {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  overflow: hidden;
+  max-width: 831px;
+
+  .entry-row-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 30px;
+  }
+
+  .entry-container {
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+
+    .entry-details-container {
+      height: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+
+      .entry-bar {
+        position: absolute;
+        height: 10px;
+        border-radius: 5px;
+        padding-bottom: 1px;
+        cursor: pointer;
+        border: 0;
+      }
+
+      .entry-bar-selected {
+        margin-left: -3px;
+        margin-top: -3px;
+        border-radius: 8px;
+        border: 3px solid $focus-color;
+        z-index: 1;
+      }
+
+      .entry-bar-employment {
+        background-color: $employment-base-color;
+      }
+
+      .entry-bar-education {
+        background-color: $education-base-color;
+      }
+
+      .entry-bar-health-and-wellbeing {
+        background-color: $health-and-wellbeing-base-color;
+      }
+
+      .entry-bar-training {
+        background-color: $training-base-color;
+      }
+
+      .entry-bar-drugs-and-alcohol {
+        background-color: $drugs-and-alcohol-base-color;
+      }
+
+      .entry-bar-community {
+        background-color: $community-base-color;
+      }
+
+      .entry-bar-behaviour-and-attitudes {
+        background-color: $behaviour-and-attitudes-base-color;
+      }
+
+      .entry-label {
+        font-size: 14px;
+        position: absolute;
+        color: #0b0c0c;
+        margin-top: 10px;
+        font-weight: 600;
+        white-space: nowrap;
+        margin-left: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 22px;
+
+        .entry-label-content {
+          cursor: pointer;
+          padding-top: 1px;
+        }
+      }
+
+      .entry-label-selected {
+        background-color: $focus-color;
+        box-shadow: 0 0px #0b0c0c, 0 3px #0b0c0c;
+      }
+    }
+  }
+}
+
+.key-information-panel {
+  color: #fff;
+  padding: 10px;
+  margin: 25px 15px 30px 0;
+  font-size: 19px;
+  height: auto;
+  width: calc(100% - 20px);
+
+  &:focus {
+    outline: 3px solid #ffdd00;
+  }
+
+  .key-info-panel-upper-container {
+    display: flex;
+    width: calc(100% - 40px);
+    margin-left: 20px;
+    margin-right: 20px;
+
+    .three-quarters-section {
+      width: 80%;
+      margin-bottom: 10px;
+      padding-top: 10px;
+
+      h2 {
+        margin: 0;
+        font-size: 36px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: 0.5px;
+        // font-family: 'helvetica_bold';
+      }
+    }
+
+    .quarter-section {
+      width: 20%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+
+
+  .date-container {
+    width: calc(100% - 40px);
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    line-height: 1.5;
+    font-weight: 400;
+
+    span {
+      font-size: 19px;
+    }
+  }
+
+  .divider {
+    border-bottom: 1px solid #fff;
+    clear: both;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+
+.govuk-tag {
+  padding: 0px 5px;
+  font-size: 19px;
+  // font-family: "helvetica_bold";
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  outline: 2px solid #fff;
+  border: 3px solid transparent;
+}
+
+.key-information-panel-employment {
+  background-color: $employment-base-color;
+
+  .govuk-tag {
+    color: $employment-base-color;
+    border-color: $employment-base-color;
+  }
+}
+
+.key-information-panel-education {
+  background-color: $education-base-color;
+
+  .govuk-tag {
+    color: $education-base-color;
+    border-color: $education-base-color;
+  }
+}
+
+.key-information-panel-health-and-wellbeing {
+  background-color: $health-and-wellbeing-base-color;
+
+  .govuk-tag {
+    color: $health-and-wellbeing-base-color;
+    border-color: $health-and-wellbeing-base-color;
+  }
+}
+
+.key-information-panel-training {
+  background-color: $training-base-color;
+
+  .govuk-tag {
+    color: $training-base-color;
+    border-color: $training-base-color;
+  }
+}
+
+.key-information-panel-drugs-and-alcohol {
+  background-color: $drugs-and-alcohol-base-color;
+
+  .govuk-tag {
+    color: $drugs-and-alcohol-base-color;
+    border-color: $drugs-and-alcohol-base-color;
+  }
+}
+
+.key-information-panel-community {
+  background-color: $community-base-color;
+
+  .govuk-tag {
+    color: $community-base-color;
+    border-color: $community-base-color;
+  }
+}
+
+.key-information-panel-behaviour-and-attitudes {
+  background-color: $behaviour-and-attitudes-base-color;
+
+  .govuk-tag {
+    color: $behaviour-and-attitudes-base-color;
+    border-color: $behaviour-and-attitudes-base-color;
+  }
+}
+
+
+@media all and (max-width: 600px) {
+  .pathway-label {
+    display: none;
+  }
+
+  .pathway-label-container {
+    width: 10px;
+  }
+
+  .above-pathway-container {
+    width: 5px !important;
+  }
+
+  .pathway-timeline {
+    width: calc(100% - 10px);
+  }
+
+  .upper-container {
+    width: 100%;
+  }
+
+  .months-container {
+    flex-grow: 1;
+
+    span {
+      font-size: 12px;
+    }
+
+    .previous-month {
+      margin-left: 5px;
+    }
+  }
+
+  .today-label-container {
+    display: none;
+  }
+
+  .date-container {
+    flex-direction: column;
+
+    span:first-of-type {
+      margin-bottom: 5px;
+    }
+  }
+
+  .key-info-panel-upper-container {
+    flex-direction: column;
+
+    .quarter-section {
+      margin-top: 5px;
+    }
+  }
+
+  .three-quarters-section {
+    width: 100% !important;
+    hyphens: auto;
+  }
+}
+
+//this changes done against VC-26355(279-292)
+.gantt-container {
+  font-size: 16px;
+}
+
+.employment-base-color {
+  border-left-color: $employment-base-color !important;
+}
+
+.education-base-color {
+  border-left-color: $education-base-color !important;
+}
+
+.health-and-wellbeing-base-color {
+  border-left-color: $health-and-wellbeing-base-color !important;
+}
+
+.training-base-color {
+  border-left-color: $training-base-color !important;
+}
+
+.drugs-and-alcohol-base-color {
+  border-left-color: $drugs-and-alcohol-base-color !important;
+}
+
+.community-base-color {
+  border-left-color: $community-base-color !important;
+}
+
+.behaviour-and-attitudes-base-color {
+  border-left-color: $behaviour-and-attitudes-base-color !important;
+}

@@ -1,0 +1,66 @@
+<mat-card id="view-customer" *ngIf="isLoaded">
+
+    <mat-card-header class="flex-end">
+        <span class="spacer"></span>
+        <button id="edit_edit_button" mat-stroked-button color="primary"
+            [routerLink]="['/programme-management/programmes/edit/' + userId]">
+            Edit
+        </button>
+        <button id="exit_user_button" mat-stroked-button color="primary"
+            [routerLink]="['/programme-management']">Exit</button>
+    </mat-card-header>
+
+    <mat-card-content>
+        <div class="label-hr">
+            <span>Programme details</span>
+        </div>
+    </mat-card-content>
+    <mat-card-content>
+        <div class="infoSection">
+            <div class="card-row">
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Programme name</span>
+                        <span id="titleId">{{programmeDetails?.programmeName || "N/A"}}</span>
+                    </p>
+                    <p class="info">
+                        <span class="details_label">Capacity</span>
+                        <span id="titleId">{{programmeDetails?.capacity || "N/A"}}</span>
+                    </p>
+                </div>
+
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Provider</span>
+                        <span id="titleId">{{programmeDetails?.providerId |
+                            getLabel:providerList:programmeDetails.providerId:'providerName' }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+    <div class="label-hr">
+        <span>Course and Qualification details</span>
+    </div>
+    <mat-card-content>
+        <div class="infoSection">
+            <div class="card-row" *ngFor="let CAndQ of programmeDetails?.coursesAndQualifications">
+                <div class="card-column">
+                    <p class="info">
+
+                        <span class="details_label">Course name</span>
+                        <span id="titleId">{{CAndQ?.courseId | getLabel:courseList:CAndQ?.courseId:'courseName'
+                            }} ({{CAndQ?.courseId | getLabel:courseList:CAndQ?.courseId:'courseCode'}})</span>
+                    </p>
+                </div>
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Qualification</span>
+                        <span id="titleId">{{CAndQ?.qualificationIds |
+                            getLabel:qualificationList:CAndQ?.qualificationIds[0]:'qualificationName':'qualificationCode'}} </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

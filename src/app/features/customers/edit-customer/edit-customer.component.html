@@ -1,0 +1,633 @@
+<mat-card id="edit-customer">
+  <mat-card-header class="flex-end">
+    <span>
+      <mat-icon>groups_2</mat-icon>
+    </span>
+    <span *ngIf=isNew class="margin10">
+      <mat-card-title>
+        Add customer</mat-card-title>
+    </span>
+    <span *ngIf=!isNew class="margin10">
+      <mat-card-title>
+        Edit customer</mat-card-title>
+    </span>
+    <span class="spacer"></span>
+    <span><button id="exit_user_button" mat-stroked-button class="right" color="primary"
+        [routerLink]="['/customers']">Exit</button></span>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="customerForm" (ngSubmit)="onSubmit()" validate autocomplete="off"
+      (keydown.enter)="handleEnterKeyPress($event)">
+      <div class="card-row">
+        <div formGroupName="clientDetails" class="card-column" *ngIf="isNew">
+          <mat-form-field appearance="fill">
+            <mat-label>Customer name</mat-label>
+            <input matInput formControlName="clientName" id="clientName" required>
+            <mat-error
+              *ngIf="customerForm.controls.clientDetails.controls.clientName.invalid && !customerForm.controls.clientDetails.controls.clientName.errors?.minlength && !customerForm.controls.clientDetails.controls.clientName.errors?.maxlength && !customerForm.controls.clientDetails.controls.clientName.errors?.pattern">
+              Customer name is required.
+            </mat-error>
+            <mat-error *ngIf="customerForm.controls.clientDetails.controls.clientName.errors?.minlength">
+              Customer name should be greater than 3 characters.
+            </mat-error>
+            <mat-error *ngIf="customerForm.controls.clientDetails.controls.clientName.errors?.maxlength">
+              Customer name should be less than 50 characters.
+            </mat-error>
+            <mat-error *ngIf="customerForm.controls.clientDetails.controls.clientName.errors?.pattern">
+              Invalid characters in customer name.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="card-column" *ngIf="!isNew">
+          <mat-form-field appearance="fill">
+            <mat-label>Customer name (disabled)</mat-label>
+            <input matInput disabled value="{{customer?.clientDetails?.clientName}}" id="clientName">
+          </mat-form-field>
+        </div>
+        <div formGroupName="clientDetails" class="card-column" *ngIf="isNew">
+          <mat-form-field appearance="fill">
+            <mat-label>Identifier</mat-label>
+            <input matInput disabled formControlName="identifier" oninput="this.value = this.value.toUpperCase()"
+              id="identifier" required>
+            <mat-error
+              *ngIf="customerForm.controls.clientDetails.controls.identifier.invalid && !customerForm.controls.clientDetails.controls.identifier.errors?.minlength && !customerForm.controls.clientDetails.controls.identifier.errors?.maxlength && !customerForm.controls.clientDetails.controls.identifier.errors?.pattern">
+              Identifier is required.
+            </mat-error>
+            <mat-error *ngIf="customerForm.controls.clientDetails.controls.identifier.errors?.minlength">
+              Identifier should be greater than 2 characters.
+            </mat-error>
+            <mat-error *ngIf="customerForm.controls.clientDetails.controls.identifier.errors?.maxlength">
+              Identifier should be less than 10 characters.
+            </mat-error>
+            <mat-error *ngIf="customerForm.controls.clientDetails.controls.identifier.errors?.pattern">
+              Identifier is invalid.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="card-column" *ngIf="!isNew">
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Identifier (disabled)</mat-label>
+            <input matInput disabled value="{{customer?.clientDetails?.identifier}}" id="identifier">
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="card-row">
+        <div formGroupName="clientDetails" class="card-column">
+          <div *ngIf="isNew">
+            <mat-form-field appearance="fill">
+              <mat-label>Domain</mat-label>
+              <mat-select formControlName='domainId' required>
+                <mat-option *ngFor="let domain of refDomain" [value]="domain.id" id="domain">
+                  {{domain.value}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="customerForm.controls.clientDetails.controls.domainId.errors?.required">
+                Domain is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div formGroupName="clientDetails" class="card-column">
+          <div *ngIf="isNew">
+            <mat-form-field appearance="fill">
+              <mat-label>Is moodle required?</mat-label>
+              <mat-select formControlName='isMoodleUser' required>
+                <mat-option [value]="true">Yes</mat-option>
+                <mat-option [value]="false">No</mat-option>
+              </mat-select>
+              <mat-error *ngIf="customerForm.controls.clientDetails.controls.isMoodleUser.errors?.required">
+                Please select Yes or No.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="label-hr"> <span> Keyworker application details </span> </div>
+      <div formGroupName="kwAppDetails" class="card-row">
+        <div class="card-column">
+          <div class="mt25">
+            <mat-form-field appearance="fill">
+              <mat-label>Primary app colour</mat-label>
+              <input matInput formControlName="primaryColour" id="primaryColour" required>
+              <mat-error
+                *ngIf="customerForm.get('kwAppDetails.primaryColour').errors?.required && !customerForm.get('kwAppDetails.primaryColour').errors?.pattern && !customerForm.get('kwAppDetails.primaryColour').valid">
+                Primary app colour is required.
+              </mat-error>
+              <mat-error *ngIf="customerForm.get('kwAppDetails.primaryColour').errors?.pattern">
+                Primary app colour is invalid.
+              </mat-error>
+              <mat-error
+                *ngIf="customerForm.get('kwAppDetails.primaryColour').invalid && !customerForm.get('kwAppDetails.primaryColour').errors?.pattern">
+                Primary & secondary app colour must be different.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="card-column">
+          <div class="mt25">
+            <mat-form-field appearance="fill">
+              <mat-label>Secondary app colour</mat-label>
+              <input matInput formControlName="secondaryColour" id="secondaryColour" required>
+              <mat-error
+                *ngIf="customerForm.get('kwAppDetails.secondaryColour').errors?.required && !customerForm.get('kwAppDetails.secondaryColour').errors?.pattern && !customerForm.get('kwAppDetails.secondaryColour').valid">
+                Secondary app colour is required.
+              </mat-error>
+              <mat-error *ngIf="customerForm.get('kwAppDetails.secondaryColour').errors?.pattern">
+                Secondary app colour is invalid.
+              </mat-error>
+              <mat-error
+                *ngIf="customerForm.get('kwAppDetails.secondaryColour').invalid && !customerForm.get('kwAppDetails.secondaryColour').errors?.required && !customerForm.get('kwAppDetails.secondaryColour').errors?.pattern">
+                Primary & secondary app colour must be different.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div formGroupName="kwAppDetails" class="card-row">
+        <div class="card-column">
+          <div class="mt25" *ngIf="isNew">
+            <mat-form-field appearance="fill">
+              <mat-label>App URL</mat-label>
+              <input matInput formControlName="appUrl" id="appUrl" required>
+              <mat-error
+                *ngIf="customerForm.get('kwAppDetails.appUrl').errors?.required  && !customerForm.get('kwAppDetails.appUrl').errors?.pattern">
+                App URL is required.
+              </mat-error>
+              <mat-error *ngIf="customerForm.get('kwAppDetails.appUrl').errors?.pattern">
+                Invalid app URL provided
+              </mat-error>
+              <mat-error
+                *ngIf="customerForm.get('kwAppDetails.appUrl').invalid && !customerForm.get('kwAppDetails.appUrl').errors?.required && !customerForm.get('kwAppDetails.appUrl').errors?.pattern">
+                Keyworker url and service user app url cannot be same.
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="mt25" *ngIf="!isNew">
+            <mat-form-field appearance="fill">
+              <mat-label>App URL (disabled)</mat-label>
+              <input matInput disabled value="{{customer?.kwAppDetails?.appUrl}}" id="appUrl">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="card-column">
+          <div class="mt25">
+            <mat-form-field appearance="fill">
+              <mat-label>Licences</mat-label>
+              <input matInput formControlName="licences" id="licences" required>
+              <mat-error
+                *ngIf="customerForm.get('kwAppDetails.licences')?.hasError('required') && !customerForm.get('kwAppDetails.licences')?.hasError('pattern')">
+                Licences is required.
+              </mat-error>
+              <mat-error *ngIf="customerForm.get('kwAppDetails.licences')?.hasError('pattern')">
+                Invalid customer licences provided
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div formGroupName="kwAppDetails" class="card-row">
+        <div class="card-column">
+          <div class="margin20">
+            <span>
+              <button type="button" id="browse_button" (click)="file.click()" mat-stroked-button color="primary">
+                <label for="">Upload KW logo</label>
+              </button>
+              <input type="file" class="file-input" id="image_uploads" (change)="selectFile($event)" value=""
+                formControlName="file" #file>
+              <mat-error *ngIf="customerForm.get('kwAppDetails.file').hasError('maxlength')"> File name too large.
+                Maximum file name
+                length is 100 characters. Please rename and upload again
+              </mat-error>
+              <mat-error *ngIf="customerForm.get('kwAppDetails.file').hasError('required')">
+              </mat-error>
+            </span>
+            <span class="preview">
+              <p>{{customerForm.get('kwAppDetails.logoName').value}}</p>
+            </span>
+
+          </div>
+        </div>
+      </div>
+      <div class="label-hr">
+        <span>Keyworker Features</span>
+      </div>
+      <div formGroupName="kwAppDetails" class="card-row mb20">
+        <div formArrayName="features">
+          <mat-chip-list #chipList>
+            <mat-chip *ngFor="let feature of customerForm.get('kwAppDetails.features').value; let i=index;"
+              [removable]="true" class="input_chip" (removed)="removeKw(i, feature)"
+              (click)="selectKwSubFeatures(feature)" [selected]="selectedKwMainFeatureId==feature.featureId?true:false">
+              <span matLine>
+                {{ feature.featureId |
+                getLabel:allFeaturesKw:feature.featureId:'featureName'}}
+              </span>
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+          </mat-chip-list>
+          <br>
+          <mat-card-header>
+            <span>
+              <mat-form-field class="search_by">
+                <mat-label>Search</mat-label>
+                <input matInput #keywordFilter id="keywordFilter" [formControl]="keywordFilterCtrlKw"
+                  (keydown.enter)="onFilterKw(keywordFilter.value)">
+                <button type="button" id="do_search_button" mat-button matSuffix mat-icon-button aria-label="Clear"
+                  (click)="onFilterKw(keywordFilter.value)">
+                  <mat-icon>search</mat-icon>
+                </button>
+                <button id="clear_search_button" *ngIf="keywordFilter.value !==''" mat-button matSuffix mat-icon-button
+                  aria-label="Clear" (click)="onFilterKw(''); keywordFilter.value=''">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </span>
+          </mat-card-header>
+          <span>
+            <mat-card-title id="helpful_text"> Please select what features would you like to show on this application
+              to.</mat-card-title>
+          </span>
+          <div class="card-row">
+            <div class="keyword-container keywordScroll">
+              <mat-chip-list class="keyword-list">
+                <ng-container *ngFor="let option of featureOptionsKw">
+                  <mat-chip color="accent" class="input_chip" title="{{option.featureIds}}"
+                    value="{{option.featureIds}}" (click)="selectKw(option)" *ngIf="!option.invisible">
+                    <span matLine>{{option.featureName }}</span>
+                  </mat-chip>
+                </ng-container>
+              </mat-chip-list>
+              <p class="text-center" *ngIf="featureOptionsKw && featureOptionsKw?.length === 0">No results found.</p>
+            </div>
+          </div>
+
+          <div *ngIf="showKwSubFeatures">
+            <div class="label-hr">
+              <span>Keyworker Sub Features</span>
+            </div>
+            <div class="keyword-container" [formGroupName]="featureIndexKw"
+              *ngIf="customerForm.get('kwAppDetails.features')?.at(featureIndexKw)?.get('subFeatureIds')?.value.length>0">
+              <mat-chip-list #chipList1 formArrayName="subFeatureIds">
+                <mat-chip
+                  *ngFor="let subFeature of customerForm.get('kwAppDetails.features')?.at(featureIndexKw)?.get('subFeatureIds')?.value; let j=index;"
+                  [removable]="true" class="input_chip" (removed)="removeKwSubFeature(subFeature, j)">
+                  <span matLine>
+                    {{ subFeature.featureId |
+                    getLabel:allSubFeaturesKw:subFeature.featureId:'featureName'}}
+                  </span>
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+            <br>
+            <mat-card-header>
+              <span>
+                <mat-form-field class="search_by">
+                  <mat-label>Search</mat-label>
+                  <input type="text" matInput #keywordFilter1
+                    (keydown.enter)="onFilterKwSubFeature(keywordFilter1.value)" id="keywordFilter1"
+                    >
+                  <button type="button" id="do_search_button" mat-button matSuffix mat-icon-button aria-label="Clear"
+                    (click)="onFilterKwSubFeature(keywordFilter1.value)">
+                    <mat-icon>search</mat-icon>
+                  </button>
+                  <button id="clear_search_button" *ngIf="keywordFilter1.value !==''" mat-button matSuffix
+                    mat-icon-button aria-label="Clear" (click)="onFilterKwSubFeature(''); keywordFilter1.value=''">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </span>
+            </mat-card-header>
+            <span>
+              <mat-card-title id="helpful_text"> Please select what sub features would you like to show on this
+                application
+                to.</mat-card-title>
+            </span>
+            <div class="card-row">
+              <div class="keyword-container keywordScroll">
+                <mat-chip-list class="keyword-list">
+                  <ng-container *ngFor="let option of subFeatureOptionsKw">
+                    <mat-chip color="accent" class="input_chip" title="{{option.featureId}}"
+                      value="{{option.featureId}}" (click)="selectKwSubFeature(option)" *ngIf="!option.invisible">
+                      <span matLine>{{option.featureName}}</span>
+                    </mat-chip>
+                  </ng-container>
+                </mat-chip-list>
+                <p class="text-center" *ngIf="subFeatureOptionsKw && subFeatureOptionsKw?.length === 0">No results
+                  found.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="label-hr" *ngIf="isGenaieSelected">
+        <span>Genaie Licences</span>
+      </div>
+      <div class="card-row"  *ngIf="isGenaieSelected">
+        <div formGroupName="clientDetails" class="card-column" *ngIf="isGenaieSelected && isNew">
+          <mat-form-field appearance="fill">
+            <mat-label>Number of Courses to Generate</mat-label>
+            <input matInput formControlName="noOfCourseGenerated" id="noOfCourseGenerated" >
+            <mat-error
+              *ngIf="customerForm.controls.clientDetails.controls.noOfCourseGenerated.hasError('required')">
+              Number of Courses to Generate is required.
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('clientDetails.noOfCourseGenerated').hasError('pattern')">
+              Number of Courses to Generate is invalid.
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('clientDetails.noOfCourseGenerated').hasError('max')">
+              Number of Courses to Generate should be less than 5000.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="card-column" *ngIf="isGenaieSelected && !isNew">
+          <mat-form-field appearance="fill">
+            <mat-label>Number of Courses to Generate (disabled)</mat-label>
+            <input matInput disabled value="{{customer?.clientDetails?.noOfCourseGenerated}}" id="dnoOfCourseGenerated">
+          </mat-form-field>
+        </div>
+        <div formGroupName="clientDetails" class="card-column" *ngIf="isGenaieSelected && isNew">
+          <mat-form-field appearance="fill">
+            <mat-label>Number of Courses to Publish</mat-label>
+            <input matInput  formControlName="noOfCourseApproved"
+              id="noOfCourseApproved">
+            <mat-error
+              *ngIf="customerForm.controls.clientDetails.controls.noOfCourseApproved.hasError('required')">
+              Number of Courses to Publish is required.
+            </mat-error>
+            <mat-error *ngIf="customerForm.controls.clientDetails.controls.noOfCourseApproved.hasError('pattern')">
+              Number of Courses to Publish is invalid.
+            </mat-error>
+            <mat-error *ngIf="customerForm.controls.clientDetails.controls.noOfCourseApproved.hasError('max')">
+              Number of Courses to Publish should be less than 2500.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="card-column" *ngIf="isGenaieSelected && !isNew">
+          <mat-form-field appearance="fill">
+            <mat-label>Number of Courses to Publish (disabled)</mat-label>
+            <input matInput disabled value="{{customer?.clientDetails?.noOfCourseApproved}}" id="dnoOfCourseApproved">
+          </mat-form-field>
+        </div>
+        
+      </div>
+      <div *ngIf="isNew || showSuFields" class="label-hr"> <span> Service user application details </span> </div>
+      <!-- <div class="card-row"> -->
+      <div *ngIf="isNew">
+        <div class="card-column">
+
+          <mat-form-field appearance="fill">
+            <mat-label>Is SU application required?</mat-label>
+            <mat-select formControlName='isSUAppRequired' required>
+              <mat-option [value]="true">Yes</mat-option>
+              <mat-option [value]="false">No</mat-option>
+            </mat-select>
+            <mat-error *ngIf="customerForm.controls.isSUAppRequired.errors?.required">
+              Please select Yes or No.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div formGroupName="suAppDetails" *ngIf="showSuFields">
+        <div class="card-row">
+          <div class="card-column">
+            <div class="mt25">
+              <mat-form-field appearance="fill">
+                <mat-label>Primary app colour</mat-label>
+                <input matInput formControlName="primaryColour" id="primaryColour" required>
+                <mat-error *ngIf="customerForm.controls.suAppDetails.get('primaryColour').errors?.required ">
+                  Primary app colour is required.
+                </mat-error>
+                <mat-error *ngIf="customerForm.controls.suAppDetails.get('primaryColour').errors?.pattern">
+                  Primary app colour is invalid.
+                </mat-error>
+                <mat-error
+                  *ngIf="customerForm.controls.suAppDetails.get('primaryColour').invalid && !customerForm.controls.suAppDetails.get('primaryColour').errors?.required && !customerForm.controls.suAppDetails.get('primaryColour').errors?.pattern">
+                  Primary & secondary app colour must be different.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="card-column">
+            <div class="mt25">
+              <mat-form-field appearance="fill">
+                <mat-label>Secondary app colour</mat-label>
+                <input matInput formControlName="secondaryColour" id="secondaryColour" required>
+                <mat-error
+                  *ngIf="customerForm.controls.suAppDetails.get('secondaryColour').errors?.required && !customerForm.controls.suAppDetails.get('secondaryColour').errors?.pattern && !customerForm.controls.suAppDetails.get('secondaryColour').valid">
+                  Secondary app colour is required.
+                </mat-error>
+                <mat-error *ngIf="customerForm.controls.suAppDetails.get('secondaryColour').errors?.pattern">
+                  Secondary app colour is invalid.
+                </mat-error>
+                <mat-error
+                  *ngIf="customerForm.controls.suAppDetails.get('secondaryColour').invalid && !customerForm.controls.suAppDetails.get('secondaryColour').errors?.required && !customerForm.controls.suAppDetails.get('secondaryColour').errors?.pattern">
+                  Primary & secondary app colour must be different.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="card-row">
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>App URL</mat-label>
+              <input matInput formControlName="appUrl" id="appUrl" required>
+              <mat-error *ngIf="customerForm.controls.suAppDetails.get('appUrl').errors?.required ">
+                App URL is required.
+              </mat-error>
+              <mat-error *ngIf="customerForm.controls.suAppDetails.get('appUrl').errors?.pattern">
+                Invalid App URL provided
+              </mat-error>
+              <mat-error
+                *ngIf="customerForm.controls.suAppDetails.get('appUrl').invalid && !customerForm.controls.suAppDetails.get('appUrl').errors?.required && !customerForm.controls.suAppDetails.get('appUrl').errors?.pattern">
+                Keyworker url and service user app url cannot be same.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="card-column">
+            <mat-form-field appearance="fill">
+              <mat-label>Licences</mat-label>
+              <input matInput formControlName="licences" id="licences" required>
+              <mat-error
+                *ngIf="customerForm.controls.suAppDetails.get('licences').errors?.required && !customerForm.controls.suAppDetails.get('licences').errors?.pattern">
+                Licences is required.
+              </mat-error>
+              <mat-error *ngIf="customerForm.controls.suAppDetails.get('licences').errors?.pattern">
+                Invalid customer licences provided
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-row" *ngIf="showSuFields">
+        <div class="card-column">
+          <div class="margin20">
+            <mat-form-field appearance="fill">
+              <mat-label>Can service users self register?</mat-label>
+              <mat-select formControlName="isSelfRegisterAllowed" required>
+                <mat-option [value]="true">Yes</mat-option>
+                <mat-option [value]="false">No</mat-option>
+              </mat-select>
+              <mat-error *ngIf="customerForm.controls.isSelfRegisterAllowed.errors?.required">
+                Please select Yes or No.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div formGroupName="suAppDetails" *ngIf="showSuFields">
+        <div class="card-row">
+          <div class="card-column">
+            <div class="margin20">
+              <span>
+                <button type="button" id="browse_button" (click)="suAppfile.click()" mat-stroked-button color="primary">
+                  <label for="">Upload SU logo</label>
+                </button>
+                <input type="file" class="file-input" id="image_uploads" (change)="selectSuFile($event)"
+                  formControlName="suAppfile" #suAppfile>
+                <mat-error *ngIf="customerForm.controls.suAppDetails.get('suAppfile').hasError('maxlength')"> File
+                  name
+                  too large. Maximum file name length is 100 characters. Please rename and upload again
+                </mat-error>
+                <mat-error *ngIf="customerForm.controls.suAppDetails.get('suAppfile').hasError('required')">
+                </mat-error>
+              </span>
+              <span class="preview">
+                <p>{{suLogoFile?.name ? suLogoFile.name :
+                  customerForm.get('suAppDetails').get('logoName').value}}
+                </p>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="showSuFields">
+        <div formGroupName="suAppDetails">
+          <div class="label-hr">
+            <span>Service User Features</span>
+          </div>
+          <div formArrayName="features">
+            <mat-chip-list #chipList>
+              <mat-chip *ngFor="let feature of customerForm.get('suAppDetails.features').value; let i=index;"
+                [removable]="true" class="input_chip" (removed)="removeSu(i, feature)"
+                (click)="selectSuSubFeatures(feature)"
+                [selected]="selectedSuMainFeatureId==feature.featureId?true:false">
+                <span matLine>
+                  {{ feature.featureId |
+                  getLabel:allFeaturesSu:feature.featureId:'featureName'}}
+                </span>
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+            </mat-chip-list>
+            <br>
+            <mat-card-header>
+              <span>
+                <mat-form-field class="search_by">
+                  <mat-label>Search</mat-label>
+                  <input matInput #keywordFilterSu id="keywordFilterSu"
+                    (keydown.enter)="onFilterSu(keywordFilterSu.value)" [formControl]="keywordFilterCtrlSu">
+                  <button type="button" id="do_search_button" mat-button matSuffix mat-icon-button aria-label="Clear"
+                    (click)="onFilterSu(keywordFilterSu.value)">
+                    <mat-icon>search</mat-icon>
+                  </button>
+                  <button id="clear_search_button" *ngIf="keywordFilterSu.value !==''" mat-button matSuffix
+                    mat-icon-button aria-label="Clear" (click)="onFilterSu(''); keywordFilterSu.value=''">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </span>
+            </mat-card-header>
+            <span>
+              <mat-card-title id="helpful_text"> Please select what features would you like to show on this application
+                to.</mat-card-title>
+            </span>
+            <div class="card-row">
+              <div class="keyword-container keywordScroll">
+                <mat-chip-list class="keyword-list">
+                  <ng-container *ngFor="let option of featureOptionsSu">
+                    <mat-chip color="accent" class="input_chip" title="{{option.featureIds}}"
+                      value="{{option.featureIds}}" (click)="selectSu(option)" *ngIf="!option.invisible">
+                      <span matLine>{{option.featureName }}</span>
+                    </mat-chip>
+                  </ng-container>
+                </mat-chip-list>
+                <p class="text-center" *ngIf="featureOptionsSu && featureOptionsSu?.length === 0">No results found.</p>
+              </div>
+            </div>
+            <div *ngIf="showSuSubFeatures">
+              <div class="label-hr">
+                <span>Service User Sub Features</span>
+              </div>
+              <div class="keyword-container" [formGroupName]="featureIndexSu"
+                *ngIf="customerForm.get('suAppDetails.features')?.at(featureIndexSu)?.get('subFeatureIds')?.value.length>0">
+                <mat-chip-list #chipList1 formArrayName="subFeatureIds">
+                  <mat-chip
+                    *ngFor="let subFeature of customerForm.get('suAppDetails.features').at(featureIndexSu).get('subFeatureIds').value; let j=index;"
+                    [removable]="true" class="input_chip" (removed)="removeSuSubFeature(subFeature, j)">
+                    <span matLine>
+                      {{ subFeature.featureId |
+                      getLabel:allSubFeaturesSu:subFeature.featureId:'featureName'}}
+                    </span>
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <br>
+              <mat-card-header>
+                <span>
+                  <mat-form-field class="search_by">
+                    <mat-label>Search</mat-label>
+                    <input matInput #keywordFilterSuSub id="keywordFilterSuSub"
+                      (keydown.enter)="onFilterSuSubFeature(keywordFilterSuSub.value)">
+                    <button type="button" id="do_search_button" mat-button matSuffix mat-icon-button aria-label="Clear"
+                      (click)="onFilterSuSubFeature(keywordFilterSuSub.value)">
+                      <mat-icon>search</mat-icon>
+                    </button>
+                    <button id="clear_search_button" *ngIf="keywordFilterSuSub.value !==''" mat-button matSuffix
+                      mat-icon-button aria-label="Clear"
+                      (click)="onFilterSuSubFeature(''); keywordFilterSuSub.value=''">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </span>
+              </mat-card-header>
+              <span>
+                <mat-card-title id="helpful_text"> Please select what sub features would you like to show on this
+                  application
+                  to.</mat-card-title>
+              </span>
+              <div class="card-row">
+                <div class="keyword-container keywordScroll">
+                  <mat-chip-list class="keyword-list">
+                    <ng-container *ngFor="let option of subFeatureOptionsSu">
+                      <mat-chip color="accent" class="input_chip" title="{{option.featureId}}"
+                        value="{{option.featureId}}" (click)="selectSuSubFeature(option)" *ngIf="!option.invisible">
+                        <span matLine>{{option.featureName}}</span>
+                      </mat-chip>
+                    </ng-container>
+                  </mat-chip-list>
+                  <p class="text-center" *ngIf="subFeatureOptionsKw && subFeatureOptionsKw?.length === 0">No results
+                    found.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div formGroupName="clientDetails" class="margin20">
+        <mat-slide-toggle formControlName="isActive">Deactivate customer?</mat-slide-toggle>
+      </div>
+      <mat-card-footer>
+        <span class="spacer"></span>
+        <span>
+          <button type="submit" id="save_user_button" mat-flat-button color="primary"
+            [disabled]="!customerForm.valid || disableSaveButton">Save</button>
+        </span>
+      </mat-card-footer>
+    </form>
+  </mat-card-content>
+</mat-card>

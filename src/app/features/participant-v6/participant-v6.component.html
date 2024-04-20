@@ -1,0 +1,112 @@
+<mat-card id='view-programmes'>
+    <mat-card-header>
+        <div class="search-container example-form" style="margin-right: 10px;">
+            <mat-form-field id="search_service_user_form" appearance="fill" style="width: 100%;">
+            <mat-label>Search by</mat-label>
+              <input id="search_service_user_input" autocomplete="off" (keydown.enter)="onFilter(search_service_user_input.value)" matInput
+                 #search_service_user_input aria-label="Search a user">
+              <button id="do_search_button" mat-button matSuffix mat-icon-button aria-label="Search"
+                (click)="onFilter(search_service_user_input.value)">
+                <mat-icon>search</mat-icon>
+              </button>
+              <button id="clear_search_button" *ngIf="search_service_user_input.value !==''" mat-button matSuffix
+                mat-icon-button aria-label="Clear" (click)="onFilter(''); search_service_user_input.value=''">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+        </div>
+      
+          <div class="search-container">
+            <mat-form-field class="search_by_lr" style="align-self: flex-start;">
+              <mat-select (selectionChange)="findWorker($event)" [(ngModel)]="select">
+                <mat-option value="All Service Users">All Participants</mat-option>
+                <mat-option value="My Service Users">My Participants</mat-option>
+              </mat-select>
+            </mat-form-field>
+        </div>
+          <span class="spacer"></span>
+        <span *ngIf="showcaseLoad && filteredListSize > 0">
+            <button id="create_service_user_button" mat-stroked-button class="right" color="primary"
+              (click)="openCaseLoadPopup()">Print my caseload
+              <div id="form_holder" style="display: none;"></div>
+            </button>
+          </span>
+        <span>
+            <button  id="add_learner_button" mat-stroked-button class="right" color="primary"
+               (click)="onClickAddParticipant()">Add participant</button>
+        </span>
+    </mat-card-header>
+    
+    <mat-card-content class="learners">
+    <span class="spacer"></span>  
+    
+        <mat-table id="learners_table" #table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="fullName">
+                <mat-header-cell *matHeaderCellDef id="fullName" mat-sort-header>
+                    Name
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{ element.fullName }}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="DateofBirth">
+                <mat-header-cell *matHeaderCellDef id="DateofBirth">
+                    Date of birth
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{ element.dateOfBirth | customMonthFormat}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Username">
+                <mat-header-cell *matHeaderCellDef id="Username">
+                    Username
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{ element.email }}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Number">
+                <mat-header-cell *matHeaderCellDef id="Number">
+                    Telephone Number
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{ element.contactNo }}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Worker">
+                <mat-header-cell *matHeaderCellDef id="Worker">
+                    Coach
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{ element.workerName }}
+                </mat-cell>
+            </ng-container>
+            
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+
+                    <button id="view_user_button_{{element.id}}" mat-icon-button color="primary"
+                         matTooltip="View" [matTooltipShowDelay]="800"
+                        [routerLink]="['./participant-professional-view']" [queryParams]="{ id: element.id ,name:element.fullName,operation:'view' }">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button   id="edit_user_button_{{element.id}}" mat-icon-button color="primary"
+                        [routerLink]="['./edit-participant']" [queryParams]="{ id: element.id ,name:element.fullName,operation:'edit' }" matTooltip="Edit"
+                        [matTooltipShowDelay]="800">
+                        <mat-icon>create</mat-icon>
+                    </button>
+                    <button  id="delete_user_button" mat-icon-button attr.aria-label="Delete" matTooltip="Delete"
+                        [matTooltipShowDelay]="800">
+                        <mat-icon color="accent">delete</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+        <mat-paginator id="user_pagination" [pageSize]="pageSize" [showFirstLastButtons]='true' [hidePageSize]="true">
+        </mat-paginator>
+    </mat-card-content>
+</mat-card>
+

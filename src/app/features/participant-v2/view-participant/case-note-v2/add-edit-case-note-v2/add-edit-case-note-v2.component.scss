@@ -1,0 +1,64 @@
+@import "~src/styles/helpers/mixins/grid";
+@import "~src/styles/helpers/variables/palette";
+
+.mr10 {
+    width: 23%;
+    @include media(mobile) {
+      width: 100%;
+    }
+  }
+
+  .mat-error-end {
+    margin-top: -3px;
+  }
+
+  .add-casenote-form-container {
+    display: flex;
+    flex-direction: column;
+
+    .casenote-date-time-container {
+      display: flex;
+
+      @media (max-width: 660px) {
+        flex-direction: column;
+      }
+
+      .date-input-container {
+        display: flex;
+        width: 100%;
+
+        @media (max-width: 660px) {
+          flex-direction: column;
+          width: 100%;
+        }
+
+        .mat-form-field {
+          width: 100%;
+        }
+
+        .time-input-container {
+          display: flex;
+          width: calc(50% - 10px);
+
+          @media (max-width: 660px) {
+            width: 100%;
+          }
+        }
+
+        .time-input-container:first-of-type {
+          margin-right: 20px;
+
+          @media (max-width: 660px) {
+            margin-right: 0px;
+          }
+        }
+      }
+
+      .date-input-container:first-of-type {
+
+        @media (max-width: 660px) {
+          margin-right: 0px;
+        }
+      }
+    }
+  }

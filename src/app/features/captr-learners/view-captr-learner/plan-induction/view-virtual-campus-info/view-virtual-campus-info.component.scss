@@ -1,0 +1,226 @@
+@import "~src/styles/helpers/mixins/grid";
+@import "~src/styles/helpers/variables/palette";
+
+.info {
+  word-break: break-word;
+}
+.infoSection {
+  width: 78%;
+}
+.profileImg {
+  width: 8.3em;
+}
+.alert{
+  color: orange;
+  position: absolute;
+}
+.learnerInfo .info p {
+  position: relative;
+}
+.info span.lldname {
+  margin-left: 30px;
+}
+.textIndent{
+  text-indent: 7%;
+}
+.label-hr {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  margin: 16px 0;
+  flex: 1;
+}
+.iconAlignment {
+  margin: 2px 10px 0 0;
+}
+
+@media screen and (max-width: 767px) {
+  .infoSection {
+    width: 100%;
+  }
+  .imgSection {
+    position: absolute;
+    top: 5em;
+  }
+
+}
+.deactivatedDate {
+  padding: 4px 12px;
+  background-color: #2e6eb8;
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+  border-radius: 4px;
+}
+
+.tabWrapper {
+  margin-top: 10px;
+  position: relative;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    height: 44px;
+    border-bottom: 1px solid $grey-2;
+
+    @include media(mobile) {
+        height: 45px;
+    }
+    
+    li {
+      position: relative;
+      margin: 0 5px 0 0;
+      padding: 10px 20px 1px;
+      float: left;
+      background-color: none;
+      text-align: center;
+      cursor: pointer;
+      
+      @include media(mobile) {
+          cursor: pointer;
+          display: inline-block;
+      }
+      a {
+          margin-right: 3px;
+          float: left;
+          color: #666;
+          text-align: center;
+          text-decoration: none;
+        }
+    }
+
+    li:focus {
+      outline: none;
+    }
+    
+    li.active {
+      margin-top: -6px;
+      margin-bottom: -1px;
+      padding: 14px 19px 11px 19px;
+      border-bottom: 3px solid #2e6eb8;
+      background-color: none;
+      
+      @include media(mobile) {
+          background-color: transparent;
+      }
+    }
+  }
+}
+
+span.card-column {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: auto !important;
+}
+
+// case note style 
+
+mat-card-header span {
+  font-family: "Roboto", "Helvetica Neue", sans-serif !important;
+}
+.infoSection {
+  width: 78%;
+}
+.case-notes-section {
+  margin: 12px 0;
+}
+
+.message-list-right {
+  .chat-wrapper {
+    min-height: 134px;
+    display: flex;
+    flex-direction: column;
+    height: 370px;
+    border: 1px solid #b1b4b6;
+    margin: 12px 0;
+    border-radius: 5px;
+    border: 2px solid rgba(0, 0, 0, 0.42);
+    .convesation-div{
+      overflow-x: hidden;
+      overflow-y: auto;
+      margin-top: auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column-reverse;
+      .message-list__date {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-weight: 700;
+        font-size: 19px;
+        line-height: 1.25;
+        padding: 15px 0;
+        color: #6f777b;
+        display: inline-block;
+        text-align: center;
+        width: 100%;
+      }
+
+    .message-item {
+        border-radius: 0.5em 0.5em 0.75em 0.5em;
+        padding: 15px;
+        position: relative;
+        word-break: break-word;
+        .message-item__meta--sender{
+          font-weight: bold;
+        }
+        .message-item__meta--timestamp{
+          font-weight: bold;
+        }
+    }
+
+    .message-item--sent {
+      color: #000;
+      background-color: #f3f2f1;
+      padding-right: 25px;
+      margin: 10px;
+      text-align: left;
+      white-space:pre-wrap;
+       .message-item__meta {
+         text-align: right;
+         margin: 5px 0 0 0;
+       }
+    }
+  }
+}
+  .action {
+    position: relative;
+    margin: 25px 0;
+    .mat-form-field {
+      display: block;
+    }
+    button {
+      position: absolute;
+      right: 0px;
+      bottom: -25px;
+      @media all and (max-width: 767px) {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        float: right;
+      }
+    }
+  }
+}
+
+
+@media screen and (max-width: 767px) {
+  .infoSection {
+    width: 100%;
+  }
+  .imgSection {
+    position: absolute;
+    top: 5em;
+  }
+
+}
+::ng-deep .seq-theme .mat-form-field-appearance-outline.mat-form-field-invalid.mat-form-field-invalid .mat-form-field-outline-thick {
+  color: rgba(0, 0, 0, 0.42) !important;
+}
+::ng-deep .seq-theme .mat-form-field.mat-form-field-invalid .mat-form-field-label{
+  color: rgba(0, 0, 0, 0.42) !important;
+}

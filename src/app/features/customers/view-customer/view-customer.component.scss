@@ -1,0 +1,22 @@
+.ul {
+  border-bottom: 1px solid black
+}
+
+.logoImg {
+  width: 8.3em;
+}
+
+.margin10 {
+  margin-left: 10px;
+  @media (max-width: 375px){
+  margin-left: 0px;
+  margin-bottom: -25px;
+}
+
+}
+.info {
+  word-break: break-word;
+}
+.infoSection {
+  width: 78%;
+}

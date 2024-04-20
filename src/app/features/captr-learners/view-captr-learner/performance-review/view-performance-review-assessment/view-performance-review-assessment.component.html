@@ -1,0 +1,67 @@
+<div class="header">
+  <div class="tabWrapper">
+    <ul>
+      <li class="tabHead active" routerLink="/captr-learner/performance-review" queryParamsHandling="merge">
+        <a class="tab-item" id="profile-tab" attr.aria-label="tab Profile">My performance review</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<mat-card id='view-assessment'>
+  <mat-card-header>
+    <span> Performance Evaluation Report </span>
+    <span class="spacer"></span>
+    <span>
+      <button id="edit_view_button" mat-stroked-button color="primary" (click)="onExitClicked()">Exit</button>
+    </span>
+  </mat-card-header>
+  <mat-card-content >
+<div *ngIf="flag">
+    <div class="chart" id="chart" *ngIf="chartOptions">
+      <apx-chart [series]="chartOptions?.series" [chart]="chartOptions?.chart"
+          [xaxis]="chartOptions?.xaxis" [stroke]="chartSkillOptions?.stroke" [colors]="chartOptions?.colors"
+          [dataLabels]="chartOptions?.dataLabels" [tooltip]="chartOptions?.tooltip"
+          [plotOptions]="chartOptions?.plotOptions" [markers]="chartOptions?.markers"
+          [yaxis]="chartOptions?.yaxis" [fill]="chartOptions?.fill" [title]="chartOptions?.title">
+      </apx-chart>
+  </div>
+  <div class="chart" id="chart" *ngIf="chartSkillOptions">
+      <apx-chart [series]="chartSkillOptions?.series" [chart]="chartSkillOptions?.chart"
+          [xaxis]="chartSkillOptions?.xaxis" [stroke]="chartSkillOptions?.stroke"
+          [colors]="chartSkillOptions?.colors"[dataLabels]="chartSkillOptions?.dataLabels"
+          [tooltip]="chartSkillOptions?.tooltip"[plotOptions]="chartSkillOptions?.plotOptions"
+          [markers]="chartSkillOptions?.markers"[yaxis]="chartSkillOptions?.yaxis"
+          [fill]="chartSkillOptions?.fill" [title]="chartSkillOptions?.title">
+      </apx-chart>
+  </div>
+</div>
+  <div class="survey-container contentcontainer codecontainer">
+    <survey [model]="surveyModel"></survey>
+  </div>
+  </mat-card-content>
+
+   <!--<mat-card-header *ngIf="isCompleted === 'true'">
+    <span> Assessment Complete </span>
+    <span class="spacer"></span>
+  </mat-card-header> --
+
+  mat-card-content class="view_user-plan_container" *ngIf="isCompleted === 'true'">
+    <div class="card-row">
+      <div class="infoSection">
+        <div class="card-row">
+          <div class="card-column">
+            <p class="info">
+              <span class="details_label">Completed on</span>
+              {{updatedDate | date: 'dd MMM yyyy HH:mm' }}
+            </p>
+            <p class="info">
+              <span class="details_label">Completed by</span>
+              {{updatedBy}}
+              <span class="line-break">{{togetherModeUserName}}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content> -->
+</mat-card>

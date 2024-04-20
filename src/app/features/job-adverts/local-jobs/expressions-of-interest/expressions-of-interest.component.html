@@ -1,0 +1,56 @@
+
+<div class="page-nav" id="page-nav">
+  <h1 class="page-title ng-star-inserted">Expressions of Interest</h1>
+ </div>
+ 
+ <mat-card id='expressions-of-interest'>
+   
+   <mat-card-content class="local-jobs_container">
+ 
+     <mat-table id="local_job_table" #table [dataSource]="dataSource" matSort matSortActive="dateExpressed"
+       matSortDirection="asc" class="isMobile">
+ 
+       <ng-container matColumnDef="dateExpressed">
+         <mat-header-cell class="width-20" *matHeaderCellDef mat-sort-header id="date_interest_column"> Date Expressed Interest
+         </mat-header-cell>
+         <mat-cell class="width-20" *matCellDef="let element"> <span class="mobile-label">Date Expressed Interest:
+           </span>{{element.dateExpressed | date:'dd MMM yyyy'}}
+         </mat-cell>
+       </ng-container>
+ 
+       <ng-container matColumnDef="learner">
+         <mat-header-cell class="width-17" *matHeaderCellDef id="learner_column">Service User
+         </mat-header-cell>
+         <mat-cell class="width-17" *matCellDef="let element"> <span class="mobile-label">Learner:
+           </span>{{element.serviceUserName}} {{element.serviceUserPRN}}
+         </mat-cell>
+       </ng-container>
+ 
+       <ng-container matColumnDef="status">
+         <mat-header-cell class="width-12" *matHeaderCellDef id="job_status_column">Job Status
+         </mat-header-cell>
+         <mat-cell class="width-12" *matCellDef="let element"> <span class="mobile-label call-status-label">Job Status:
+           </span><span class="status">{{jobStatus}}</span>
+         </mat-cell>
+       </ng-container>
+ 
+       <ng-container matColumnDef="prison">
+         <mat-header-cell *matHeaderCellDef id="prison_column" class="local-jobs width-15">
+          Organisation
+         </mat-header-cell>
+         <mat-cell *matCellDef="let element" class="local-jobs-postingDate width-15"> <span
+             class="mobile-label">Prison:
+           </span>{{element.suOrganization}}
+         </mat-cell>
+       </ng-container>
+    
+ 
+       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+     </mat-table>
+ 
+     <mat-paginator id="pagination" [pageSize]="pageSize" (page)='onPaginateChange($event)' [showFirstLastButtons]='true'
+       [hidePageSize]='true'>
+     </mat-paginator>
+   </mat-card-content>
+ </mat-card>

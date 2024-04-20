@@ -1,0 +1,98 @@
+
+<mat-card id='of-jobs-expressions-of-interest'>
+  <mat-card-header>
+    <span>
+      <mat-form-field id="search_nfn_job_form" class="search_by">
+        <mat-label>Search by</mat-label>
+        <input id="search_job_input" (keydown.enter)="onFilter(search_job_input.value)" matInput placeholder="Search by"
+          #search_job_input>
+        <button id="do_search_button" mat-button matSuffix mat-icon-button aria-label="Search"
+          (click)="onFilter(search_job_input.value)">
+          <mat-icon>search</mat-icon>
+        </button>
+        <button id="clear_search_button" mat-button *ngIf="search_job_input.value" matSuffix mat-icon-button
+          aria-label="Clear" (click)="search_job_input.value=''; onFilter(search_job_input.value);">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </span>
+  </mat-card-header>
+
+  <mat-card-content class="nfn-jobs_container">
+
+    <mat-table id="nfn_job_table" #table [dataSource]="dataSource" matSort matSortActive="dateApplied"
+      matSortDirection="asc" class="isMobile">
+
+      <ng-container matColumnDef="dateExpressed">
+        <mat-header-cell  *matHeaderCellDef mat-sort-header  id="job_title_column"> Date Applied
+        </mat-header-cell>
+        <mat-cell  *matCellDef="let element"> <span class="mobile-label">Date Applied:
+          </span>{{element.dateExpressed | customMonthFormat}}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="suUserName">
+        <mat-header-cell
+         *matHeaderCellDef id="su_button"> Username
+        </mat-header-cell>
+        <mat-cell
+         *matCellDef="let element"> <span class="mobile-label">Username:
+          </span>{{element.suUserName}}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="suName">
+        <mat-header-cell  *matHeaderCellDef mat-sort-header id="company_column">Name
+        </mat-header-cell>
+        <mat-cell  *matCellDef="let element"> <span class="mobile-label">Name:
+          </span>{{element.suName}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="jobStatus">
+        <mat-header-cell 
+         *matHeaderCellDef id="job_status_column">Job Status
+        </mat-header-cell>
+        <mat-cell 
+         *matCellDef="let element"> <span class="mobile-label call-status-label">Job Status:
+          </span><span class="status">{{element.jobStatus}}</span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="jobAdvertNFN.jobTitle">
+        <mat-header-cell  *matHeaderCellDef mat-sort-header id="company_column"> Job Title
+        </mat-header-cell>
+        <mat-cell  *matCellDef="let element"> <span class="mobile-label">Job Title:
+          </span>{{element.jobTitle}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="jobExpressionStatus.statusDescription">
+        <mat-header-cell  class="actions-column" *matHeaderCellDef mat-sort-header id="job_status_column">Status
+        </mat-header-cell>
+        <mat-cell class="actions-column" *matCellDef="let element"> <span class="mobile-label">Status:
+          </span><span [ngClass]="{'status' : element.status}">{{element.status}}</span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+
+        <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+        <mat-cell *matCellDef="let element"> <span class="mobile-label"></span>
+
+          <button  *ngIf="isAuthorized(19,2)" id="view_nfn_job_button_{{element.expressInterestNFNId}}" mat-icon-button
+            color="primary" title="View"
+            (click)="viewOFJExpressionOfInterest(element.expressInterestNFNId, element.suName)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator id="pagination" [pageSize]="pageSize" (page)='onPaginateChange($event)' [showFirstLastButtons]='true'
+      [hidePageSize]='true'>
+    </mat-paginator>
+
+  </mat-card-content>
+</mat-card>

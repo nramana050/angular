@@ -1,0 +1,36 @@
+<mat-card-content>
+    <form [formGroup]="planForm" (ngSubmit)="onSubmit()" autocomplete="off">
+        <h1 mat-dialog-title>What plan do you need to create?</h1>
+    
+        <div class="card-row">
+            <mat-form-field id="type" appearance="outline">
+                <mat-label>Select an option</mat-label>
+                <mat-select formControlName="planType" matInput>
+                  <mat-option *ngFor="let assessment of assessmentData" [value]="assessment">
+                    {{ assessment.assessmentName }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="planForm.get('planType').hasError('required')">Please select an option
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="card-row">
+            <mat-form-field id="contract" appearance="outline">
+                <mat-label>Select contract</mat-label>
+                <mat-select formControlName="contractId" matInput>
+                    <mat-option *ngFor="let contract of contracts" [value]="contract.id">
+                        {{ contract.name }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="planForm.get('contractId').hasError('required')">Please select a contract
+                </mat-error>
+            </mat-form-field>
+        </div>
+        
+        <div class="card-row">
+            <mat-dialog-actions align="end">
+                <button mat-button type="button" (click)="dialogClose()">Cancel</button>
+                <button type="submit" mat-flat-button color="primary" [disabled]="planForm.invalid">Create</button>
+            </mat-dialog-actions>
+        </div> 
+    </form>
+</mat-card-content>

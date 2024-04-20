@@ -1,0 +1,33 @@
+.card-row{
+  border-bottom: 1px solid #b1b4b6;
+  margin-bottom: 12px;
+  &:last-child {
+      border-bottom: none
+  }
+}
+
+.details_label1 {
+  display: block;
+  font-size: 14px;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.details_label {
+  font-size: 14px;
+}
+
+.ans {
+  font-size: 16px;
+}
+
+.color-circle {
+  width: 20px; 
+  height: 20px; 
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  top: 5px;
+  margin-left: 12px;
+  margin-top: -6px;
+}

@@ -1,0 +1,53 @@
+<h1 mat-dialog-title>{{isNew ? 'Add qualification' : 'Edit qualification'}}</h1>
+
+<mat-card-content>
+    <form [formGroup]="qualificationForm" (ngSubmit)="onSubmit()" autocomplete="off">
+        <div class="card-row">
+            <mat-form-field appearance="fill">
+                <mat-label>Qualification name</mat-label>
+                <input matInput formControlName="qualificationName" id="qualification-name">
+                <mat-error *ngIf="qualificationForm.controls.qualificationName.errors?.required">
+                    Qualification name is required.
+                </mat-error>
+                <mat-error
+                    *ngIf="qualificationForm.controls.qualificationName.errors?.minlength && !qualificationForm.controls.qualificationName.errors?.pattern">
+                    Qualification name must be greater than 3 characters.
+                </mat-error>
+                <mat-error
+                    *ngIf="qualificationForm.controls.qualificationName.errors?.maxlength && !qualificationForm.controls.qualificationName.errors?.pattern">
+                    Qualification name must be less than 50 characters.
+                </mat-error>
+                <mat-error *ngIf="qualificationForm.controls.qualificationName.errors?.pattern ">
+                    Qualification name is invalid.
+                </mat-error>
+            </mat-form-field>
+            <div class="card-row">
+                <mat-form-field appearance="fill">
+                    <mat-label>Qualification code</mat-label>
+                    <input matInput formControlName="qualificationCode" id="qualification-code" required>
+                    <mat-error *ngIf="qualificationForm.controls.qualificationCode.errors?.required">
+                        Qualification code is required.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="qualificationForm.controls.qualificationCode.errors?.minlength && !qualificationForm.controls.qualificationCode.errors?.pattern">
+                        Qualification code must be greater than 3 characters.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="qualificationForm.controls.qualificationCode.errors?.maxlength && !qualificationForm.controls.qualificationCode.errors?.pattern">
+                        Qualification code must be less than 20 characters.
+                    </mat-error>
+                    <mat-error *ngIf="qualificationForm.controls.qualificationCode.errors?.pattern ">
+                        Qualification code is invalid.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="card-row">
+            <mat-dialog-actions align="end">
+                <button mat-button type="button" (click)="dialogClose()">Cancel</button>
+                <button type="submit" id="save_qualification_button" [disabled]="!qualificationForm.valid"
+                    mat-flat-button color="primary" >{{isNew ? 'Add' : 'Update'}}</button>
+            </mat-dialog-actions>
+        </div>
+    </form>
+</mat-card-content>

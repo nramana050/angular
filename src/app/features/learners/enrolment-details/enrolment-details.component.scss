@@ -1,0 +1,29 @@
+mat-card-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 24px;
+    white-space: pre-wrap;
+    word-break:break-all;
+    }
+    .mat-column-endDate {
+        word-wrap: break-word;
+        flex: 0 0 20% !important;
+        width: 20%;
+    }
+    @media (max-width: 960px){
+        .mat-card .mat-cell:last-of-type {
+          flex-direction: column;
+          margin: 10px 0;
+        }
+        .mat-card .mat-cell.mat-column-status {
+            display: flex !important;
+        }
+    }
+
+    @media screen and (min-width: 1024px) and (max-width: 1112px) {
+        .mat-card .mat-card-header button #exit_view_button {
+          margin-left: -95px !important;
+        }
+      }
+    

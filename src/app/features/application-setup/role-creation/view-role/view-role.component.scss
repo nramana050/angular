@@ -1,0 +1,133 @@
+.actions {
+    button {
+      margin: 15px 0px;
+    }
+  }
+  
+  .keyword-list {
+  
+    display: flex;
+    flex-wrap: wrap;
+  
+    .input_chip {
+      cursor: pointer;
+      margin: 8px;
+      padding : 7px 20px 8px;
+  
+      span {
+        font-size: 18px;
+      }
+    }
+  
+    @media (max-width: 598px) {
+      .mat-list-option {
+        width: 100%;
+      }
+    }
+  
+    .chip {
+      margin: 4px 5px 8px 5px;
+    }
+  
+    &:focus {
+        outline: 0px
+    }
+  }
+  
+  .keyword-container {
+    width: 100%;
+  
+    .mat-error {
+      font-size: 75%;
+      margin-top: 6px;
+    }
+  }
+  .mb20 {
+    margin-bottom: 20px;
+  }
+  .keyword-container.keywordScroll {
+    width: 100%;
+    height: 40vh;
+    overflow: auto;
+    overflow-x: hidden;
+  }
+  
+  .example-chip-list {
+    width: 100%;
+  }
+  .table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  
+  table {
+    width: max-content;
+  }
+
+  .tableTitle{
+    color: #F08030;
+    font-size: 0.8em;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 8px;
+    text-align: left; 
+  }
+  
+
+  .data-table th.feature-column,
+.data-table td.feature-column {
+  min-width: 200px; 
+  word-break: break-all;
+}
+
+.feature-column:first-child {
+  width: 10%;
+}
+
+.feature-column {
+  width: 10%; 
+}
+
+.column-space{
+  margin-left: 200px;
+}
+
+.scroll-container {
+  overflow-x: auto; 
+  white-space: nowrap;
+}
+/* Existing CSS */
+
+/* Ensure table cells have enough space and responsiveness */
+.data-table th,
+.data-table td {
+  padding: 8px;
+  text-align: left;
+  white-space: nowrap; /* Prevent wrapping */
+  overflow: hidden; /* Hide content that overflows */
+  text-overflow: ellipsis; /* Show ellipsis for overflowed content */
+}
+
+/* Set a max-width for feature columns */
+.data-table th.feature-column,
+.data-table td.feature-column {
+  max-width: 200px;
+}
+
+/* Adjustments for smaller screens */
+@media screen and (max-width: 768px) {
+  .data-table th.feature-column,
+  .data-table td.feature-column {
+    max-width: 100px; /* Reduce max-width for smaller screens */
+  }
+}
+

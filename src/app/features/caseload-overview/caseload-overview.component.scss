@@ -1,0 +1,190 @@
+.caseload-overview-container {
+    .caseload-overview {
+       display: block;
+       overflow: auto;
+        .caseload-inner {
+            display: block;
+            float: left;
+            width: calc(50% - 20px);
+            padding: 0 10px;
+            margin-bottom: 25px;
+            .caseload-icon {
+                position: absolute;
+                right: 20px;
+                cursor: pointer;
+                background: url(../../../assets/images/pin-outline.png);
+                width: 25px;
+                height: 25px;
+                display: none;
+                background-size: cover;
+                filter: brightness(0) invert(1);
+                transform: rotate(40deg);
+                &:hover{
+                    opacity: 0.6;
+                }
+            }
+            .caseload-list{
+                list-style-type: none;
+                padding: 0;
+                min-height: 300px;
+                li{
+                    padding: 10px 20px;
+                    &:nth-child(odd) {
+                        background: #f1f1f1;
+                    }
+                }
+            }
+            mat-card{
+                padding: 0!important;
+                mat-card-header{
+                    padding: 20px 20px 10px 20px;
+                    background: var(--primary-color);
+                    color: #fff;
+                }
+                mat-card-actions{
+                    padding: 10px;
+                    margin: 0!important;
+                    min-height: 56px;
+                }
+                mat-card-content{
+                    max-height: 300px;
+                    overflow: auto;
+                    margin: 0;
+                }
+            } 
+            
+        }
+        .my-todo {
+            width: calc(100% - 20px);
+        } 
+        .caseDisable{
+            mat-card-header, mat-card-actions{
+                background: #0000001f;
+            }
+            mat-card-header{
+                background: #0000001f!important;
+                color: rgba(0, 0, 0, 0.87)!important;
+            }
+            .caseload-list{
+                background: #0000001f;
+                li{
+                    &:nth-child(odd) {
+                        background: #0000001f;
+                    }
+                }
+            }
+            .caseload-icon{
+                background: url(../../../assets/images/pin-filled.png);
+                width: 25px;
+                height: 25px;
+                display: block;
+                background-size: cover;
+                //filter: inherit!important;
+                filter: brightness(0) invert(0.5);
+                opacity: 0.6;
+                &::after{
+                    display: none!important;
+                }
+            }
+        }
+    }
+    .personaliseOn{
+        .caseload-inner {
+            .caseload-icon{
+                display: block;
+                &::after{
+                    content: '';
+                    border: 1px solid #fff;
+                    height: 27px;
+                    transform: rotate(109deg);
+                    display: block;
+                    /* width: 0.5px; */
+                    position: absolute;
+                    background: #fff;
+                    right: 10px;
+                    top: -4px;
+                }
+            }
+        }    
+    }
+    .personaliseOff {
+        .caseDisable{
+            display: none;
+        }
+    }
+    .custom-options {
+        text-align: right;
+        margin-bottom: 15px;
+    }
+    .caseload-mytodo{
+        margin-bottom: 25px;
+    }
+    .caseload-mycalendar{
+        margin-bottom: 25px;
+    }
+}
+
+.active-cases{
+    margin: 0 !important;
+}
+
+@media screen and (max-width: 1024px) {
+    .caseload-overview-container {
+        .caseload-overview {
+            .caseload-inner {
+            width: calc(50% - 20px)!important;
+            }
+            .my-todo {
+                width: calc(100% - 20px)!important;
+            } 
+        }
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .caseload-overview-container {
+        .caseload-overview {
+            .caseload-inner {
+            width: calc(100% - 20px)!important;
+            }
+        }
+    }
+}
+
+.active-cases{
+    margin: 0 !important;
+}
+
+.status {
+    padding: 4px 7px;
+    background-color:var(--primary-color);
+    font-size: 12px;
+    color: white;
+    border-radius: 4px;
+  }
+  ::ng-deep.search_by .mat-form-field-label-wrapper {
+   top: 0.25em !important;
+   display: none;
+  }
+
+  
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .button-pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.export-pagination-container {
+    display: flex;
+    align-items: center;
+}
+
+.export-pagination-container .flex-spacer {
+    flex: 1;
+}

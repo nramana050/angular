@@ -1,0 +1,51 @@
+<h1 mat-dialog-title>{{isNew ? 'Add  qualification' : 'Update  qualification'}}</h1>
+<mat-card-content>
+ <form [formGroup]="qualificationDetails" (ngSubmit)="onSubmit()" autocomplete="off"> 
+  <div class="card-row">
+          <mat-form-field appearance="fill">
+            <mat-label >NVQS achieved</mat-label>
+            <mat-select placeholder="NVQS achieved"
+              formControlName="nvqsQualification">
+              <mat-option *ngFor="let item of allData?.refDataMap?.NVQS_Achieved" [value]="item?.id" id="item">{{item.description}}</mat-option>
+              <mat-option [value]="null" id="nvqsQualification-null"> Clear Selection </mat-option> 
+            </mat-select>
+          </mat-form-field>
+    </div>
+   <div class="card-row">
+        <mat-form-field appearance="fill">
+            <mat-label>Site the qualification was completed?</mat-label>
+            <mat-select placeholder="Site the qualification was completed?"
+              formControlName="siteOfQualificationCompletion">
+              <mat-option *ngFor="let item of allData?.refDataMap?.Site_Qualification_Completed" [value]="item?.id" id="item">{{item.description}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+    </div>
+  <div class="card-row">
+        <mat-form-field appearance="fill">
+            <mat-label >Fully or partially completed?</mat-label>
+            <mat-select placeholder="Fully or partially completed?"
+            formControlName="fullyParticiallyStatus">
+            <mat-option *ngFor="let item of allData?.refDataMap?.Fully_Partially_Completed" [value]="item?.id" id="fullyParticiallyStatus">{{item.description}}</mat-option>
+            <mat-option [value]="null" id="fullyParticiallyStatus-null"> Clear Selection </mat-option>
+          </mat-select>
+          </mat-form-field>
+    </div> 
+     
+    <div class="card-row">
+        <mat-form-field appearance="fill">
+            <mat-label >Date achieved</mat-label>
+            <input matInput [matDatepicker]="achievedDate" [min]="minEndDate" [max]="maxStartDate"
+              formControlName="achieveDate" placeholder="Qualification achieved date"
+              id="achieveDate" >
+            <mat-datepicker-toggle matSuffix [for]="achievedDate"></mat-datepicker-toggle>
+            <mat-datepicker #achievedDate></mat-datepicker>
+          </mat-form-field>
+    </div> 
+    <mat-dialog-actions align="end">
+        <button mat-button type="button" (click)="dialogClose()">Cancel</button>
+        <button type="submit" mat-flat-button color="primary" [disabled]="qualificationDetails.invalid ">
+            {{ isNew ? 'Save' : 'Update' }}
+        </button>
+    </mat-dialog-actions>
+ </form>
+</mat-card-content>

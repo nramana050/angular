@@ -1,0 +1,163 @@
+.all-card {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  
+    .mat-stroked-button {
+      border-radius: 4px;
+      background: transparent;
+      width: calc(50% - 12px);
+      margin: 12px 0;
+      padding: 6px 0;
+      z-index: 10;
+    }
+  }
+  .counter.on-desktop {
+    color: rgba(0, 0, 0, 0.54);
+    position: absolute;
+    top: 21px;
+    right: 21px;
+    margin: 0;
+    padding: 0;
+    font-size: 120px;
+    font-weight: 900;
+    line-height: 120px;
+    opacity: 0.12;
+    z-index: 0;
+  }
+  
+  .title.not-completed {
+    color: var(--primary-color);
+  }
+  
+  .on-mobile {
+    display: none;
+  }
+  
+  .card-row {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .card-column {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: calc(50% - 12px);
+    align-items: stretch;
+    min-height: 240px;
+  
+    .mat-card {
+      height: 100%;
+      .date-list {
+          float: left;
+          width: 100%;
+          margin-bottom: 15px;
+      
+          @media screen and(min-width: 1336px) {
+            width: 50%;
+      
+          }
+        a{
+          z-index: 1;
+          width: 200px;
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+  
+  @media screen and (max-width: 598px) {
+    .all-card {
+      flex-direction: column;
+  
+      .mat-stroked-button {
+        width: 100%;
+        z-index: 10;
+      }
+    }
+  
+    .on-mobile {
+      display: flex !important;
+    }
+  
+    .mat-card-header.on-desktop {
+      display: none;
+    }
+  
+    .card-row {
+      flex-direction: column;
+    }
+  
+    .card-column {
+      width: 100%;
+    }
+  }
+  
+  .mat-card:not([class*='mat-elevation-z']).info-text {
+    p, li {
+      font-size: 15px;
+      line-height: 24px;
+      color: rgba(#000000, 0.87);
+    }
+  
+    .highlight-text-primary {
+      color: #246281;
+      font-weight: 600;
+    }
+  
+    .highlight-text-accent {
+      color: #e91e63;
+    }
+  
+    ul {
+      list-style: none;
+    }
+  
+    ul li::before {
+      font-size: 16px;
+      line-height: 24px;
+      content: "\2022";
+      color: #246281;
+      font-weight: bold;
+      display: inline-block;
+      width: 1em;
+      margin-left: -1em;
+    }
+  
+    a, a:hover, a:visited {
+      font-size: 15px;
+      color: #e91e63;
+    }
+  }
+.count-alignement{
+  color: rgba(0,0,0,.54);
+  position: absolute;
+  top: 21px;
+  right: 24px;
+  margin: 0;
+  padding: 0;
+  font-size: 120px;
+  font-weight: 900;
+  line-height: 120px;
+  opacity: .12;
+  z-index: 0;
+
+}
+// .card-row-in{
+//   flex-direction: column;
+// }
+
+@media only screen and (max-width: 760px) {
+  .seq-theme .mat-card .card-row {
+    flex-direction: column !important;
+  }
+}

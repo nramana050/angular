@@ -1,0 +1,212 @@
+<div class="header">
+    <div class="tabWrapper">
+        <ul>
+            <li class="tabHead " (click)= "goToDigitalCourse()" routerLinkActive="active">
+                <a class="tab-item" id="usefulContacts" attr.aria-label="tab Month">Digital course progress</a>
+            </li>
+            <li class="tabHead active" (click)= "goToProgramInfo()" routerLinkActive="active">
+                <a class="tab-item" id="usefulContacts" attr.aria-label="tab Month">Programme enrolment</a>
+            </li>
+            <li class="tabHead" (click)="goToProgramOutcome()" routerLinkActive="active">
+                <a class="tab-item" id="usefulContacts" attr.aria-label="tab Month">Programme outcomes</a>
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+<mat-card>
+    <mat-card-header>
+        <span>
+            <app-stepper-navigation></app-stepper-navigation>
+        </span>
+        <span class="spacer"></span>
+        <span>
+            <button type="button" id="exit_user_button" mat-stroked-button color="primary"
+                (click)="navigateToWorkshopAttendance()">Exit</button>
+        </span>
+    </mat-card-header>
+
+    <mat-card-content>
+        <div class="label-hr"> <span> Programme Details </span> </div>
+
+        <div class="card-row mb20">
+            <div class="card-column-two-third">
+                <div class="infoSection">
+                    <div class="card-row">
+                        <div class="card-column spacer">
+                            <p class="info">
+                                <span class="details_label">Programme name</span>
+                                {{programDetails?.programmeName}}
+                            </p>
+                        </div>
+                        <div class="card-column spacer">
+                            <span class="details_label">Cohort number</span>
+                            {{programDetails?.cohortNumber}}
+                          
+                        </div>
+                        <div class="card-column spacer">
+                            <p class="info">
+                                <span class="details_label">Completion state</span>
+                                <span id="curationStartDateId">{{programDetails?.programStatus}}</span>
+                            </p>
+                        </div>
+                        <div class="card-column spacer" *ngIf="programDetails?.programEndDate">
+                            <p class="info">
+                                <span class="details_label">Actual end date</span>
+                                <span id="curationEndDateId">{{programDetails?.programEndDate | date:'dd MMM yyyy' ||
+                                    "N/A"}}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card-row" *ngIf="programDetails?.withdrawlReason">
+                        <p class="info">
+                            <span class="details_label">Withdrawal reason</span>
+                            <span id="descId">{{programDetails?.withdrawlReason}}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="label-hr"> <span> Course Details </span> </div>
+
+        <mat-table id="learners_table" #table [dataSource]="dataSource" >
+            <ng-container matColumnDef="Coursename">
+                <mat-header-cell *matHeaderCellDef id="Coursename" >
+                    Course name
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"><span class="mobile-label">Course name:</span>
+                    {{ element.courseName }}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Coursecompleted">
+                <mat-header-cell *matHeaderCellDef id="Coursecompleted">
+                    Course completed
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"><span class="mobile-label">Course completed:</span>
+                    {{ element.isCourseCompleted ? 'Yes' : 'No' }}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Startdate">
+                <mat-header-cell *matHeaderCellDef id="Startdate" >
+                    Start date
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"><span class="mobile-label">Start date:</span>
+                    <ng-container
+                        *ngIf="element.qualificationOutcomeDtos && element.qualificationOutcomeDtos.length > 0">
+                        <ul>
+                            <li *ngFor="let outcome of element.qualificationOutcomeDtos">
+                                {{ element.startDate | date:'dd MMM yyyy'}}
+                            </li>
+                        </ul>
+                    </ng-container>
+                    <ng-container
+                        *ngIf="!element.qualificationOutcomeDtos || element.qualificationOutcomeDtos.length === 0">
+                        {{ element.startDate | date:'dd MMM yyyy'}}
+                    </ng-container>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Enddate">
+                <mat-header-cell *matHeaderCellDef id="Enddate" >
+                    End date
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"><span class="mobile-label">End date:</span>
+                    <ng-container
+                        *ngIf="element.qualificationOutcomeDtos && element.qualificationOutcomeDtos.length > 0">
+                        <ul>
+                            <li *ngFor="let outcome of element.qualificationOutcomeDtos">
+                                {{ element.endDate | date:'dd MMM yyyy'}}
+                            </li>
+                        </ul>
+                    </ng-container>
+                    <ng-container
+                        *ngIf="!element.qualificationOutcomeDtos || element.qualificationOutcomeDtos.length === 0">
+                        {{ element.endDate | date:'dd MMM yyyy'}}
+                    </ng-container>
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Attemptdate">
+                <mat-header-cell *matHeaderCellDef id="Attemptdate" >
+                    Attempt date
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"><span class="mobile-label">Attempt date:</span>
+                    <ng-container
+                        *ngIf="element.qualificationOutcomeDtos && element.qualificationOutcomeDtos.length > 0">
+                        <ul>
+                            <li *ngFor="let outcome of element.qualificationOutcomeDtos">
+                                {{ outcome.attemptDate | date:'dd MMM yyyy' }}
+                            </li>
+                        </ul>
+                    </ng-container>
+                    <ng-container
+                        *ngIf="!element.qualificationOutcomeDtos || element.qualificationOutcomeDtos.length === 0">
+                        N/A
+                    </ng-container>
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Qulificationoutcome">
+                <mat-header-cell *matHeaderCellDef id="Qulificationoutcome">
+                    Qualification outcome
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"><span class="mobile-label">Qualification outcome:</span>
+                    <ng-container
+                        *ngIf="element.qualificationOutcomeDtos && element.qualificationOutcomeDtos.length > 0">
+                        <ul>
+                            <li *ngFor="let outcome of element.qualificationOutcomeDtos">
+                                {{outcome?.outcomeId === 1 ? 'Passed' : outcome?.outcomeId === 2 ? 'Failed' : 'Did not sit'}}
+                            </li>
+                        </ul>
+                    </ng-container>
+                    <ng-container
+                        *ngIf="!element.qualificationOutcomeDtos || element.qualificationOutcomeDtos.length === 0">
+                        N/A
+                    </ng-container>
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Qulificationexpirydate">
+                <mat-header-cell *matHeaderCellDef id="Qulificationexpirydate">
+                    Qualification expiry date
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"><span class="mobile-label">Qualification expiry date:</span>
+                    <ng-container
+                        *ngIf="element.qualificationOutcomeDtos && element.qualificationOutcomeDtos.length > 0">
+                        <ul>
+                            <li *ngFor="let outcome of element.qualificationOutcomeDtos">
+                                {{ outcome?.qualificationExpiryDate ? (outcome.qualificationExpiryDate | date:'dd MMM yyyy') : 'N/A'  }}
+                            </li>
+                        </ul>
+                    </ng-container>
+                    <ng-container
+                        *ngIf="!element.qualificationOutcomeDtos || element.qualificationOutcomeDtos.length === 0">
+                        N/A
+                    </ng-container>
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Qualificationrefranceid">
+                <mat-header-cell class="align" *matHeaderCellDef id="Qualificationrefranceid">
+                    Qualification reference id
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"><span class="mobile-label">Qualification reference id:</span>
+                   
+                    <ng-container style="min-width: 50px;"
+                        *ngIf="element.qualificationOutcomeDtos && element.qualificationOutcomeDtos.length > 0">
+                        <ul>
+                            <li *ngFor="let outcome of element.qualificationOutcomeDtos">
+                                {{ outcome?.qualificationReferenceNumber ? outcome.qualificationReferenceNumber : 'N/A' }}
+                            </li>
+                        </ul>
+                    </ng-container>
+                    <ng-container *ngIf="!element.qualificationOutcomeDtos || element.qualificationOutcomeDtos.length === 0">
+                        N/A
+                        
+                    </ng-container>
+                
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+    </mat-card-content>
+</mat-card>

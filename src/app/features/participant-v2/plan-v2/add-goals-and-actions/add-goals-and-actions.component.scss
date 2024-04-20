@@ -1,0 +1,238 @@
+.header {
+  .tabWrapper {
+    margin-top: 10px;
+    position: relative;
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      height: 44px;
+      border-bottom: 1px solid grey;
+
+      li.tabHead {
+        position: relative;
+        margin: 0 33px 0 0;
+        padding: 10px 1px 1px;
+        float: left;
+        background-color: none;
+        text-align: center;
+        cursor: pointer;
+
+        a {
+          margin-right: 3px;
+          float: left;
+          color: #666;
+          text-align: center;
+          text-decoration: none;
+        }
+
+        &:focus a {
+          color: black;
+          background-color: focus-colour;
+          -webkit-box-shadow: 0 -2px focus-colour, 0 4px black;
+          box-shadow: 0 -2px focus-colour, 0 4px black;
+          text-decoration: none;
+        }
+      }
+
+      li.tabHead.active {
+        border-bottom: 3px solid var(--primary-color);
+      }
+    }
+
+  }
+
+  li.active {
+    margin-top: -5px;
+    margin-bottom: -1px;
+    padding: 14px 19px 11px 19px;
+    border-bottom: 3px solid var(--primary-color);
+    background-color: none;
+
+  }
+
+  .tabHead:active {
+    margin-top: -5px;
+    margin-bottom: -1px;
+    padding: 14px 19px 11px 19px;
+    border-bottom: 3px solid var(--primary-color);
+    background-color: none;
+  }
+
+  .tabHead:focus {
+    border-bottom: 3px solid var(--primary-color);
+
+  }
+
+  :tabHead {
+    border-bottom: 3px solid var(--primary-color);
+
+  }
+}
+
+.rating-container {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 18px;
+}
+
+.rating-box {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.rating-box:hover {
+  background-color: #f0f0f0;
+}
+
+.rating-container {
+  display: flex;
+}
+
+.rating-box {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+  margin-right: 5px;
+}
+
+.rating-box.selected {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+span.details_label {
+  display: block;
+  font-size: 14px;
+  color: #ddd;
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.mat-form-field {
+  margin: 8px 0;
+}
+
+.list-table {
+  margin-top: 20px;
+}
+.accordion-section {
+  overflow: hidden;
+  .table-container {
+    margin-top: 20px;
+    min-width: 750px;
+  }
+}
+
+.header-width {
+  color: rgba(0, 0, 0, 0.54) !important;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.header-color {
+  color: rgba(0, 0, 0, 0.54) !important;
+  font-size: 13px;
+}
+
+.width-49 {
+  width: 49.85%
+}
+
+.expanded-panel-align {
+  width: 100%;
+  display: flex;
+}
+
+.my-class {
+  font-weight: bold;
+}
+
+.action-btn {
+  margin-left: 6px;
+}
+
+.mat-expansion-panel-header-title {
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+.mat-card .mat-card-content span.details_label {
+  font-size: 16px !important;
+}
+.mat-expansion-panel-spacing {
+  margin: 0px !important;
+}
+.mat-expansion-panel {
+  border-radius: 0px;
+}
+.mat-expansion-panel-header {
+  font-size: 16px !important;
+}
+.align{
+  margin-top: 16px; 
+}
+.add-btn {
+  margin-left: 8px;
+}
+.mat-card-header {  
+  p {
+    font-size: 16px;
+    margin: 0px 0;
+  }
+}
+.mat-dialog-title {
+  text-align: start;
+}
+.main_header {
+  padding-bottom: 0px !important;
+}
+.width-40 {
+  width: calc(40% - 12px);
+}
+.ml {
+  margin-left: -3px;
+}
+.mat-card .mat-card-content p {
+  margin: 0px;
+  font-size: 16px;
+.status_radio {
+  padding-bottom: 1.34375em;
+}
+.radio-complete {
+  margin: 0 12px 0 0 !important;
+}
+.mat-card .mat-card-content p {
+  margin: 0px;
+  font-size: 16px;
+}
+//  .mat-radio-button {
+//   margin: 0 0px  !important;
+// }
+.mat-radio-button {
+  margin: 0 12px  ;
+}
+
+/* Media query for responsive mode */
+@media screen and (max-width: 768px) {
+  /* CSS rules specific to responsive mode */
+  .mat-radio-button {
+      margin: 0 0px ;
+  }
+}
+}

@@ -1,0 +1,31 @@
+<div class="errorPopup">
+  <h1 mat-dialog-title align="middle"> Participant Status</h1>
+  <div  mat-dialog-content align="middle">{{popUpMessage}}</div>
+  <div class="action" *ngIf="userStatus == 'Reactivated' || userStatus == 'Deactivated' || userStatus==='Active'">
+    <form [formGroup]="chatForm">
+      <mat-form-field class="full-width" appearance="outline">
+        <textarea id="text" matInput minlength="0" maxlength="100" #message 
+         name="chat-text" formControlName="chat"></textarea>
+        <mat-hint *ngIf="message.value.length !=(100-1) && (100) >= 
+                        message.value.length && message.value.length != 0">
+          {{100 - message.value.length}} characters left
+        </mat-hint>
+        <mat-hint *ngIf="message.value.length == 99" id="msg_length">1 character left </mat-hint>
+        <mat-hint *ngIf="message.value.length === 0" id="msg_length">Maximum 100
+          characters allowed</mat-hint>
+        <mat-error *ngIf="message.invalid || !message.errors?.minlength">
+            Minimum 1 character required
+        </mat-error>
+      </mat-form-field>
+      <div mat-dialog-actions align="end">
+        <button class="button_status" mat-button mat-dialog-close>Cancel</button>
+        <button class="status" mat-flat-button mat-dialog-close
+          (click)="statusChange(message)" [disabled]="!chatForm.valid">{{this.setStatusName}}</button>
+      </div>
+    </form>
+  </div>
+  <div class="mt40"mat-dialog-actions align="end" *ngIf="userStatus==='Inactive'">
+    <button class="button_status" mat-button mat-dialog-close>Cancel</button>
+    <button class="status" mat-flat-button mat-dialog-close (click)="statusChange(null)">Activate</button>
+  </div>
+</div>

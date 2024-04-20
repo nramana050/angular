@@ -1,0 +1,343 @@
+<div class="header">
+<div class="tabWrapper">
+  <ul>
+    <li class="tabHead " routerLink="/captr-learner/profile" queryParamsHandling="merge">
+      <a class="tab-item" id="profile-tab" attr.aria-label="tab Profile">Profile</a>
+    </li>
+    <li *ngIf="isAuthorize(60)" class="tabHead active" routerLink="/captr-learner/profile/view-further-information" queryParamsHandling="merge">
+      <a class="tab-item" id="view-further-information-tab" attr.aria-label="tab Further Information">Further
+          Information</a>
+  </li>
+  <li *ngIf="isAuthorize(30)" class="tabHead" routerLink="/captr-learner/profile/action-plan" queryParamsHandling="merge">
+    <a class="tab-item" id="action-plan-tab" attr.aria-label="tab Plan induction">Action plan</a>
+  </li>
+  </ul>
+</div>
+</div>
+
+<mat-card id="view-captr-learner" *ngIf="refData">
+
+  <mat-card-header>
+
+    <div class="learnerName">
+      {{ user?.primaryLearnerDetails.firstName }} {{user?.primaryLearnerDetails.lastName}}
+    </div>
+
+    <div>
+      <button *ngIf="Authorized(60,3)" id="edit_view_button" mat-stroked-button color="primary" [routerLink]="['/captr-learner/further-information']"
+        [queryParams]="{ id: user?.primaryLearnerDetails.id }">
+        Edit
+      </button>
+      <button id="exit_view_button" mat-stroked-button color="primary" [routerLink]="['/captr-learner/participant-professional-view']" queryParamsHandling="merge">
+        Exit
+      </button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <div *ngIf="isLoaded">
+
+      <dl>
+        <div class="label-hr">
+          <span>Referral Information</span>
+        </div>
+
+        <div class="card-row">
+          <div class="card-column">
+            <dt class="details-label">Who made the referral</dt>
+            <dd>
+              <app-list-label *ngIf="furtherInfo?.referalInformation.referalTypeId!=null" id="referalTypeId"
+                [list]="refData.referralType" [value]="furtherInfo?.referalInformation.referalTypeId">
+              </app-list-label>
+              <div *ngIf="furtherInfo?.referalInformation.referalTypeId==null">
+                N/A
+              </div>
+            </dd>
+
+            <dt class="details-label">Referrer name</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.referalInformation.referalName!=null">
+                {{furtherInfo?.referalInformation.referalName}}
+              </div>
+              <div *ngIf="furtherInfo?.referalInformation.referalName==null">
+                N/A
+              </div>
+            </dd>
+
+            <dt class="details-label">Contact number</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.referalInformation.contactNumber!=null">
+                {{furtherInfo?.referalInformation.contactNumber}}
+              </div>
+              <div *ngIf="furtherInfo?.referalInformation.contactNumber==null">
+                N/A
+              </div>
+            </dd>
+
+            <dt class="details-label">How did the participant hear about the service?</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.referalInformation.hearAboutService!=null">
+                {{furtherInfo?.referalInformation.hearAboutService}}
+              </div>
+              <div *ngIf="furtherInfo?.referalInformation.hearAboutService==null">
+                N/A
+              </div>
+            </dd>
+          </div>
+
+          <div class="card-column">
+            <dt class="details-label">Referral details</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.referalInformation.referalDetails!=null">
+                {{furtherInfo?.referalInformation.referalDetails}}
+              </div>
+              <div *ngIf="furtherInfo?.referalInformation.referalDetails==null">
+                N/A
+              </div>
+            </dd>
+
+            <dt class="details-label">Referral organisation</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.referalInformation.referalOrganization!=null">
+                {{furtherInfo?.referalInformation.referalOrganization}}
+              </div>
+              <div *ngIf="furtherInfo?.referalInformation.referalOrganization==null">
+                N/A
+              </div>
+            </dd>
+
+            <dt class="details-label">Contact email</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.referalInformation.contactEmail!=null">
+                {{furtherInfo?.referalInformation.contactEmail}}
+              </div>
+              <div *ngIf="furtherInfo?.referalInformation.contactEmail==null">
+                N/A
+              </div>
+            </dd>
+          </div>
+        </div>
+
+        <div class="label-hr">
+          <span>Prison information</span>
+        </div>
+
+        <div class="card-row">
+          <div class="card-column">
+            <dt class="details-label">Released from prison in the last two years?</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.prisonInformation.isReleasedFromPrisonInLastTwoYears">
+                Yes
+              </div>
+              <div *ngIf="furtherInfo?.prisonInformation.isReleasedFromPrisonInLastTwoYears==false">
+                No
+              </div>
+              <div *ngIf="furtherInfo?.prisonInformation.isReleasedFromPrisonInLastTwoYears==null">
+                N/A
+              </div>
+            </dd>
+
+            <div *ngIf="furtherInfo?.prisonInformation.isReleasedFromPrisonInLastTwoYears">
+              <dt class="details-label">Date of release</dt>
+              <dd>
+                <div *ngIf="furtherInfo?.prisonInformation.dateOfRelease!=null">
+                  {{furtherInfo?.prisonInformation.dateOfRelease}}
+                </div>
+                <div *ngIf="furtherInfo?.prisonInformation.dateOfRelease==null">
+                  N/A
+                </div>
+              </dd>
+            </div>
+          </div>
+
+          <div class="card-column" *ngIf="furtherInfo?.prisonInformation.isReleasedFromPrisonInLastTwoYears">
+            <dt class="details-label">Prison released from</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.prisonInformation.prisonReleasedFrom!=null">
+                {{furtherInfo?.prisonInformation.prisonReleasedFrom}}
+              </div>
+              <div *ngIf="furtherInfo?.prisonInformation.prisonReleasedFrom==null">
+                N/A
+              </div>
+            </dd>
+
+            <dt class="details-label">Licence/bail conditions</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.prisonInformation.licenceBailCondition!=null">
+                {{furtherInfo?.prisonInformation.licenceBailCondition}}
+              </div>
+              <div *ngIf="furtherInfo?.prisonInformation.licenceBailCondition==null">
+                N/A
+              </div>
+            </dd>
+          </div>
+        </div>
+
+        <div class="label-hr">
+          <span>External support</span>
+        </div>
+
+        <div class="card-row">
+          <div class="card-column-custom">
+            <dt class="details-label">Support Areas</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.externalSupports?.externalSupportList!=null">
+                <div *ngFor="let id of furtherInfo?.externalSupports?.externalSupportList">
+                  <app-list-label id="supportAreaId" [list]="refData.supportArea" [value]="id.supportAreaId">
+                  </app-list-label>
+                </div>
+              </div>
+              <div *ngIf="furtherInfo?.externalSupports?.externalSupportList==null">
+                N/A
+              </div>
+            </dd>
+          </div>
+          <div class="card-column-custom">
+            <dt class="details-label">Support details</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.externalSupports?.externalSupportList!=null">
+                <div *ngFor="let id of furtherInfo?.externalSupports?.externalSupportList">
+                  {{id.supportDetails}}
+                </div>
+              </div>
+              <div *ngIf="furtherInfo?.externalSupports?.externalSupportList==null">
+                N/A
+              </div>
+            </dd>
+          </div>
+          <div class="card-column-custom">
+            <dt class="details-label">Who is providing support?</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.externalSupports?.externalSupportList!=null">
+                <div *ngFor="let id of furtherInfo?.externalSupports?.externalSupportList">
+                  {{id.providingSupport}}
+                </div>
+              </div>
+              <div *ngIf="furtherInfo?.externalSupports?.externalSupportList==null">
+                N/A
+              </div>
+            </dd>
+          </div>
+        </div>
+
+        <div class="label-hr">
+          <span>ID and Documents</span>
+        </div>
+
+        <div class="card-row">
+          <div class="card-column-custom">
+            <dt class="details-label">ID and Documents</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.idAndDocuments?.idAndDocumentList!=null">
+                <div *ngFor="let id of furtherInfo?.idAndDocuments?.idAndDocumentList">
+                  <app-list-label id="documentId" [list]="refData.document" [value]="id.documentId">
+                  </app-list-label>
+                </div>
+              </div>
+              <div *ngIf="furtherInfo?.idAndDocuments?.idAndDocumentList==null">
+                N/A
+              </div>
+            </dd>
+          </div>
+          <div class="card-column-custom">
+            <dt class="details-label">Where is it held?</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.idAndDocuments?.idAndDocumentList!=null">
+                <div *ngFor="let id of furtherInfo?.idAndDocuments?.idAndDocumentList">
+                  {{id.documentLocation}}
+                </div>
+              </div>
+              <div *ngIf="furtherInfo?.idAndDocuments?.idAndDocumentList==null">
+                N/A
+              </div>
+            </dd>
+          </div>
+          <div class="card-column-custom">
+            <dt class="details-label">Is this current?</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.idAndDocuments?.idAndDocumentList!=null">
+                <div *ngFor="let id of furtherInfo?.idAndDocuments?.idAndDocumentList">
+                  {{id.documentDescription}}
+                </div>
+              </div>
+              <div *ngIf="furtherInfo?.idAndDocuments?.idAndDocumentList==null">
+                N/A
+              </div>
+            </dd>
+          </div>
+        </div>
+
+        <div class="label-hr">
+          <span>Self employment</span>
+        </div>
+
+        <div class="card-row">
+          <div class="card-column">
+            <dt class="details-label">In 100 words or less, describe your business ideas</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.selfEmployment?.businessIdea!=null">
+                {{furtherInfo?.selfEmployment?.businessIdea}}
+              </div>
+              <div *ngIf="furtherInfo?.selfEmployment?.businessIdea==null">
+                N/A
+              </div>
+            </dd>
+
+            <dt class="details-label">Have you previously been self employed?</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.selfEmployment?.isPreviouslySelfEmployed===1">
+                Yes
+              </div>
+              <div *ngIf="furtherInfo?.selfEmployment?.isPreviouslySelfEmployed===2">
+                No
+              </div>
+              <div *ngIf="furtherInfo?.selfEmployment?.isPreviouslySelfEmployed===null">
+                N/A
+              </div>
+            </dd>
+
+            <dt class="details-label">What is the current status?</dt>
+            <dd>
+              <app-list-label *ngIf="furtherInfo?.selfEmployment?.tradingStatus!=null" id="tradingStatus"
+                [list]="refData?.tradingStatus" [value]="furtherInfo?.selfEmployment?.tradingStatus">
+              </app-list-label>
+              <div *ngIf="furtherInfo?.selfEmployment?.tradingStatus==null">
+                N/A
+              </div>
+            </dd>
+          </div>
+
+          <div class="card-column">
+            <dt class="details-label">If still on probation, are they aware of the intention to become self employed?
+            </dt>
+            <dd>
+              <div *ngIf="furtherInfo?.selfEmployment?.isProbation===1">
+                Yes
+              </div>
+              <div *ngIf="furtherInfo?.selfEmployment?.isProbation===2">
+                No
+              </div>
+              <div *ngIf="furtherInfo?.selfEmployment?.isProbation===null">
+                N/A
+              </div>
+            </dd>
+
+
+            <dt class="details-label">What is your UTR number?</dt>
+            <dd>
+              <div *ngIf="furtherInfo?.selfEmployment?.utrNumber!=null">
+                {{furtherInfo?.selfEmployment?.utrNumber}}
+              </div>
+              <div *ngIf="furtherInfo?.selfEmployment?.utrNumber==null">
+                N/A
+              </div>
+            </dd>
+          </div>
+        </div>
+      </dl>
+
+    </div>
+  </mat-card-content>
+
+</mat-card>

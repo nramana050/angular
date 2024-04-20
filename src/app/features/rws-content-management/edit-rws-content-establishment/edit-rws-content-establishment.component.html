@@ -1,0 +1,34 @@
+<!-- <mat-card id='edit_content'>
+    <mat-card-header>
+      <span class="spacer">
+        <app-stepper-navigation></app-stepper-navigation>
+      </span>
+      <span>
+        <button id="exit_user_button" mat-stroked-button color="primary"
+          [routerLink]="['/content-management']">Exit</button>
+      </span>
+    </mat-card-header>
+    <mat-card-content>
+  
+      <div class="info-text">
+        <p class="mt0">Select which Teams can access the resource.</p>
+        <p>Use the search to locate a specific Team to limit the results by Client. You can
+          clear your search or filter selections by clearing the search and clicking on ' Clear ' button.
+        </p>
+        <p>The select all feature will mark all of the Teams that are in the list table - the default view is all
+          Teams, unless a search or filter has been used.</p>
+      </div>
+  
+      <org-search-filter [organizations]="organizations" [selectedOrganizations]="preSelected" [lotNames]="lotNames"
+        [multiple]="true" (update)="updateOrganizations($event)"></org-search-filter>
+    </mat-card-content>
+  
+    <mat-card-footer>
+      <span class="spacer"></span>
+      <span>
+        <button type="button" id="save_org" mat-raised-button color="primary" [disabled]="!selected.valid"
+          (click)="saveOrganizations()">Save &
+          Next</button>
+      </span>
+    </mat-card-footer>
+  </mat-card> -->

@@ -1,0 +1,36 @@
+<mat-card id='keywords'>
+  <mat-card-header>
+   <span class="search-container example-form">
+      <mat-form-field id="search_keywords_form" appearance="fill" class="width">
+        <input id="search_keywords_input" (keydown.enter)="onFilter(search_keywords_input.value)" matInput
+          #search_keywords_input aria-label="Search keywords">
+        <button id="do_search_button" mat-button matSuffix mat-icon-button aria-label="Search" (click)="onFilter(search_keywords_input.value)">
+          <mat-icon>search</mat-icon>
+        </button>
+        <button id="clear_search_button" *ngIf="search_keywords_input.value !==''" mat-button matSuffix mat-icon-button aria-label="Clear"
+          (click)="onFilter(''); search_keywords_input.value=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </span>
+    <span class="spacer"></span>
+    <span *auth="[11,1]">
+      <button id="create_keyword_button" mat-stroked-button class="right" color="primary" [routerLink]="['./add-keyword']">Add
+      </button>
+    </span>
+  </mat-card-header>
+  <mat-card-content class="keyword_container">
+    <div class="card-row">
+      <div class="keyword-container keywordScroll">
+        <mat-chip-list class="keyword-list" aria-label="Fish selection" multiple>
+          <mat-chip color="accent" class="input_chip" *ngFor="let option of keywordOptions" [removable]="true" title="{{option.keywords}}"
+            value="{{option.keywords}}" (removed)="removeKeyword(option.id)">
+            <span matLine>{{option.keywordName}}</span>
+            <mat-icon *auth="[11,4]" matChipRemove>cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-list>
+        <p class="text-center" *ngIf="keywordOptions && keywordOptions?.length === 0">No results found.</p>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,102 @@
+.header {
+    .tabWrapper {
+        margin-top: 10px;
+        position: relative;
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            height: 44px;
+            border-bottom: 1px solid grey;
+
+            li.tabHead {
+                position: relative;
+                margin: 0 10px 0 0; 
+                padding: 10px 10px 1px; 
+                float: left;
+                background-color: none;
+                text-align: center;
+                cursor: pointer;
+
+                a {
+                    margin-right: 3px;
+                    float: left;
+                    color: #666;
+                    text-align: center;
+                    text-decoration: none;
+                }
+
+                &:focus a {
+                    color: black;
+                    background-color: focus-colour;
+                    -webkit-box-shadow: 0 -2px focus-colour, 0 4px black;
+                    box-shadow: 0 -2px focus-colour, 0 4px black;
+                    text-decoration: none;
+                }
+            }
+
+            li.tabHead.active {
+                border-bottom: 3px solid var(--primary-color);
+            }
+        }
+
+    }
+
+    li.active {
+        margin-top: -5px;
+        margin-bottom: -1px;
+        padding: 14px 19px 11px 19px;
+        border-bottom: 3px solid var(--primary-color);
+        background-color: none;
+    }
+
+    .tabHead:active {
+        margin-top: -5px;
+        margin-bottom: -1px;
+        padding: 14px 19px 11px 19px;
+        border-bottom: 3px solid var(--primary-color);
+        background-color: none;
+    }
+
+    .tabHead:focus {
+        border-bottom: 3px solid var(--primary-color);
+    }
+}
+
+.matMenus {
+    @media screen and (max-width: 768px) {
+        .mat-icon-button {
+            width: 40px !important;
+            margin-right: 0px !important;
+        }
+    }
+}
+
+.status {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 12px;
+    padding-right: 12px;
+    background-color: #2e6eb8;
+    font-size: 12px;
+    color: white;
+    border-radius: 4px;
+}
+
+.unenroll {
+    position: absolute;
+    top: 7px;
+    left: 1px;
+    width: 14px;
+    overflow: hidden;
+}
+
+.search-container {
+    display: flex;
+    align-items: flex-end; /* Align items to the bottom of the flex container */
+  }
+
+  .search-container.example-form {
+    height: 100%; /* Ensure this container takes the full height */
+  }

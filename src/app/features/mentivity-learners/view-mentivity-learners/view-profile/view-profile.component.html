@@ -1,0 +1,492 @@
+<div class="header">
+    <div class="tabWrapper">
+      <ul>
+        <li class="tabHead active" routerLink="/mentivity-learner/profile" queryParamsHandling="merge" >
+          <a class="tab-item" id="profile-tab" attr.aria-label="tab Profile">Profile</a>
+        </li>
+        <li *ngIf="isAuthorize(100)" class="tabHead" routerLink="/mentivity-learner/profile/view-further-info" queryParamsHandling="merge">
+          <a class="tab-item" id="view-further-information-tab" attr.aria-label="tab Further Information">Further
+              Information</a>
+      </li>
+      <li  class="tabHead" routerLink="/mentivity-learner/profile/action-plan" queryParamsHandling="merge">
+        <a class="tab-item" id="action-plan-tab" attr.aria-label="tab Plan induction">Action plan</a>
+      </li>
+      </ul>
+    </div>
+    </div>
+    <mat-card id="view-captr-learner" *ngIf="refData && allData">
+     
+        <mat-card-header>
+      
+          <div class="learnerName">
+            {{ user?.primaryLearnerDetails.firstName }} {{user?.primaryLearnerDetails.lastName}}
+          </div>
+          
+          <div>
+              <button  id="edit_view_buttodn" mat-stroked-button color="primary" [routerLink]="['/mentivity-learner/edit-info']"
+                [queryParams]="{ id: user?.primaryLearnerDetails.id }">
+                Edit
+              </button>
+          
+            <button id="exit_view_button" mat-stroked-button color="primary" [routerLink]="['../participant-professional-view']" queryParamsHandling="merge">
+              Exit
+            </button>
+          </div>
+        </mat-card-header>
+      
+        <mat-card-content>
+      
+          <div *ngIf="isLoaded">
+            <div class="label-hr no-top-margin"></div>
+           
+            <dl>
+              <div class="card-row">
+                <div class="card-column">
+                  <dt class="details-label">Unique identifier</dt>
+                  <dd>{{user?.primaryLearnerDetails.id}}</dd>
+                 
+                  <dt class="details-label">Date of birth</dt>
+                  <dd>{{ user?.primaryLearnerDetails.dateOfBirth | date:'dd MMM yyyy'}}</dd>
+      
+                  <dt class="details-label">Gender</dt>
+                  <dd>  
+                    <ng-container>
+                    <div *ngIf="user?.primaryLearnerDetails.gender !== null">           
+                      <app-list-label *ngIf="user?.primaryLearnerDetails.gender !== 12 && user?.primaryLearnerDetails.gender !== 13"
+                       id="genders" [list]="refData.genders" [value]="user?.primaryLearnerDetails.gender">
+                    </app-list-label>
+                  </div>                   
+                    <div *ngIf=" (user?.primaryLearnerDetails.gender === 12) || (user?.primaryLearnerDetails.gender === 13) ">{{ user?.primaryLearnerDetails.otherGender }}
+                    </div>
+                    <div *ngIf="user?.primaryLearnerDetails.gender==null">N/A
+                    </div>
+                    </ng-container>
+                  </dd>
+                      
+                  <dt class="details-label">NI number</dt>
+                  <dd>{{ user?.primaryLearnerDetails.niNumber || "N/A"}}</dd>
+
+
+          <dt class="details-label">Is English a first language?</dt>
+          <dd>
+            <div *ngIf="user?.primaryLearnerDetails.isEnglishLanguage==1">Yes
+            </div>
+            <div *ngIf="user?.primaryLearnerDetails.isEnglishLanguage == 2 ">No
+            </div>
+            <div *ngIf="user?.primaryLearnerDetails.isEnglishLanguage==null">N/A
+            </div>
+          </dd>
+          <div *ngIf="user?.primaryLearnerDetails.isEnglishLanguage == 2 ">
+            <dt class="details-label">What is the first language?</dt>
+            <dd>
+              <app-list-label *ngIf="user?.primaryLearnerDetails.selectedLanguage != 508" id="Language_Choice "
+                [list]="allData.refDataMap.Language_Choice" [type]="'mentivity'"
+                [value]="user?.primaryLearnerDetails.selectedLanguage">
+              </app-list-label>
+              <div *ngIf="user?.primaryLearnerDetails.selectedLanguage == 508">
+                {{user?.primaryLearnerDetails.otherLanguage }}
+              </div>
+            </dd>
+          </div>
+
+          <dt class="details-label">Is the young person on an EHCP?</dt>
+          <dd>
+            <div *ngIf="user?.primaryLearnerDetails.isPersonEHCU== 1">Yes</div>
+            <div *ngIf="user?.primaryLearnerDetails.isPersonEHCU== 2">No</div>
+            <div *ngIf="user?.primaryLearnerDetails.isPersonEHCU== null">N/A</div>
+          </dd>
+          <dd>
+          <div *ngIf="user?.primaryLearnerDetails.isPersonEHCU== 1">
+          <dt class="details-label">What are the young persons EHCP needs?</dt>
+          <dd>
+            <app-list-label id="EHCP_Person_Need" [list]="allData.refDataMap.EHCP_Person_Need" [type]="'multiple'"
+              [value]="user?.primaryLearnerDetails.personNeed">
+            </app-list-label>
+            <div>{{user?.primaryLearnerDetails.otherNeed}}</div>
+          </dd>
+        </div>
+        </div>
+
+        <div class="card-column">
+          <dt class="details-label">Participant name</dt>
+          <dd>{{ user?.primaryLearnerDetails.firstName }} {{user?.primaryLearnerDetails.lastName}}</dd>
+
+          <dt class="details-label">Country of residence</dt>
+         <dd>
+          <app-list-label id="Country" [list]="allData.refDataMap.Country"  [type]="'mentivity'"
+          [value]="user?.primaryLearnerDetails.countryOfResidance">
+        </app-list-label>
+        <div *ngIf="user?.primaryLearnerDetails.countryOfResidance == null">N/A
+        </div>
+      </dd>
+          <dt class="details-label">Nationality</dt>
+          <dd> 
+            <app-list-label id="Nationality" [list]=" allData.refDataMap.Nationality" [type]="'mentivity'"
+            [value]="user?.primaryLearnerDetails.nationality">
+          </app-list-label>
+          <div *ngIf="user?.primaryLearnerDetails.nationality== null">N/A
+          </div>
+        </dd>
+
+
+                  <dt class="details-label">ULN</dt>
+                  <dd>{{ user?.primaryLearnerDetails.uln || "N/A"}}</dd>
+
+                  <dt class="details-label">Allocated worker</dt>
+                  <dd>
+                    <app-list-label id="users" [list]="userList" [value]="user?.primaryLearnerDetails.workerId">
+                    </app-list-label>
+                    <div *ngIf="user?.primaryLearnerDetails.workerId==null">N/A
+                    </div>
+                </dd>
+
+        <dt class="details-label">What are the young person's support needs?</dt>
+        <dd>
+          <div>
+            <app-list-label id="Support_Need" [list]="allData.refDataMap.Support_Need" [type]="'multiple'"
+              [value]="user?.primaryLearnerDetails.youngPersonSupportNeeds">
+            </app-list-label>
+          </div>
+          <div>{{user?.primaryLearnerDetails.otheryoungPersonSupportNeeds}}</div>
+          <div *ngIf="user?.primaryLearnerDetails.youngPersonSupportNeeds == null">N/A</div>
+    </div>
+    </div>
+
+
+    <div class="label-hr">
+      <span>Contact Details</span>
+    </div>
+
+    <div class="card-row">
+      <div class="card-column">
+        <dt class="details-label">Address line 1</dt>
+        <dd>{{ user?.contactDetails.addressLine1 || "N/A" }}</dd>
+
+        <dt class="details-label">Address line 2</dt>
+        <dd>{{ user?.contactDetails.addressLine2 || "N/A"}}</dd>
+
+        <dt class="details-label">Town</dt>
+        <dd>{{ user?.contactDetails.townOrCity || "N/A"}}</dd>
+
+        <dt class="details-label">County</dt>
+        <dd>{{ user?.contactDetails.county || "N/A" }}</dd>
+
+        <dt class="details-label">Postcode</dt>
+        <dd>{{ user?.contactDetails.postCode || "N/A"}}</dd>
+      </div>
+
+      <div class="card-column">
+        <dt class="details-label">Email address</dt>
+        <dd>{{ user?.contactDetails.emailAddress || "N/A"}}</dd>
+
+        <dt class="details-label">Contact number</dt>
+        <dd>{{ user?.contactDetails.contactNo || "N/A"}}</dd>
+
+        <dt class="details-label">Address tenure in years</dt>
+        <dd>{{ user?.contactDetails.addressTenureInyear || "N/A"}}</dd>
+
+        <dt class="details-label">Address tenure in months</dt>
+        <dd>{{ user?.contactDetails.addressTenureInMonth || "N/A"}}</dd>
+      </div>
+    </div>
+
+    <div class="label-hr">
+      <span>Emergency Contact Details</span>
+    </div>
+
+              <h4>Primary contact</h4>
+              
+              <div class="card-row" >
+                
+                <div class="card-column">
+                  <dt class="details-label">Name</dt>
+                  <dd>{{ user?.emergencyContact[0].firstName || 'N/A' }}</dd>
+      
+                  <dt class="details-label">Emergency contact number</dt>
+                  <dd>{{ user?.emergencyContact[0].contactNo || 'N/A'}}</dd>
+
+                  <dt class="details-label">Address line 2</dt>
+                  <dd>{{ user?.emergencyContact[0].addressLine2 || "N/A"}}</dd>
+
+                  <dt class="details-label">Postcode</dt>
+                  <dd>{{ user?.emergencyContact[0].postCode || "N/A"}}</dd>
+
+                </div>
+      
+                <div class="card-column">
+                  <dt class="details-label">Relationship with participant</dt>
+                  <dd>{{ user?.emergencyContact[0].relationshipWithUser || 'N/A'}}</dd>
+
+                  <dt class="details-label">Address line 1</dt>
+                  <dd>{{ user?.emergencyContact[0].addressLine1 || "N/A" }}</dd>
+      
+                  <dt class="details-label">Town</dt>
+                  <dd>{{ user?.emergencyContact[0].townOrCity || "N/A"}}</dd>
+      
+                </div>
+              </div>
+
+              <h4>Secondary contact</h4>
+              <div class="card-row" >
+                <div class="card-column">
+                  <dt class="details-label">Name</dt>
+                  <dd>{{ user?.emergencyContact.length > 1 && user?.emergencyContact[1].firstName ? user?.emergencyContact[1].firstName : 'N/A' }}</dd>
+      
+                  <dt class="details-label">Emergency contact number</dt>
+                  <dd>{{ user?.emergencyContact.length > 1 && user?.emergencyContact[1].contactNo  ? user?.emergencyContact[1].contactNo : 'N/A'}}</dd>
+                  <dt class="details-label">Address line 2</dt>
+                  <dd>{{ user?.emergencyContact.length > 1 && user?.emergencyContact[1].addressLine2  ? user?.emergencyContact[1].addressLine2 : 'N/A'}}</dd>
+                  <dt class="details-label">Postcode</dt>
+                  <dd>{{ user?.emergencyContact.length > 1 && user?.emergencyContact[1].postCode  ? user?.emergencyContact[1].postCode : 'N/A'}}</dd>
+                </div>
+      
+                <div class="card-column">
+                  <dt class="details-label">Relationship with participant</dt>
+                  <dd>{{ user?.emergencyContact.length > 1 && user?.emergencyContact[1].relationshipWithUser ? user?.emergencyContact[1].relationshipWithUser : 'N/A'}}</dd>
+                  <dt class="details-label">Address line 1</dt>
+                  <dd>{{ user?.emergencyContact.length > 1 && user?.emergencyContact[1].addressLine1 ? user?.emergencyContact[1].addressLine1 : 'N/A'}}</dd>
+      
+                  <dt class="details-label">Town</dt>
+                  <dd>{{ user?.emergencyContact.length > 1 && user?.emergencyContact[1].townOrCity ? user?.emergencyContact[1].townOrCity : 'N/A'}}</dd>
+
+                </div>
+
+          
+              </div>
+              
+      
+              <div class="label-hr">
+                <span>Unemployment Status</span>
+              </div>
+      
+              <div class="card-row">
+                <div >
+                  <dt class="details-label">Looking for work?</dt>
+                  <dd>
+                    <div *ngIf="user?.unEmploymentStatus.isLookingForWork==1">Yes
+                    </div>
+                    <div *ngIf="user?.unEmploymentStatus.isLookingForWork==2">No
+                    </div>
+                    <div *ngIf="user?.unEmploymentStatus.isLookingForWork==null">N/A
+                    </div>
+                  </dd>
+      
+                  <div *ngIf="user?.unEmploymentStatus.isLookingForWork==1">
+                    <dt class="details-label">Length of unemployment</dt>
+                    <dd>
+                      <app-list-label *ngIf="user?.unEmploymentStatus.lengthOfUnemployment!=null" id="lengthOfUnemployments"
+                        [list]="refData.lengthOfUnemployments" [value]="user?.unEmploymentStatus.lengthOfUnemployment">
+                      </app-list-label>
+                      <div *ngIf="user?.unEmploymentStatus.lengthOfUnemployment==null">N/A
+                      </div>
+                    </dd>
+      
+                    <dt class="details-label">Job centre location</dt>
+                    <dd>{{ user?.unEmploymentStatus.jobCentreLocation || 'N/A'}}</dd>
+      
+      
+                      <dt class="details-label">Work coach</dt>
+                      <dd>{{ user?.unEmploymentStatus.workCoach || 'N/A'}}</dd>
+      
+                      <dt class="details-label">Benefit  type</dt>
+                      <dd>
+                        <app-list-label *ngIf="user?.unEmploymentStatus.benefitType!=null" id="benefits"
+                          [list]="refData.benefits" [value]="user?.unEmploymentStatus.benefitType ">
+                        </app-list-label>
+                        <div *ngIf="user?.unEmploymentStatus.benefitType==null">N/A
+                        </div>
+                      </dd>
+                  </div>
+      
+                </div>
+              </div>
+      
+              <div class="label-hr">
+                <span>Equal Opportunities Monitoring</span>
+              </div>
+      
+              <div class="card-row">
+                <div class="card-column">
+                  <dt class="details-label">Disability or learning difficulty</dt>
+                  <dd>
+                    <div
+                      *ngIf="user?.equalOpportunitiesMonitoring?.disabilityOrLearningDifficultyId==1 && user?.equalOpportunitiesMonitoring?.disabilityOrLearningDifficultyIds!=null">
+                      <div *ngFor="let id of user?.equalOpportunitiesMonitoring?.disabilityOrLearningDifficultyIds">
+                        <app-list-label id="disabiltyOrLearningDifficulties" [list]="refData.disabiltyOrLearningDifficulties"
+                          [value]="id">
+                        </app-list-label>
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="user?.equalOpportunitiesMonitoring?.disabilityOrLearningDifficultyId==2 || user?.equalOpportunitiesMonitoring?.disabilityOrLearningDifficultyIds==null">No
+                    </div>
+                    <div *ngIf="user?.equalOpportunitiesMonitoring?.disabilityOrLearningDifficultyId==null">N/A 
+                    </div>
+                  </dd>
+      
+                  <dt class="details-label">Medical condition</dt>
+                  <dd>
+                  <div
+                      *ngIf="user?.equalOpportunitiesMonitoring?.isMedicalCondition==1 && user?.equalOpportunitiesMonitoring?.isMedicalCondition!=null">{{ user?.equalOpportunitiesMonitoring.medicalCondition}}
+                  </div>
+                  <div
+                    *ngIf="user?.equalOpportunitiesMonitoring?.isMedicalCondition==2 ">No
+                  </div>
+                  <div *ngIf="user?.equalOpportunitiesMonitoring?.isMedicalCondition==null">N/A
+                  </div>
+                </dd>
+      
+                  <dt class="details-label">Support in relation to literacy</dt>
+                 <dd>
+                    <div
+                        *ngIf="user?.equalOpportunitiesMonitoring?.isSupportToLiteracy==1 && user?.equalOpportunitiesMonitoring?.isSupportToLiteracy!=null">{{ user?.equalOpportunitiesMonitoring.literacySupport }}
+                    </div>
+                    <div
+                    *ngIf="user?.equalOpportunitiesMonitoring?.isSupportToLiteracy==2 ">No
+                  </div>
+                  <div *ngIf="user?.equalOpportunitiesMonitoring?.isSupportToLiteracy==null">N/A
+                  </div>
+                </div>
+               
+      
+      
+                <div class="card-column">
+                  <dt class="details-label">Career requirements</dt>  
+                  <dd>
+                    <div
+                        *ngIf="user?.equalOpportunitiesMonitoring?.isCareerRequirements==1 && user?.equalOpportunitiesMonitoring?.isCareerRequirements!=null">{{ user?.equalOpportunitiesMonitoring.careerRequirements }}
+                    </div>
+                  <div
+                    *ngIf="user?.equalOpportunitiesMonitoring?.isCareerRequirements==2 ">No
+                  </div>
+                  <div *ngIf="user?.equalOpportunitiesMonitoring?.isCareerRequirements==null">N/A
+                  </div>
+                </dd> 
+      
+                  <dt class="details-label">Support with motivation of self-esteem</dt>
+                  <dd>
+                    <div
+                        *ngIf="user?.equalOpportunitiesMonitoring?.isMotivationOfselfEsteem==1 && user?.equalOpportunitiesMonitoring?.isMotivationOfselfEsteem!=null">{{ user?.equalOpportunitiesMonitoring.motivationOfselfEsteem }}
+                    </div>
+                 
+                  <div
+                    *ngIf="user?.equalOpportunitiesMonitoring?.isMotivationOfselfEsteem==2 ">No
+                  </div>
+                  <div *ngIf="user?.equalOpportunitiesMonitoring?.isMotivationOfselfEsteem==null">N/A
+                  </div>
+                </dd>
+                  <dt class="details-label">Criminal convictions which have not been spent under the Rehabilitation of
+                    Offenders Act 1974</dt>
+                      <div
+                          *ngIf="user?.equalOpportunitiesMonitoring?.isCriminalConvictions==1 && user?.equalOpportunitiesMonitoring?.isCriminalConvictions!=null">{{ user?.equalOpportunitiesMonitoring.criminalConvictions}}
+                      </div>       
+                  <div
+                    *ngIf="user?.equalOpportunitiesMonitoring?.isCriminalConvictions==2 && user?.equalOpportunitiesMonitoring?.isCriminalConvictions!=null">No
+                  </div>
+                  <div *ngIf="user?.equalOpportunitiesMonitoring?.isCriminalConvictions==null">N/A
+                  </div>
+      
+                </div>
+              </div>
+      
+              <div class="label-hr">
+                <span>Equality and diversity</span>
+              </div>
+      
+              <div class="card-row">
+                <div class="card-column">
+                  <div class="infoContainer" *ngIf="user?.equalityAndDiversity.isEqualityAndDiversityInformationId==1">
+                    <dt class="details-label">Caring responsibilities</dt>
+                    <dd>
+                      <app-list-label id="caringResponsibilities" [list]="refData.caringResponsibilities"
+                        [value]="user?.equalityAndDiversity.caringResposibilities">
+                      </app-list-label>
+                    </dd>
+      
+                    <dt class="details-label">Household situations</dt>
+                    <dd>
+                      <app-list-label id="householdSituations" [list]="refData.householdSituations"
+                        [value]="user?.equalityAndDiversity.householdSituation">
+                      </app-list-label>
+                    </dd>
+      
+                    <dt class="details-label">Married or civil partnership</dt>
+                    <dd>
+                      <app-list-label id="marriedOrCivilPartnerships" [list]="refData.marriedOrCivilPartnerships"
+                        [value]="user?.equalityAndDiversity.marriedOrCivilParnership">
+                      </app-list-label>
+                    </dd>
+      
+                    <dt class="details-label">Religion or beliefs</dt>
+                    <dd>
+                      <app-list-label id="religionOrBeliefs" [list]="refData.religionOrBeliefs"
+                        [value]="user?.equalityAndDiversity.religionOrbeliefs">
+                      </app-list-label>
+                    </dd>
+                  </div>
+      
+                  <dt class="details-label">Working pattern</dt>
+                  <div  *ngIf="user?.equalityAndDiversity.workingpattern!=null">
+                  <dd>
+                    <app-list-label id="workingPatterns" [list]="refData.workingPatterns"
+                      [value]="user?.equalityAndDiversity.workingpattern">
+                    </app-list-label>
+                  </dd>
+                  </div>
+                  <div *ngIf="user?.equalityAndDiversity.workingpattern==null">N/A
+                  </div>
+      
+                </div>
+      
+                <div class="card-column">
+                  <div class="infoContainer" *ngIf="user?.equalityAndDiversity.isEqualityAndDiversityInformationId==1">
+      
+                    <dt class="details-label">Sexual orientation</dt>
+                    <dd>
+                      <app-list-label id="sexualOrientations" [list]="refData.sexualOrientations"
+                        [value]="user?.equalityAndDiversity.sexualOrientation">
+                      </app-list-label>
+                    </dd>
+      
+                    <div *ngIf="user?.equalityAndDiversity.sexualOrientation==6">
+                      <dt class="details-label">Other sexual orientation</dt>
+                      <dd>{{ user?.equalityAndDiversity.otherSexualOrientation || N/A}}</dd>
+                    </div>
+      
+                    <dt class="details-label">Ethinicity</dt>
+                    
+                    <dd>
+                      <app-list-label *ngIf="user?.equalityAndDiversity.ethnicity !=74" id="ethnicities" [list]="refData.ethnicities"
+                        [value]="user?.equalityAndDiversity.ethnicity">
+                      </app-list-label>
+                      <div *ngIf="user?.equalityAndDiversity.ethnicity==74">           
+                        <dd>{{ user?.equalityAndDiversity.otherEthnicity || N/A}}</dd>
+                      </div>
+                    </dd>
+                   
+      
+                    <div *ngIf="user?.equalityAndDiversity.religionOrbeliefs==11">
+                      <dt class="details-label">Other religion or beliefs</dt>
+                      <dd>{{ user?.equalityAndDiversity.otherReligionOrBeliefs || N/A}}</dd>
+                    </div>
+      
+                  </div>
+      
+                  <dt class="details-label">Flexibility</dt>
+                  <div *ngIf="user?.equalityAndDiversity.flexibility!=null">
+                  <dd>
+                    <app-list-label id="flexibilities" [list]="refData.flexibilities"
+                      [value]="user?.equalityAndDiversity.flexibility">
+                    </app-list-label>
+                  </dd>
+                  </div>
+                  <div *ngIf="user?.equalityAndDiversity.flexibility==null">N/A
+                  </div>
+                </div>
+              </div>
+            </dl>
+      
+          </div>
+        </mat-card-content>
+      
+      </mat-card>

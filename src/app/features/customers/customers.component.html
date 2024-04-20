@@ -1,0 +1,73 @@
+<mat-card id="customer">
+
+    <mat-card-header>
+        <span>
+            <mat-icon class="sidenav-icon">groups_2</mat-icon>
+        </span>
+        <span class="margin10">
+            <mat-card-title id="customer_header">
+                Customers</mat-card-title>
+        </span>
+        <span class="spacer"></span>
+        <span *auth ="[49, 1]">
+            <button id="add_customer_button" mat-stroked-button class="right" color="primary"
+                [routerLink]="['./new']">Add customer</button>
+        </span>
+    </mat-card-header>
+
+    <mat-card-content>
+        <mat-table id="customer_table" #table [dataSource]="dataSource" >
+
+            <ng-container matColumnDef="customer">
+                <mat-header-cell *matHeaderCellDef id="userName_button" >
+                    Customer name
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"><span class="mobile-label">Customer name:
+                </span>
+                    {{element.clientName}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="createddate">
+                <mat-header-cell *matHeaderCellDef id="accountType_button" >
+                    Created date
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"><span class="mobile-label">Created date:
+                </span>
+                    {{element.createdDate | customMonthFormat }}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="activecustomer" >
+                <mat-header-cell *matHeaderCellDef id="accountState_button" >
+                    Active customer?
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element" ><span class="mobile-label">Active Customer:
+                </span>
+                    {{element.isActive === true ? 'Yes' : 'No'}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+
+                    <button *auth ="[49, 2]" id="view_user_button_{{element.id}}" title="View" mat-icon-button color="primary"
+                        attr.aria-label="View" [routerLink]="['./view' + '/' + element.id]" matTooltip="View"
+                        [matTooltipShowDelay]="800" class="mat-style">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+
+                    <button *auth ="[49, 3]" id="edit_user_button_{{element.id}}" mat-icon-button color="primary" title="Edit"
+                        attr.aria-label="Edit" [routerLink]="['./edit' + '/' + element.id]" matTooltip="Edit"
+                        [matTooltipShowDelay]="800">
+                        <mat-icon>create</mat-icon>
+                    </button>
+
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+    </mat-card-content>
+</mat-card>

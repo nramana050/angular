@@ -1,0 +1,112 @@
+<mat-card id="view-pd">
+
+    <mat-card-header class="flex-end">
+        <span class="spacer"></span>
+        <button id="edit_edit_button" mat-stroked-button color="primary"
+            [routerLink]="['/programme-management/programme-delivery/edit-pd']"
+            [queryParams]="{ id: userId , pname:programmeDetails?.programmeName}">
+            Edit
+        </button>
+        <button id="exit_user_button" mat-stroked-button color="primary"
+            [routerLink]="['/programme-management']">Exit</button>
+    </mat-card-header>
+
+    <mat-card-content>
+        <div class="label-hr">
+            <span>Programme details</span>
+        </div>
+    </mat-card-content>
+    <mat-card-content>
+        <div class="infoSection">
+            <div class="card-row">
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Programme name</span>
+                        <span id="titleId">{{programmeDetails?.programmeName}}</span>
+                    </p>
+                    <p class="info">
+                        <span class="details_label">Capacity</span>
+                        <span id="titleId">{{programmeDetails?.capacity || "N/A"}}</span>
+                    </p>
+                </div>
+
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Provider</span>
+                        <span id="titleId">{{programmeDetails?.providerName }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+    <div class="label-hr">
+        <span>Delivery planning</span>
+    </div>
+    <mat-card-content>
+        <div class="infoSection">
+            <mat-table id="courseSetup_table" #table [dataSource]="dataSource">
+                <ng-container matColumnDef="courseName">
+                    <mat-header-cell *matHeaderCellDef id="courseName">
+                        Course name
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        {{ element.courseName }} ({{ element?.courseCode}})
+                    </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="tutor">
+                    <mat-header-cell *matHeaderCellDef id="tutor">
+                        Tutor
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        {{ element?.tutorName || 'N/A'}}
+                    </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="startDate">
+                    <mat-header-cell *matHeaderCellDef id="tutor">
+                        Start date
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        {{ element?.startDate | date: 'dd MMMM yyyy'}}
+                    </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="endDate">
+                    <mat-header-cell *matHeaderCellDef id="tutor">
+                        End date
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        {{ element?.endDate| date: 'dd MMMM yyyy'}}
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+            <div class="label-hr">
+                <span>Enrolment details</span>
+            </div>
+        </div>
+
+        <div>
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel *ngFor="let learner of enrolledLearners; let i=index" (opened)="onPanelOpened(i)"
+                    (closed)="onPanelClosed(i)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title [ngClass]="{'my-class': learner.isExpanded}">
+                            {{learner.lernerFullName}}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="expanded-panel-align">
+
+                        <mat-list>
+                            <div *ngFor="let course of learner.learnerCourses; let index=index">
+                                <mat-list-item > {{course.courseName}} ({{course.courseCode}})
+                                    {{course?.hasQualification? 'Q' : null}}</mat-list-item>
+                            </div>
+                        </mat-list>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </mat-card-content>
+</mat-card>

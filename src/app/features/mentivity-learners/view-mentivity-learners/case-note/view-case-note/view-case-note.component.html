@@ -1,0 +1,72 @@
+<mat-card id='view_job'>
+    <mat-card-header>
+        <mat-icon class="iconAlignment">local_hospital</mat-icon>
+        <span id="contactId"> Case Notes </span>
+        <span class="spacer"></span>
+        <span>
+            <button id="exit_button" mat-stroked-button color="primary" (click)="onExitClicked()">Exit</button>
+        </span>
+    </mat-card-header>
+
+    <mat-card-content class="view_user-plan_container">
+        <div class="card-row mb20">
+            <div class="card-column">
+                <div class="card-row">
+                    <p class="info">
+                        <span class="details_label">Date</span>
+                        <span id="titleId">{{caseNoteData?.noteTimestamp | date:'dd MMM yyyy'}}</span>
+                    </p>
+                </div>
+                <div class="card-row">
+                    <p class="info">
+                        <span class="details_label">Start time</span>
+                        <span id="startTime">{{startTime || 'N/A'}}</span>
+                    </p>
+                </div>
+                <div class="card-row">
+                    <p class="info">
+                        <span class="details_label">End time</span>
+                        <span id="endtime">{{endTime || 'N/A'}}</span>
+                    </p>
+                </div>
+                <div class="card-row">
+                    <p class="info ">
+                        <span class="details_label">Length of visit</span>
+                        <span id="lovisit">{{lenOfVisit || 'N/A'}}</span>
+                    </p>
+                </div>
+            </div>
+            <div class="card-column">
+                <div class="card-row">
+                    <p class="info">
+                        <span class="details_label">Worker</span>
+                        <span id="featured">{{caseNoteData.noteSenderName}}</span>
+                    </p>
+                </div>
+                <div class="card-row">
+                    <p class="info">
+                        <span class="details_label">Intervention</span>
+                        <span id="location"
+                            style="min-width:300px;word-break: break-word">
+                            <ng-container *ngFor="let intervention of caseNoteData.intervantionList">
+                               <div>{{intervention}} </div> 
+                            </ng-container>
+                        </span>
+                    </p>
+                </div>
+                <div class="card-row">
+                    <p class="info">
+                        <span class="details_label">Type</span>
+                        <span id="company">{{caseNoteData.typeName}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="card-row">
+            <p class="info card-column-100 full-width">
+                <span class="details_label">Notes</span>
+                <span id="titleId" style="min-width:300px;word-break: break-word">{{caseNoteData.noteText}}</span>
+            </p>
+        </div>
+    </mat-card-content>
+</mat-card>

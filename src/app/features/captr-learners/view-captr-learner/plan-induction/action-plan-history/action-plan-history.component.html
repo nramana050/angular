@@ -1,0 +1,45 @@
+<div [style.display]="visible ? 'block' : 'none'" #historyQuestionModal class="fade-in">
+  <div class="gds-modal show" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="gds-modal-dialog" role="document">
+      <div class="gds-modal-content">
+        <div class="gds-modal-header">
+          <h1 tabindex="0" class="govuk-heading-l mt0" id="myModalLabel" autofocus="autofocus">
+            {{historySectionName}} historic goals</h1>
+        </div>
+
+        <div class="gds-modal-body">
+
+          <div class="quesWrapper" *ngFor="let hlist of filterList; let i=index">
+            <span class="parentQues">Goal {{i+1}} - {{hlist.goal}}</span>
+            <div class="quesSpace">
+              <table>
+                <tr>
+                  <th>Action</th>
+                  <th>Comment</th>
+                  <th>Responsible Person</th>
+                  <th>Status Date</th>
+                  <th>Status</th>
+                  <th>Track</th>
+                </tr>
+                <tr *ngFor="let aList of hlist.actionList">
+                  <td>{{aList.action}}</td>
+                  <td>{{aList.comment}}</td>
+                  <td style="width:24px;">{{aList.byWho}}</td>
+                  <td>{{aList.byWhen | date:'dd MMMM yyyy'}}</td>
+                  <td style="width:18%;"><span [ngClass]="{'gray': aList.status === 'Incomplete', 'green' : aList.status === 'Inprogress', 'blue' : aList.status === 'Completed' }" class="govuk-tag">{{aList.status}}</span></td>
+                  <td *ngIf="aList.byWhen < todayDay">Overdue</td>
+                  <td *ngIf="todayDay <= aList.byWhen && aList.byWhen <= Nextday">Coming Due</td>
+                  <td *ngIf="aList.byWhen > Nextday ">On Track</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="gds-modal-footer">
+          <button id="id-close" class="gds-button button-secondary" type="button" name="close-modal"
+          (click)="close()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

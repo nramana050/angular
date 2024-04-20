@@ -1,0 +1,94 @@
+<mat-card id="view-session">
+    <mat-card-header>
+        <span id="fullName"> {{displayDate}} </span>
+        <span class="spacer system_setup"></span>
+        <span>
+            <button type="button" id="exit_user_button" mat-stroked-button color="primary" (click)="navigateToSessionListPage()">Exit</button>
+        </span>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="card-row">
+            <div class="card-column width-50">
+                <p class="info">
+                    <span class="details_label" id="SessionTakePlace">Did this session take place?</span>
+                    <span id="takePlace" *ngIf=" sessionData.hasOccurred !== null">{{ sessionData?.hasOccurred ? "Yes" : "No"}}</span>
+                     <span id="takePlace" *ngIf=" sessionData.hasOccurred === null">Y / N</span>
+                </p>
+            </div>
+        </div>
+        <div class="card-row">
+            <div class="card-column width-50">
+                <p class="info">
+                    <span class="details_label" id="SessionTakePlace">Session notes</span>
+                    <span id="takePlace" *ngIf=" sessionData.sessionNotes !== null">{{ sessionData?.sessionNotes}}</span>
+                     <span id="takePlace" *ngIf=" sessionData.sessionNotes === null">N/A</span>
+                </p>
+            </div>
+        </div>
+        <div class="card-row" *ngIf=" sessionData?.hasOccurred !== null && ! sessionData?.hasOccurred">
+            <div class="card-column width-50">
+                <p class="info">
+                    <span class="details_label" id="SessionTakePlace">Reason for why this session did not run.</span>
+                <app-list-label *ngIf=" sessionData?.notOccurredReseaonId" [list]="refData?.notOccurredReason" [value]=" sessionData?.notOccurredReseaonId">
+                </app-list-label>
+
+                </p>
+            </div>
+        </div>
+        <div class="card-row">
+            <div class="card-column width-50">
+                <p class="info">
+                    <span class="details_label" id="SessionTakePlace">Tutor name</span>
+                    <span id="takePlace" >{{getValueById(sessionData?.tutorId, 'TUTOR')}}</span>
+                     <span id="takePlace" *ngIf=" sessionData.tutorId === null">N/A</span>
+                </p>
+            </div>
+        </div>
+    </mat-card-content>
+    <div *ngIf=" sessionData?.hasOccurred ===null ||  sessionData?.hasOccurred">
+       
+        <div class="label-hr system_setup"><span class="label-hr">Session attendance</span></div>
+        <mat-table [dataSource]=" sessionData?.learners" multiTemplateDataRows>
+            <ng-container matColumnDef="Learner Name">
+                <mat-header-cell *matHeaderCellDef id="workerName_button" class="name width-15"> Learner name</mat-header-cell>
+                <mat-cell *matCellDef="let element" class="width-15 name">
+                    {{getValueById(element.learnerId, 'NAME')}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Tutor Name">
+                <mat-header-cell *matHeaderCellDef id="workerName_button" class="name width-15"> Date of Birth</mat-header-cell>
+                <mat-cell *matCellDef="let element" class="width-15 name">
+                    {{getValueById(element.learnerId , 'DOB')| date:'dd MMM yyyy'}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Attended">
+                <mat-header-cell *matHeaderCellDef id="lrn_button" class="name width-10">Attended?
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element" class="name width-10">
+                    <app-list-label [list]="refData?.attendanceStatus"
+                        [value]="element.attendanceStatusId"></app-list-label>
+                    <span *ngIf="element.attended===null">Y / N / L / WFH</span>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="expandedDetail">
+                <mat-cell *matCellDef="let element" [ngClass]="{'highlight-expendable-table': element.attendanceStatusId === 3}"
+                    [attr.colspan]="columnsToDisplay.length"
+                    [@detailExpand]="element.attendanceStatusId === 3?'expanded':'collapsed'">
+                    <div class="highlight-expendable-table">
+                    <mat-card-content>
+                        {{element.absenceTypeId ===1 ? 'Authorised' : 'Unauthorised'}} absence
+                    </mat-card-content>
+                    </div>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+            <mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row">
+            </mat-row>
+            <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></mat-row>
+        </mat-table>
+    </div>
+</mat-card>

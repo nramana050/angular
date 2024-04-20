@@ -1,0 +1,92 @@
+<mat-card id='organisations'>
+  <mat-card-header>
+    <span>
+      <mat-form-field id="search_organisations_form" class = "search_by_lr">
+        <mat-label class="hide-at">Search by</mat-label>
+        <input id="search_organisation_input"  (keydown.enter)="onFilter(search_organisation_input.value)" matInput placeholder="Search by" #search_organisation_input aria-label="Search a user">
+        <button id="do_search_button" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="onFilter(search_organisation_input.value)">
+          <mat-icon>search</mat-icon>
+        </button>
+        <button id="clear_search_button" *ngIf="search_organisation_input.value !==''" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="onFilter(''); search_organisation_input.value=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </span>
+    <span class="spacer"></span>
+    <span>
+      <button id="create_organisation_button" *auth="[44,1]" mat-stroked-button class="right" color="primary" [routerLink]="['./new-organisation']">Add</button>
+    </span>
+  </mat-card-header>
+  <mat-card-content class="organisations_container">
+    <mat-table 
+      id="organisation_table" 
+      #table 
+      [dataSource]="dataSource" 
+      class="isMobile" 
+      matSort
+      matSortActive="organizationName"
+      matSortDirection="asc"
+    >
+      <ng-container matColumnDef="organizationName">
+        <mat-header-cell *matHeaderCellDef id="organisation_name_button" class="name" mat-sort-header>
+          Organisation name
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="name"> <span class="mobile-label">Organisation name:
+          </span>{{element.organizationName}} 
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="officeNumber">
+        <mat-header-cell *matHeaderCellDef id="lot_name_header" class="name">
+          Office number
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="name"> <span class="mobile-label">Office number:
+          </span>{{element.contactTelephone}}
+        </mat-cell>
+      </ng-container>
+      
+      <ng-container matColumnDef="officeEmail">
+        <mat-header-cell *matHeaderCellDef id="lot_name_header" class="name">
+          Office email
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="name"> <span class="mobile-label">Office email:
+          </span>{{element.contactEmail}}
+        </mat-cell>
+      </ng-container>
+      
+      <ng-container matColumnDef="dateCreated">
+        <mat-header-cell *matHeaderCellDef id="lot_name_header" class="name">
+          Date created
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="name"> <span class="mobile-label">Date created:
+          </span>{{element.createdDate | customMonthFormat }}
+        </mat-cell>
+      </ng-container>
+      
+      <ng-container matColumnDef="addedBy">
+        <mat-header-cell *matHeaderCellDef id="lot_name_header" class="name">
+          Added by
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="name"> <span class="mobile-label">Added by:
+          </span>{{element.createdByName}}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <mat-header-cell class="actions-column" *matHeaderCellDef>Action</mat-header-cell>
+        <mat-cell class="actions-column" *matCellDef="let element"> <span class="mobile-label"></span>
+          <button 
+            id="edit_organisation_button_{{element.id}}" 
+            mat-icon-button 
+            (click)="onEditClicked(element.id)" 
+            matTooltip="Edit"
+            [matTooltipShowDelay]="800" *auth="[44,3]">
+            <mat-icon color="primary">create</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator id="organisation_pagination" [pageSize]="pageSize" [showFirstLastButtons]='true' [hidePageSize]="true"></mat-paginator>
+  </mat-card-content>
+</mat-card>

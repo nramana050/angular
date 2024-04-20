@@ -1,0 +1,52 @@
+<div class="track-tab-container">
+  <div class="action-buttons-container">
+    <button *ngIf="isAuthorized" id="add_entry_button" mat-stroked-button color="primary" (click)="addEntry()">Add</button>
+  </div>
+  <div class="f-structure-container">
+    <div class="f-structure-entry-container" *ngFor="let entryData of fStructureData; index as i">
+      <ng-container [ngSwitch]="entryData.activityId">
+        <ng-container *ngSwitchCase="'today'">
+          <div class="today-line-panel-container">
+            <div class="today-line-bracket-container" *ngIf="shouldShowTodayLineBrackets(i)">
+              <div class="today-line-bracket"></div>
+            </div>
+            <div class="today-line-divider"></div>
+            <p class="today-line-label">{{entryData.title}}</p>
+            <div class="today-line-divider"></div>
+            <div class="today-line-bracket-container" *ngIf="shouldShowTodayLineBrackets(i)">
+              <div class="today-line-bracket"></div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="-1">
+          <div class="entry-panel-container">
+            <app-entry-induction [entryData]="entryData"></app-entry-induction>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="getActivityId('Intervention')">
+          <div class="entry-panel-container">
+            <app-entry-intervention [entryData]="entryData" [statusList]="getFilteredStatusList()"
+              [outcomeList]="activityRefData?.outcomeList" [withdrawalList]="activityRefData?.withdrawalList"
+              [interventionList]="activityRefData?.interventionList" [pathwayList]="activityRefData?.pathwayList"
+              [projectList]="activityRefData?.projectList" (handleUpdateInterventionEntry)="onUpdateEntry($event)">
+            </app-entry-intervention>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="getActivityId('Appointment')">
+          <div class="entry-panel-container">
+            <app-entry-appointment [entryData]="entryData" [activityRefData]="activityRefData"
+              (handleUpdateAppointmentEntry)="onUpdateEntry($event)"></app-entry-appointment>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="getActivityId('System Interaction')">
+          <div class="entry-panel-container">
+            <app-entry-system [entryData]="entryData"></app-entry-system>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+    <div class="load-more-container" *ngIf="loadMoreVisible">
+      <a href="javascript:void(0)" (click)="onClickLoadMore()">Load more</a>
+    </div>
+  </div>
+</div>

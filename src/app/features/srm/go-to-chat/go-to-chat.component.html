@@ -1,0 +1,99 @@
+<div class="messages-page">
+    <div class="chathead">
+        <h3 class="title" id="chatWith" *ngIf="messageToName">Conversation with {{messageToName}}</h3>
+        <h3 class="title" id="chat" *ngIf="!messageToName">Chat </h3>
+        <button id="exit_chatbox_button" [ngClass]="{'button_for_mobile': for_mobile}" mat-stroked-button
+            color="primary" (click)="onClickChatList()">Exit</button>
+        <button *ngIf="isAuthorized(14,1)" id="create_message_button" class="create_msg" mat-stroked-button color="primary"
+            (click)="onClickExit()">Create Message</button>
+    </div>
+
+    <div id="messages" class="messages-container">
+        <div class="message-list-left" id="style-1" [ngClass]="{'for_mobile': for_mobile}">
+            <dl class="govuk-grid-row">
+                <div class="govuk-grid-column-one-third">
+
+                    <nav class="moj-side-navigation" aria-label="Side navigation">
+                        <ul class="moj-side-navigation__list">
+                            <li  class="moj-side-navigation__item" [ngClass]="{'active': chat.isChatActive }"
+                                *ngFor="let chat of chatDataSource" (click)="onClickChat(chat,$event)" id="{{chat.chatId}}">
+                                <div class="kw-avatar-circle" *ngIf="chat.conersationWith ==='KW'">
+                                    <span id="kw_avatar_{{chat.chatId}}" class="initials">{{getShortName(chat.chatFrom) | uppercase }}</span>
+                                </div>
+
+                                <div class="avatar-circle" *ngIf="chat.conersationWith !=='KW'">
+                                    <span id="su_avatar_{{chat.chatId}}" class="initials">{{getShortName(chat.chatFrom) | uppercase }}</span>
+                                </div>
+
+                                <div class="message-item">
+                                    <span id="last_msg_{{chat.chatId}}"> Last Message {{chat.status}}</span>
+                                    <p><span id="last_msg_recieved_date_{{chat.chatId}}">{{chat.lastMessageRecievedDate | date: 'dd MMM yyyy'}}</span>
+                                    <span class="status_mark" *ngIf="!chat.isRead" id="read_status_{{chat.chatId}}"></span></p>
+                                    <p><span id="last_msg_recieved_time_{{chat.chatId}}">{{chat.lastMessageRecievedDate | date: 'HH:mm'}}</span></p>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </dl>
+
+        </div>
+
+        <div class="message-list-right" >
+            <div class="chat-wrapper">
+            <div class="convesation-div" (scroll)="scrolled($event)" [ngClass]="{'oldVersion': oldVersion}" id="messageBody" #mainScreen>
+            <div *ngFor="let message of messagesDataSource" id="message_{{message.messageId}}">
+                <div *ngIf="userId === message.messageSenderId">
+                    <time  class="message-list__date"
+                        *ngIf="!message.isSameDate" id="msg_day_date_{{message.messageId}}">{{message.messageTimestamp | date: 'dd MMM yyyy'}}</time>
+                    <div class="message-item message-item--sent">
+                        <div class="message-item__text message-item__text--sent" id="msg_text_{{message.messageId}}">{{message.messageText}}</div>
+                        
+                        <div class="message-item__meta">
+                            <span class="message-item__meta--sender"
+                                *ngIf="message.messageSenderId === chat.messageFromId" id="msg_from_name_{{message.messageId}}">{{chat.messageFromName}}</span>
+                            <span class="message-item__meta--sender"
+                                *ngIf="message.messageSenderId === chat.messageToId" id="msg_to_name_{{message.messageId}}">{{chat.messageToName}}</span>
+                            at
+                            <time
+                                class="message-item__meta--timestamp" id="msg_time_{{message.messageId}}">{{ message.messageTimestamp | date:'HH:mm' }}</time>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="userId !== message.messageSenderId">
+                    <time class="message-list__date"
+                        *ngIf="!message.isSameDate" id="msg_day_date_{{message.messageId}}">{{message.messageTimestamp | date: 'dd MMM yyyy'}}</time>
+                    <div class="message-item message-item--received">
+                        <div class="message-item__text message-item__text--received" id="msg_text_{{message.messageId}}">{{message.messageText}}</div>
+                        <div class="message-item__meta">
+                            <span class="message-item__meta--sender"
+                                *ngIf="message.messageSenderId === chat.messageFromId" id="msg_from_name_{{message.messageId}}">{{chat.messageFromName}}</span>
+                            <span class="message-item__meta--sender"
+                                *ngIf="message.messageSenderId === chat.messageToId"  id="msg_to_name_{{message.messageId}}">{{chat.messageToName}}</span> at
+                            <time
+                                class="message-item__meta--timestamp" id="msg_time_{{message.messageId}}">{{ message.messageTimestamp | date:'HH:mm' }}</time>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    <div class="action" *ngIf="conversationWithId">
+        
+            <mat-form-field class="full-width" appearance="outline">
+                <mat-label>Type message here...</mat-label>
+                <textarea id="text" matInput placeholder="Type message here..." minlength="0" maxlength="400" #message
+                matTextareaAutosize matAutosizeMinRows=1 matAutosizeMaxRows=3></textarea>
+                <mat-hint *ngIf="message.value.length !=(400-1) && (400) >= 
+                    message.value.length && message.value.length != 0">
+                    {{400 - message.value.length}} characters left
+                </mat-hint>
+                <mat-hint *ngIf="message.value.length == 399" id="msg_length">1 character left</mat-hint>
+                <mat-hint *ngIf="message.value.length === 0" id="msg_length">Minimum 1 and maximum 400 characters allowed</mat-hint>
+            </mat-form-field>
+            <button type="button" id="send_button" mat-raised-button color="primary"
+            (click)="onSubmit(message)" [disabled]=" message.value.length === 0">Send</button>
+        </div>
+        </div>
+    </div>
+</div>

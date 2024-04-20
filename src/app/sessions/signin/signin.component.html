@@ -1,0 +1,35 @@
+<div class="sign-in-container white material-13">
+  <h2>Sign in</h2>
+  <mat-error *ngIf="signinError">{{signinError}}</mat-error>
+
+  <form [formGroup]="signinForm"  autocomplete="off">
+
+    <input id="fakeUsername" name="userName" style="display:none" type="text" autocomplete="off">
+    <input id="fakePassword" name="password" style="display:none" type="password" autocomplete="off">
+
+    <h3>Please fill in your username and password</h3>
+
+    <mat-form-field class="darkModeBorderNone" appearance="fill">
+      <mat-label class="white">Username</mat-label>
+      <input matInput maxlength="30" name="userName" formControlName="userName" required id="username" autocomplete="off">
+      <mat-error *ngIf="signinForm.controls.userName.invalid" class="form-error-msg">Username is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="darkModeBorderNone" appearance="fill">
+      <mat-label class="white">Password</mat-label>
+      <input matInput type="password" name="password" formControlName="pass" required id="password" autocomplete="off">
+      <mat-error *ngIf="signinForm.controls.pass.invalid" class="form-error-msg">Password is required</mat-error>
+    </mat-form-field>
+    <div class="button-div">
+      <button mat-flat-button [disabled]="signinForm.invalid" (click)="signin()" id="signinBtn"> Sign in </button>
+     
+      <button *ngIf="!isoAuthRequired" mat-button color="secondary" [routerLink]="'/sessions/forgot-password'" class="forgot-password">Forgot password?</button>
+    </div>
+    <div *ngIf="isoAuthRequired">
+      <button mat-flat-button  id="signinBtn"  (click)="signinWithSSO()"> Login with OKTA </button>
+    </div>
+    
+  </form>
+
+
+</div>

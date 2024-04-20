@@ -1,0 +1,162 @@
+<mat-card id='edit_content'>
+    <mat-card-header>
+        <span class="spacer">
+            <app-stepper-navigation></app-stepper-navigation>
+        </span>
+        <span>
+            <button id="exit_user_button" mat-stroked-button color="primary"
+                [routerLink]="['/application-setup/role-creation']">Exit</button>
+        </span>
+    </mat-card-header>
+    <mat-card-content>
+        <span class="margin10">
+            <mat-card-title id="customer_header">
+                {{roleDetail?.roleName}}</mat-card-title>
+        </span>
+        <form [formGroup]="contentForm" autocomplete="off">
+            <div class="label-hr">
+                <span>Features</span>
+            </div>
+            <span>
+                <mat-card-title id="helpful_text"> Please select what features you would like this role to have access to.</mat-card-title>
+            </span>
+            
+            <span>
+                Some features are linked, selecting them will automatically select linked features.
+            </span>
+            <br>
+            <br>
+            <div class="card-row mb20">
+                <div class="keyword-container">
+                    <mat-chip-list #chipList formArrayName="featureIds" *ngIf="showSelectedFeature">
+                        <mat-chip *ngFor="let feature of contentForm.get('featureIds')['controls']; let i=index;"
+                            color="primary" class="input_chip" [selectable]="false"
+                            [removable]="feature.value.removable" (removed)="remove(i, feature.value)"
+                            [formGroupName]="i" selected>
+                            <span matLine>
+                                {{feature.value.featureIds |
+                                getLabel:allfeatures:feature.value.featureIds:'featureName'}}
+                            </span>
+                            <mat-icon matChipRemove *ngIf="feature.value.removable">cancel</mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                    <mat-error
+                        *ngIf="contentForm.get('featureIds').touched && contentForm.get('featureIds').hasError('required')">
+                        You must select at least 1 feature
+                    </mat-error>
+                </div>
+            </div>
+            <mat-card-header>
+                <span>
+                    <mat-form-field class="search_by">
+                        <mat-label>Search</mat-label>
+                        <input matInput #keywordFilter id="keywordFilter" [formControl]="keywordFilterCtrl">
+                        <button id="do_search_button" mat-button matSuffix mat-icon-button aria-label="Clear"
+                            (click)="onFilter(keywordFilter.value)">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                        <button id="clear_search_button" *ngIf="keywordFilter.value !==''" mat-button matSuffix
+                            mat-icon-button aria-label="Clear" (click)="onFilter(''); keywordFilter.value=''">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </span>
+            </mat-card-header>
+            <div class="card-row">
+                <div class="keyword-container keywordScroll">
+                    <mat-chip-list class="keyword-list">
+                        <ng-container *ngFor="let option of featureOptions">
+                            <mat-chip color="accent" class="input_chip" title="{{option.featureIds}}"
+                                value="{{option.featureIds}}" (click)="select(option)" *ngIf="!option.invisible">
+                                <span matLine>{{option.featureName }}</span>
+                            </mat-chip>
+                        </ng-container>
+                    </mat-chip-list>
+                    <p class="text-center" *ngIf="featureOptions && featureOptions?.length === 0">No results found.</p>
+                </div>
+            </div>
+            <br>
+            <div *ngIf="showRadioButon()" >
+            Does the role need to appear in any of the user list?
+            <br>
+            <div class="card-row">
+                <mat-radio-group formControlName="isFilterConfig" required name="isFilterConfig">
+                    <div class="radio-button-container">
+                        <mat-radio-button (change)="onRadioChange()" value=true>Yes</mat-radio-button>
+                        <mat-radio-button (change)="onRadioChange()" value=false>No</mat-radio-button>
+                    </div>
+                </mat-radio-group>
+            </div>
+            <br>
+            <div *ngIf="contentForm.get('isFilterConfig').value == 'true'">
+                Which lists does the role need to feature?
+                <ng-container formArrayName="filterConfigIds">
+                    <ng-container *ngFor="let item of refData; let i=index">
+                        <div class="card-row" [formGroupName]="i">
+                            <div class="card-column-33">
+                                <mat-checkbox *ngIf="checkFeatureIdExists(item)" formControlName="id" (change)="checkId(i,item)"
+                                    [value]="item?.id">
+                                    {{item?.value}}
+                                </mat-checkbox>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+            </div>
+            <br>
+            
+            <div *ngIf="moodleRoleList !== null && moodleRoleList.length !== 0">
+                Does the role need to access to moodle?
+                <br>
+                <div class="card-row">
+                    <mat-radio-group [disabled]="isMoodleDisabled" formControlName="isMoodleRole" required name="isMoodleRole">
+                        <div class="radio-button-container">
+                            <mat-radio-button (change)="moodleAccessChange()" value=true>Yes</mat-radio-button>
+                            <mat-radio-button (change)="moodleAccessChange()" value=false>No</mat-radio-button>
+                        </div>
+                    </mat-radio-group>
+                </div>
+                <br>
+                <div *ngIf="contentForm.controls.isMoodleRole.value === 'true'">
+                    <div> What role in Moodle does the CAPTR role need?</div>
+                    <mat-form-field class="width-30" appearance="fill">
+                        <mat-label>Choose moodle role</mat-label>
+                        <mat-select [disabled]="isMoodleDisabled" formControlName="moodleRoleId" id="moodleRoleId" required>
+                            <mat-option *ngFor="let role of moodleRoleList" [value]="role.roleId" id="role.roleId">
+                                {{role.roleName}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="contentForm.get('moodleRoleId').hasError('required')">
+                            Moodle role is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="card-row">
+                <div class="card-column">
+                    <mat-form-field appearance="outline">
+                        <mat-label>
+                         Select landing page
+                        </mat-label>
+                        <mat-select placeholder="Select landing page " formControlName="landingPageFeatureId" required >
+                          <mat-option *ngFor="let item of selectedFeaturesArray" [value]="item?.id" id="item">{{item.featureName}}</mat-option>
+                          <mat-option [value]="null" id="landingPageFeatureId-null"> Clear Selection </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="contentForm.get('landingPageFeatureId').hasError('required')">Landing page is required
+                        </mat-error>
+                      </mat-form-field> 
+                </div>
+                
+              </div>
+        </form>
+    </mat-card-content>
+    <mat-card-footer>
+        <span class="spacer"></span>
+        <span>
+            <button type="submit" id="save_user_button" mat-flat-button color="primary" [disabled]="!contentForm.valid || isCheckboxSelect()"
+                (click)="saveAndNext()">Next</button>
+        </span>
+    </mat-card-footer>
+</mat-card>

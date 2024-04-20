@@ -1,0 +1,77 @@
+<mat-card id='favorites-jobs'>
+  
+  <mat-card-header>
+    <span> Favourite Jobs </span>
+    <span class="spacer"></span>
+    <span>
+      <button id="edit_view_button" mat-stroked-button color="primary" (click)="onExitClicked()">Exit</button>
+    </span>
+  </mat-card-header>
+  
+  <mat-card-content class="users_container">
+
+    <mat-table id="user_table" #table [dataSource]="dataSource" class="isMobile" matSort>
+
+      <ng-container matColumnDef="job_title">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          Job Title
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element"> 
+          <span class="mobile-label">Job Title: </span>
+          {{element.job_title}} 
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <mat-header-cell class="width-10" *matHeaderCellDef id="date_button">
+          Date
+        </mat-header-cell>
+        <mat-cell class="width-10" *matCellDef="let element"> 
+          <span class="mobile-label">Date: </span>
+          {{element?.date| date : 'dd/MM/yyyy'}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="location_name">
+        <mat-header-cell class="width-10" *matHeaderCellDef id="location_button"> 
+          Location
+        </mat-header-cell>
+        <mat-cell class="width-10" *matCellDef="let element"> 
+          <span class="mobile-label">Location: </span>
+          {{element.location_name}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="expired">
+        <mat-header-cell class="width-10" *matHeaderCellDef id="expired_button">
+         Status
+        </mat-header-cell>
+        <mat-cell class="width-10" *matCellDef="let element"> 
+          <span *ngIf="element.expired" class="status">EXPIRED</span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+
+        <mat-header-cell *matHeaderCellDef class="actions-column">Action</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="actions-column"> <span class="mobile-label"></span>
+
+          <button [disabled]="element.expired" *auth="[11,4]"  mat-icon-button color="primary"
+            [routerLink]="['./view']" title="View" [queryParams]="{ jobid : element.id, suUserid : userId }"
+            queryParamsHandling="merge" attr.aria-label="View ">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container> 
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    </mat-table>
+
+    <mat-paginator id="user_pagination" [pageSize]="pageSize" [showFirstLastButtons]='true' [hidePageSize]="true">
+    </mat-paginator>
+
+  </mat-card-content>
+
+</mat-card>

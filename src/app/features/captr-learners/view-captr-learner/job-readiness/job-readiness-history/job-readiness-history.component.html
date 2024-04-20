@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Job Readiness History</h2>
+
+<mat-dialog-content class="mat-typography">
+
+  <div class="card-row" *ngFor="let histItem of historyDataList; let i=index">
+    <p class="info">
+      <span class="details_label">Version {{histItem.version}} added on {{histItem.lastUpdated | date:'dd MMMM yyyy'}} 
+        by {{histItem.modifiedByName}}</span>
+    </p>
+    <p class="info">
+      <span class="details_label1">Rating</span>
+      <span class="ans" id="rating">{{histItem.colour.name}}</span>
+      <span class="color-circle" [style.background-color]="histItem.colour.colourCode || 'transparent'"></span>
+    </p>
+    <p class="info">
+      <span class="details_label1">Notes</span>
+      <span id="notes">
+        <p class="ans">{{histItem.notes || "N/A"}} </p>
+      </span>
+    </p>
+  
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

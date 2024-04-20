@@ -1,0 +1,57 @@
+.actions {
+  button {
+    margin: 15px 0px;
+  }
+}
+
+.keyword-list {
+
+  display: flex;
+  flex-wrap: wrap;
+
+  .input_chip {
+    cursor: pointer;
+    margin: 8px;
+    padding : 7px 20px 8px;
+
+    span {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 598px) {
+    .mat-list-option {
+      width: 100%;
+    }
+  }
+
+  .chip {
+    margin: 4px 5px 8px 5px;
+  }
+
+  &:focus {
+      outline: 0px
+  }
+}
+
+.keyword-container {
+  width: 100%;
+
+  .mat-error {
+    font-size: 75%;
+    margin-top: 6px;
+  }
+}
+.mb20 {
+  margin-bottom: 20px;
+}
+.keyword-container.keywordScroll {
+  width: 100%;
+  height: 40vh;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+.example-chip-list {
+  width: 100%;
+}

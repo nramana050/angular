@@ -1,0 +1,86 @@
+.align{
+    margin-top: 12px !important;
+ }
+ .header {
+    .tabWrapper {
+        margin-top: 10px;
+        position: relative;
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            height: 44px;
+            border-bottom: 1px solid grey;
+
+            li.tabHead {
+                position: relative;
+                margin: 0 10px 0 0;
+                padding: 10px 10px 1px;
+                float: left;
+                background-color: none;
+                text-align: center;
+                cursor: pointer;
+
+                a {
+                    margin-right: 3px;
+                    float: left;
+                    color: #666;
+                    text-align: center;
+                    text-decoration: none;
+                }
+
+                &:focus a {
+                    color: black;
+                    background-color: focus-colour;
+                    -webkit-box-shadow: 0 -2px focus-colour, 0 4px black;
+                    box-shadow: 0 -2px focus-colour, 0 4px black;
+                    text-decoration: none;
+                }
+            }
+
+            li.tabHead.active {
+                border-bottom: 3px solid var(--primary-color);
+            }
+        }
+
+    }
+
+    li.active {
+        margin-top: -5px;
+        margin-bottom: -1px;
+        padding: 14px 19px 11px 19px;
+        border-bottom: 3px solid var(--primary-color);
+        background-color: none;
+    }
+
+    .tabHead:active {
+        margin-top: -5px;
+        margin-bottom: -1px;
+        padding: 14px 19px 11px 19px;
+        border-bottom: 3px solid var(--primary-color);
+        background-color: none;
+    }
+
+    .tabHead:focus {
+        border-bottom: 3px solid var(--primary-color);
+    }
+}
+
+.matMenus {
+    @media screen and (max-width: 768px) {
+        .mat-icon-button {
+            width: 40px !important;
+            margin-right: 0px !important;
+        }
+    }
+}
+.radioAlignment{
+    mat-radio-button{
+      margin: 0 5px!important;
+    }
+  }
+  .v-align-middle { 
+    vertical-align: middle;
+    margin-right: 8px;
+}

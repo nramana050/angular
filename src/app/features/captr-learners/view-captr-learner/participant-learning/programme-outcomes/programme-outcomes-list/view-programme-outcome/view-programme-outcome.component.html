@@ -1,0 +1,87 @@
+<div class="header">
+    <div class="tabWrapper">
+        <ul>
+            <li class="tabHead " (click)= "goToDigitalCourse()" routerLinkActive="active" >
+                <a class="tab-item" id="usefulContacts" attr.aria-label="tab Month">Digital course progress</a>
+            </li>
+            <li class="tabHead " (click)= "goToProgramInfo()" routerLinkActive="active">
+                <a class="tab-item" id="usefulContacts" attr.aria-label="tab Month">Programme enrolment</a>
+            </li>
+            <li class="tabHead active" (click)="goToProgramOutcome()" routerLinkActive="active" >
+                <a class="tab-item" id="usefulContacts" attr.aria-label="tab Month">Programme outcomes</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<mat-card>
+    <mat-card-header>
+        <span>
+            <div class="learnerName">
+                <!-- {{ fullName }} -->
+            </div>
+            <app-stepper-navigation></app-stepper-navigation>
+        </span>
+        <span class="spacer"></span>
+        <button id="exit_user_button" mat-stroked-button color="primary" (click)="onExit()"
+            queryParamsHandling="merge">Exit</button>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="card-row mb20">
+            <div class="card-column-two-third">
+                <div class="infoSection">
+                    <div class="card-row">
+                        <div class="card-column" *ngIf="dataSource?.contactDate">
+                            <p class="info">
+                                <span class="details_label ">Contact date</span>
+                                {{dataSource?.contactDate | date:'dd MMM yyyy'}}
+                            </p>
+                        </div>
+                        <div class="card-column " *ngIf="dataSource?.contactStatus">
+                            <span class="details_label align">Contact successful</span>
+                            {{dataSource?.contactStatus}}
+                        </div>
+                        <div class="card-column" *ngIf="dataSource?.employmentStatus">
+                            <p class="info">
+                                <span class="details_label ">Employment status</span>
+                                <span id="curationStartDateId">{{dataSource?.employmentStatus}}</span>
+                            </p>
+                        </div>
+                        <div class="card-column" *ngIf="dataSource?.outcomeType">
+                            <p class="info">
+                                <span class="details_label">Outcome type</span>
+                                <span id="curationEndDateId">{{dataSource?.outcomeType}}</span>
+                            </p>
+                        </div>
+                        <div class="card-column" *ngIf="dataSource?.startDate">
+                            <p class="info">
+                                <span class="details_label">Start date</span>
+                                <span id="curationEndDateId">{{dataSource?.startDate  | date:'dd MMM yyyy' ||
+                                    "N/A"}}</span>
+                            </p>
+                        </div>
+                        <div class="card-column" *ngIf="dataSource?.employer">
+                            <p class="info">
+                                <span class="details_label">Employer</span>
+                                <span id="curationEndDateId">{{dataSource?.employer }}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="card-column" *ngIf="dataSource?.employmentType">
+                            <p class="info">
+                                <span class="details_label">Employment type</span>
+                                <span id="descId">{{dataSource?.employmentType}}</span>
+                            </p>
+                        </div>
+                        <div class="card-column" *ngIf="dataSource?.employmentSector">
+                            <p class="info">
+                                <span class="details_label">Employment sector</span>
+                                <span id="descId">{{dataSource?.employmentSector}}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

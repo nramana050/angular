@@ -1,0 +1,13 @@
+<div class="header">
+    <div class="tabWrapper">
+        <ul>
+            <li class="tabHead activeTab" routerLinkActive="active" [routerLink]="['./case-note']" [queryParams]="{id: userId, name: name}" 
+                (click)="activityTabs('caseNote')" [ngClass]="{'active': caseNote}">
+                <a class="tab-item" id="localJobs-tab" 
+                    attr.aria-label="tab Month">Case Notes</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<router-outlet></router-outlet>

@@ -1,0 +1,69 @@
+<section class="entry-panel" [class.entry-panel-conditional]="!entryData?.status">
+  <div class="left-container moj-timeline">
+    <div class="moj-timeline__item">
+      <div class="data-container">
+        <h2 class="entry-title">{{entryData?.title}}</h2>
+        <div class="entry-date-container">
+          <p class="entry-subtitle" [style.color]="setDateFontColor(entryData.interventionType, 'Start')">
+            {{entryData?.startDate}}</p>
+          <pre class="entry-subtitle"
+            [style.color]="setDateFontColor(entryData.interventionType, 'Separator')">{{dateSeparator}}</pre>
+          <p class="entry-subtitle" [style.color]="setDateFontColor(entryData.interventionType, 'End')">
+            {{entryData?.endDate}}</p>
+        </div>
+        <div class="entry-pathway-container">
+          <div class="entry-pathway-label" [style.background-color]="setPathwayBackgroundColor(entryData?.pathway)">
+            {{entryData?.pathway | uppercase}}
+          </div>
+        </div>
+
+        <div class="entry-pathway-container2">
+          <div *ngFor="let item of entryData?.additionalPathwayNames" class="entry-pathway-label2"
+            [style.background-color]="setPathwayBackgroundColor(item)">
+            {{item | uppercase}}
+          </div>
+        </div>
+
+        <div class="intervention-contact-info">
+          <p>
+            <span class="intervention-label">Contact</span>
+            <span class="intervention-value">
+              <span>{{entryData?.contactName || "N/A"}}</span><br>
+              <span class="fullWidthInMob">{{entryData?.email}}</span><span *ngIf="entryData?.telephone"
+                class="emailDelimiter"></span><span>{{entryData?.telephone}}</span>
+            </span>
+          </p>
+        </div>
+        <div class="intervention-description">
+          <span class="intervention-label">Intervention Description</span>
+          <p>{{entryData?.interventionDescription}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="right-container">
+      <div class="entry-tags-container" style="text-align:-webkit-right;">
+        <span class="withdraw-flexbox">
+          <div *ngIf="entryData?.status === 'Completed'" class="entry-tag status-completed">{{entryData?.status |
+            uppercase}}</div>
+          <div *ngIf="entryData?.status === 'Withdrawn'" class="entry-tag status-withdrawn">{{entryData?.status |
+            uppercase}}</div>
+          <div *ngIf="entryData?.withdrawalReason" class="withdrawl-entry-tag status-withdrawl-reason">
+            {{entryData?.withdrawalReason | uppercase}}</div>
+        </span>
+        <span>
+          <div *ngIf="entryData?.outcome === 'Achieved'" class="entry-tag outcome-achieved">{{entryData?.outcome |
+            uppercase}}</div>
+          <div *ngIf="entryData?.outcome === 'Not Achieved'" class="entry-tag outcome-not-achieved">{{entryData?.outcome
+            |
+            uppercase}}</div>
+        </span>
+      </div>
+      <div *ngIf="!entryData?.status && isAuthorized" class="entry-actions-container">
+        <button mat-icon-button color="primary" title="Update" attr.aria-label="Update"
+          (click)="openEditInterventionModal()">
+          <mat-icon>create</mat-icon>
+        </button>
+      </div>
+  </div>
+</section>

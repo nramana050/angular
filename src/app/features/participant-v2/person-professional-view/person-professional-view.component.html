@@ -1,0 +1,101 @@
+<mat-card id='view_user_profile'>
+    <mat-card-header>
+        <div class="page-title-icon">
+            <img class="man-woman-icon" src="./../../../../assets/images/man-woman-icon.svg" alt="man-woman-icon">
+            <span>View Person Supported</span>
+            <span class="action-buttons">
+                <button id="exit_view_button" mat-stroked-button color="primary" [routerLink]="['../']">
+                    Exit
+                </button>
+            </span>
+        </div>
+    </mat-card-header>
+    <mat-card-content class="view_user-plan_container">
+        <div class="infoSection">
+            <div class="card-row">
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">First name</span>
+                        <span id="firstName">{{user?.firstName || "N/A"}}</span>
+                    </p>
+                </div>
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Address</span>
+                        <span id="address">{{user?.contactDetails.addressLine1 || "N/A"}}</span>
+                    </p>
+                </div>
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Surname</span>
+                        <span id="surname">{{user?.lastName || "N/A"}}</span>
+                    </p>
+                </div>
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Contact number</span>
+                        <span id="contactNo">{{user?.contactDetails.contactNo || "N/A"}}</span>
+                    </p>
+                </div>
+                <div class="card-column">
+                    <p class="info">
+                        <span class="details_label">Date of birth</span>
+                        <span id="dateOfBirth">{{user?.dateOfBirth | date:'dd MMM yyyy'|| "N/A"}}</span>
+                    </p>
+                </div>
+            </div>
+            <div class="see-more-link">
+                <a href="javascript:void(0)" class="see-more-btn" (click)="navigateOnStatus()">See More</a>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+<mat-accordion id='view_user_profile' *ngIf="showProfessionView && userList !==undefined">
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <div class="page-title-icon professioanl">
+                    <img class="man-woman-icon" src="./../../../../assets/images/books-icon.svg"
+                        alt="professioanl-view-icon">
+                    <span> Professional View </span>
+                </div>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="infoSection">
+            <div class="card-row last">
+                <div class="card-column">
+                    <div class="card-row">
+                        <p class="info">
+                            <span class="details_label">Allocated Worker</span>
+                            <app-list-label class="details_ans" *ngIf="user?.workerId !== null" [list]="userList" [value]="user?.workerId">
+                            </app-list-label>
+                            <div *ngIf="user?.workerId ==null">N/A</div>
+                                 
+                    </div>
+                    <div class="card-row">
+                        <p class="info">
+                            <span class="details_label">Last Casenote</span>
+                            <span class="details_ans" id="lastCasenote"
+                                *ngIf="user?.caseNoteDate">{{user?.caseNoteDate | date:
+                                'dd MMM yyyy'}}</span>
+                            <span class="details_ans" id="titleId"
+                                *ngIf="!user?.caseNoteDate ">{{'N/A'}}</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="card-column">
+                    <div class="card-row">
+                        <p class="info">
+                            <span class="details_label">Allocated Worker Number</span>
+                            <span class="details_ans" id="workerNo">{{user?.participantV2Details.keyMemberStaffPhoneNumber || "N/A"}}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="see-more-link">
+                <a class="see-more-btn" [routerLink]="['../case-note']"
+                    [queryParams]="{ id : suId, name: fname, prn : prn}" queryParamsHandling="merge">See More</a>
+            </div>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>

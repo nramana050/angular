@@ -1,0 +1,78 @@
+<div class="header">
+  <div class="tabWrapper">
+    <ul>
+      <li class="tabHead " (click)=" onRiskAssessment()" routerLinkActive="active">
+        <a class="tab-item" id="localJobs-tab" attr.aria-label="tab Month">Risk Assessment</a>
+      </li>
+      <li class="tabHead active " routerLinkActive="active">
+        <a class="tab-item" id="localJobs-tab" attr.aria-label="tab Month">Risk Assessment Documents</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<mat-card id='risk-document'>
+  <mat-card-content class="view_user-plan_container">
+
+    <mat-card-header>
+      <span>Risk Assessment Documents</span>
+      <span class="spacer"></span>
+      <span class="action-buttons">
+        <button id="exit_user_button" mat-stroked-button color="primary"
+        (click)="onExitClicked()">Exit</button>
+      </span>
+    </mat-card-header>
+
+
+    <mat-table id="learners_table" #table [dataSource]=" dataSource ">
+
+      <ng-container matColumnDef="fileName">
+        <mat-header-cell *matHeaderCellDef id="fileName">
+          File Name
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element"><span class="mobile-label">File Name:</span>
+          {{ element.fileName }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="riskAssessmentDate">
+        <mat-header-cell *matHeaderCellDef id="riskAssessmentDate">
+          Risk Assessment Date
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element"><span class="mobile-label">Risk Assessment Date: </span>
+          {{ element.dataOfRiskAssessment | date:'dd MMM yyyy'}}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="reviewDate">
+        <mat-header-cell *matHeaderCellDef id="reviewDate">
+          Risk Assessment Review Date
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element"><span class="mobile-label"> Risk Assessment Review Date: </span>
+          {{ element.reviewDate | date:'dd MMM yyyy'}}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+        <mat-cell *matCellDef="let element; let i = index;">
+
+          <button id="download_document_{{i}}" mat-icon-button color="primary" (click)="download(element.path)"
+            title="Download" attr.aria-label="Download {{element.name}}">
+            <mat-icon>get_app</mat-icon>
+            <div id="form_holder" style="display: none;"></div>
+          </button>
+
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"></mat-row>
+    </mat-table>
+
+
+    <mat-paginator id="documents_pagination" 
+    [pageSize]="pageSize"
+    [showFirstLastButtons]='true'
+    [hidePageSize]="true"
+     (page)="onPaginateChange($event)">
+   </mat-paginator>
+
+  </mat-card-content>
+</mat-card>

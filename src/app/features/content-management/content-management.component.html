@@ -1,0 +1,105 @@
+<mat-card id='contents'>
+
+  <mat-card-header>
+    <span>
+      <mat-form-field id="search_contents_form" class="search_by">
+        <mat-label class="hide-at">Search by</mat-label>
+        <input id="search_contents_input" (keydown.enter)="onFilter(search_contents_input.value)" matInput placeholder="Search by"
+          #search_contents_input aria-label="Search a user">
+        <button id="do_search_button" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="onFilter(search_contents_input.value)">
+          <mat-icon>search</mat-icon>
+        </button>
+        <button id="clear_search_button" *ngIf="search_contents_input.value !==''" mat-button matSuffix mat-icon-button aria-label="Clear"
+          (click)="onFilter(''); search_contents_input.value=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </span>
+    <span class="spacer"></span>
+    <span >
+      <button *auth="[13,1]" id="create_content_button" mat-stroked-button class="right" color="primary" [routerLink]="['./content']">Add
+      </button>
+    </span>
+  </mat-card-header>
+
+  <mat-card-content class="contents_container">
+
+    <mat-table id="contents_table" #table [dataSource]="dataSource" class="isMobile" matSort [(matSortActive)]="sortColumn" matSortDirection="asc">
+
+      <ng-container matColumnDef="title">
+        <mat-header-cell *matHeaderCellDef id="contents_name_button" mat-sort-header>
+          Title
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element" > <span class="mobile-label">Title:
+          </span>{{element.title}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="mainCategory">
+        <mat-header-cell  *matHeaderCellDef id="mainMenuCategory_button" mat-sort-header>Main Category
+        </mat-header-cell>
+        <mat-cell  *matCellDef="let element"> <span class="mobile-label">MainCategory: </span>{{element.mainCategory}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="subCategory">
+        <mat-header-cell  *matHeaderCellDef id="subMenuCategory_button" mat-sort-header>Sub Category
+        </mat-header-cell>
+        <mat-cell  *matCellDef="let element"> <span class="mobile-label">SubCategory: </span>{{element.subCategory}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="createdDate">
+        <mat-header-cell  *matHeaderCellDef id="uploadDate_button" mat-sort-header> Upload Date
+        </mat-header-cell>
+        <mat-cell  *matCellDef="let element"> <span class="mobile-label">UploadDate: </span>{{element.uploadDate
+          | customMonthFormat }} 
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="isActive">
+        <mat-header-cell  *matHeaderCellDef id="status_button" mat-sort-header> Status
+        </mat-header-cell>
+        <mat-cell  *matCellDef="let element"> <span class="mobile-label call-status-label">Status: </span><span class="status">{{element.isActive}}</span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+
+        <mat-header-cell class="actions-column" *matHeaderCellDef>Action</mat-header-cell>
+        <mat-cell class="actions-column" *matCellDef="let element"> <span class="mobile-label"></span>
+
+          <button *auth="[13,2]" id="view_contents_button_{{element.id}}" mat-icon-button color="primary" [routerLink]="['./view-contents']"
+           
+          [queryParams]="{ id : element.id, content: element.title}" queryParamsHandling="merge"
+          
+          matTooltip="View" [matTooltipShowDelay]="800" class="mat-style">
+            <mat-icon>visibility</mat-icon>
+          </button>
+
+          <button *auth="[13,3]" id="edit_contents_button_{{element.id}}" mat-icon-button (click)="onEditClicked(element.id)" matTooltip="Edit"
+            [matTooltipShowDelay]="800" class="mat-style">
+            <mat-icon color="primary">create</mat-icon>
+          </button>
+
+          <button *auth="[13,4]" id="delete_contents_button_{{element.id}}" mat-icon-button (click)="onDeleteClicked(element.id)"
+            attr.aria-label="Delete {{element.id}}" matTooltip="Delete">
+            <mat-icon color="accent">delete</mat-icon>
+          </button>
+
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator id="contents_pagination" [pageSize]="pageSize" [showFirstLastButtons]='true' [hidePageSize]="true">
+    </mat-paginator>
+
+  </mat-card-content>
+
+
+
+
+</mat-card>

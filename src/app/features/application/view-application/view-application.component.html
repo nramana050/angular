@@ -1,0 +1,148 @@
+<mat-card id='view_application'>
+
+  <mat-card-header>
+    <span>Application Details</span>
+    <mat-chip-list class="chip-div" *ngIf="earliestReleaseDate" aria-label="Releae date">
+      <mat-chip color="primary">Earliest release date: {{earliestReleaseDate| date : 'dd MMMM yyyy'}}</mat-chip>
+    </mat-chip-list>
+    <span class="spacer"></span>
+    <span>
+      <button id="exit_view_button" mat-stroked-button color="primary" [routerLink]="['..']"
+        (click)="goBack()">Exit</button>
+    </span>
+  </mat-card-header>
+
+  <mat-card-content class="view_application_container">
+
+    <div class="card-row mb20">
+      <div class="card-column">
+        <div class="card-row" *ngIf="job?.date">
+          <p class="info">
+            <span class="details_label">Job title</span>
+            <span id="jobTitle">{{job?.job_title}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.date">
+          <p class="info">
+            <span class="details_label">Posting date</span>
+            <span id="postdateId">{{job?.date| date : 'dd MMMM yyyy'}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.location_name">
+          <p class="info">
+            <span class="details_label">Location</span>
+            <span id="locationId">{{job?.location_name}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.contract_type">
+          <p class="info">
+            <span class="details_label">Contract type</span>
+            <span id="contacttypeId">{{job?.contract_type}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.advertiser_website">
+          <p class="info">
+            <span class="details_label">Advertiser website</span>
+            <span id="sourceWebsite">{{job?.advertiser_website}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.advertiser_type">
+          <p class="info">
+            <span class="details_label">Advertiser type</span>
+            <span id="sourceUrl">{{job?.advertiser_type}}</span>
+          </p>
+        </div>
+      </div>
+      <div class="card-column">
+        <div class="card-row" *ngIf="job?.organization_name">
+          <p class="info">
+            <span class="details_label">Company name</span>
+            <span id="companynameId">{{job?.organization_name}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.salary">
+          <p class="info">
+            <span class="details_label">Salary</span>
+            <span id="salaryId">{{job?.salary | currency: 'GBP' : 'symbol' : '3.0'}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.advertiser_email">
+          <p class="info">
+            <span class="details_label">Advertiser email</span>
+            <span id="advertiserEmail">{{job?.advertiser_email}}</span>
+          </p>
+        </div>
+        <div class="card-row" *ngIf="job?.advertiser_reference_number">
+          <p class="info">
+            <span class="details_label">Advertiser reference number</span>
+            <span id="advertiserReferenceNumber">{{job?.advertiser_reference_number}}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-row mb20 flex-column" *ngIf="job?.job_description">
+      <div class="label-hr">
+        <span>Brief job description</span>
+      </div>
+      <span id="brifjobdescriptionId">{{job?.job_description }}</span>
+    </div>
+    <div class="card-row mb20 flex-column" *ngIf="job?.candidate_description">
+      <div class="label-hr">
+        <span>Candidate description</span>
+      </div>
+      <span id="candidatejobdescriptionId">{{job?.candidate_description}}</span>
+    </div>
+    <div class="card-row mb20 flex-column" *ngIf="job?.employer_description">
+      <div class="label-hr">
+        <span>Employer description</span>
+      </div>
+      <span id="employerjobdescriptionId">{{job?.employer_description}}</span>
+    </div>
+    <div class="card-row mb20 flex-column" *ngIf="job?.conditions_description">
+      <div class="label-hr">
+        <span>Conditions and benefits description</span>
+      </div>
+      <span id="conditionandbenefitsdescriptionId">{{job?.conditions_description}}</span>
+    </div>
+    <div class="card-row mb20 flex-column">
+      <div class="label-hr">
+        <span>Service user attachments</span>
+      </div>
+      <span class="details_label" *ngIf="items.length > 0">File name</span>
+      <span  *ngIf="items.length==0" >No attachment found</span>
+
+      <div class="card-row attachment-section">
+        <mat-nav-list>
+          <mat-list-item *ngFor="let item of items;" (click)="navigate(item)" [disableRipple]="true">
+            <h3 matLine> {{item.filename}}</h3>
+            <button *auth="[16,4]" id="delete_attachments_button_{{item.id}}" mat-icon-button
+              (click)="onDeleteClicked(item.id)" title="Delete" attr.aria-label="Delete {{item.id}}">
+              <mat-icon color="accent">delete</mat-icon>
+            </button>
+
+            <button *auth="[16,2]" id="downlaod_doc_button_{{item.id}}" mat-icon-button color="primary"
+              (click)="download(item.attachmentId,item.attachmentType)" title="Download"
+              attr.aria-label="Download {{item.filename}}">
+              <mat-icon>get_app</mat-icon>
+              <div id="form_holder" style="display: none;"></div>
+            </button>
+
+          </mat-list-item>
+        </mat-nav-list>
+      </div>
+      <div class="text-right">
+        <button type="submit" id="approve_button_{{application?.id}}" mat-flat-button color="primary" [disabled]="disableButtonFlag"
+          (click)="acceptJob(application?.id)" matTooltip="Approve" [matTooltipShowDelay]="800" >
+          Approve
+        </button>
+        <button class="ml10" type="submit" id="decline_button_{{application?.id}}" mat-stroked-button color="primary" [disabled]="disableButtonFlag"
+          (click)="declineJob(application?.id)" matTooltip="Decline" [matTooltipShowDelay]="800">
+          Decline
+        </button>
+      </div>
+    </div>
+
+  </mat-card-content>
+
+</mat-card>

@@ -1,0 +1,59 @@
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  #edit-intervention-label {
+    text-align: center;
+    font-size: 1.8em;
+    font-weight: 100;
+    margin: 0;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.87);
+    margin-top: 10px;
+    margin-bottom: 30px;
+  }
+}
+
+.action-buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+
+  #cancel_button {
+    margin-left: 10px;
+  }
+}
+
+.edit-intervention-form-container {
+  display: flex;
+  flex-direction: column;
+
+  .intervention-dates-container {
+    display: flex;
+
+    @media (max-width: 660px) {
+      flex-direction: column;
+    }
+
+    .date-input-container {
+      .mat-form-field {
+        width: 100%;
+      }
+    }
+
+    .date-input-container:first-of-type {
+      margin-right: 20px;
+
+      @media (max-width: 660px) {
+        margin-right: 0px;
+      }
+    }
+  }
+  
+}
+
+.actual-end-date-container {
+  margin-top: 20px;
+}

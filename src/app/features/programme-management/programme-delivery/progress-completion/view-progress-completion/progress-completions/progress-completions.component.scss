@@ -1,0 +1,174 @@
+::ng-deep .mat-horizontal-stepper-header-container {
+    width: min-content !important;
+}
+
+::ng-deep .seq-theme .mat-card .mat-row {
+    min-height: 30px !important;
+}
+
+.mat-expansion-panel {
+    margin: 0;
+}
+
+.no-border-card {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.container {
+    display: flex;
+
+    .course-menu-section {
+       
+        padding-right: 20px;
+        flex: 1 0 25%;
+
+        .course-menu-item {
+            list-style-type: none;
+            margin-bottom: 10px;
+        }
+
+        span {
+            cursor: pointer;
+        }
+    }
+
+    .spacer {
+        border-bottom: 1px solid gray;
+    }
+
+    .course-details-section {
+        border-left: 1px gray solid;
+        padding-left: 20px;
+        width: 75%;
+    }
+
+    @media screen and (max-width: 767px) {
+        display: block;
+        word-break: keep-all;
+
+        .course-details-section {
+            border-left: none;
+        }
+    }
+
+}
+
+
+.disabled {
+    color: #888;
+    cursor: text;
+}
+
+.course-title {
+    font-size: 1.4em;
+}
+
+.learner-details {
+    margin-top: 30px !important;
+}
+
+li {
+    cursor: pointer;
+}
+
+.mat-cell {
+    display: block;
+}
+
+.mat-expansion-panel-header {
+    height: 52px
+}
+
+.header-align {
+    flex: 0 1 calc(39% - 12px);
+    width: calc(39% - 12px);
+}
+
+.header-width {
+    color: rgba(0, 0, 0, 0.54) !important;
+    padding-right: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    flex: 1 1 calc(29% - 12px);
+    width: calc(30% - 12px);
+}
+
+.header-color {
+    color: rgba(0, 0, 0, 0.54) !important;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.spacing {
+    margin-left: 18px;
+}
+
+.hideCell {
+    display: none;
+}
+
+.width-30 {
+    flex: 1 1 calc(30% - 12px);
+    width: calc(30% - 12px);
+}
+
+.disabled-mat-expansion {
+    color: rgba(0, 0, 0, 0.87) !important;
+}
+
+.align-mat-header-cell {
+    align-items: flex-start;
+}
+
+.mat-cell:last-of-type {
+    @media (max-width: 960px) {
+        margin-left: 0 !important;
+    }
+}
+
+//required
+
+// ::ng-deep .mat-horizontal-stepper-header-container {
+//     width: min-content !important;
+// }
+
+// .container {
+//     width: 100%;
+//     display: flex;
+//     gap: 1em;
+//     justify-content: space-between;
+
+//     .courseMenuSection {
+//         width: 25%;
+//         border-right: 1px gray solid;
+//         padding-right: 5px;
+
+//         span {
+//             cursor: pointer;
+//         }
+//     }
+
+//     .spacer {
+//         border-bottom: 1px solid gray;
+//     }
+
+//     .courseDetailsSection {
+//         width: 74%;
+//     }
+// }
+
+// .courseMenuItem {
+//     list-style-type: none;
+//     margin-bottom: 10px;
+// }
+
+// .disabled {
+//     color: #888;
+//     cursor: text;
+//     /* You can adjust the styles to your preference for disabled elements */
+// }
+
+// li{
+//     cursor: pointer;
+// }

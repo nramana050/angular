@@ -1,0 +1,78 @@
+<mat-card-content class="dialog-container">
+  <div class="scrollable-form">
+    <form [formGroup]="addActionForm" (ngSubmit)="onSubmit()" autocomplete="off">
+      <h1 mat-dialog-title>{{ hideAddGoal === false ? 'Add' : 'Update' }} your action</h1>
+      <div class="card-row">
+        <mat-form-field appearance="outline">
+          <mat-label>What do I need to do?</mat-label>
+          <input matInput placeholder="Add action" formControlName="actionDescription" id="action">
+          <mat-hint>Maximum 100 characters are allowed</mat-hint>
+          <mat-error *ngIf="addActionForm.get('actionDescription').hasError('maxlength')">
+            Action should be 100 characters or less
+          </mat-error>
+          <mat-error *ngIf="addActionForm.get('actionDescription').hasError('required')">
+            Action is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>How do I feel about this?</mat-label>
+          <textarea matInput placeholder="Add comment" formControlName="comment" id="comment"></textarea>
+          <mat-hint>Maximum 200 characters are allowed</mat-hint>
+          <mat-error *ngIf="addActionForm.get('comment').hasError('maxlength')">
+            Comment should be 200 characters or less
+          </mat-error>
+          <mat-error *ngIf="addActionForm.get('comment').hasError('required')">
+            Comment is required</mat-error>
+        </mat-form-field>
+        <span class="details_label">Who needs to do this?</span>
+        <div class="radio-vertical">
+          <mat-radio-group formControlName="actionPerformedId" class="vertical-list"
+            (change)="onOptionSelected($event)">
+            <mat-radio-button *ngFor="let action of personsupportedAction" [value]="action.id">
+              {{ action.description }}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <mat-form-field id="type" appearance="outline"
+          *ngIf="addActionForm.get('actionPerformedId').value === 29 || addActionForm.get('actionPerformedId').value === 30">
+          <mat-label *ngIf="addActionForm.get('actionPerformedId').value === 29">Person responsible?</mat-label>
+          <mat-label *ngIf="addActionForm.get('actionPerformedId').value === 30">Who else is responsible</mat-label>
+          <mat-select formControlName="byWhoId" matInput required>
+            <mat-option *ngFor="let option of userList" [value]="option.id">
+              {{ option.userFullName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label for="dateOfBirth">When do you plan to achieve this action?</mat-label>
+          <input matInput [matDatepicker]="addByWhenControl" formControlName="byWhen" required>
+          <mat-datepicker-toggle matSuffix [for]="addByWhenControl"></mat-datepicker-toggle>
+          <mat-datepicker #addByWhenControl></mat-datepicker>
+          <mat-error *ngIf="addActionForm.get('byWhen').hasError('required')">
+            Date is required</mat-error>
+        </mat-form-field>
+
+        <div *ngIf="isNew" class="status_radio ">
+          <mat-radio-group formControlName="markAsComplete" class="radio-group">
+            <mat-radio-button type="radio" name="status" [value]="true" (click)="onMarkAsCompletedClick(true)"> Mark as
+              complete</mat-radio-button>
+          </mat-radio-group>
+          <mat-radio-group formControlName="markAsInComplete" class="radio-group">
+            <mat-radio-button type="radio" name="status" [value]="true" (click)="onMarkAsInCompletedClick(true)"> Mark
+              as incomplete</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div class="card-row">
+        <mat-dialog-actions align="end">
+          <button mat-button type="button" (click)="dialogClose()">Cancel</button>
+          <button type="submit" mat-flat-button color="primary" [disabled]="!addActionForm.valid">{{isNew ? 'Update' :
+            'Add'}}</button>
+        </mat-dialog-actions>
+      </div>
+    </form>
+  </div>
+</mat-card-content>

@@ -1,0 +1,168 @@
+<mat-card id='view-assessment'>
+    <mat-card-header>
+        <span>{{title}} </span>
+        <span class="spacer"></span>
+        <span>
+            <button id="edit_view_button" mat-stroked-button color="primary" (click)="onExitClicked()">Exit</button>
+        </span>
+    </mat-card-header>
+    <mat-card-content class="assessments_container">
+        <div id='assessment_container1'>
+            <mat-card [ngClass]='"fade"' id="surveyElement"></mat-card>
+        </div>
+       
+    </mat-card-content>
+    <div class="label-hr" *ngIf="assessmentTemplate1?.reviewTypeId ===3">
+        <span>Feedback details</span>
+    </div>
+    <mat-card-content *ngIf="assessmentTemplate1?.reviewTypeId ===3" class="assessments_container" id="planv2-assessment">
+        <div class="survey-container contentcontainer codecontainer">
+          <survey [model]="surveyItem1"></survey>
+        </div>
+    </mat-card-content>
+    <mat-card-header *ngIf="isCompleted === 'true'">
+        <span> Assessment Complete </span>
+        
+    </mat-card-header>
+
+    <mat-card-content class="view_user-plan_container" *ngIf="isCompleted === 'true'">
+        <div class="card-row">
+            <div class="infoSection">
+                <div class="card-row">
+                    <div class="card-column">
+                        <p class="info">
+                            <span class="details_label">Completed on</span>
+                            {{updatedDate | date: 'dd MMM yyyy HH:mm' }}
+                        </p>
+                        <p class="info">
+                            <span class="details_label">Completed by</span>
+                            {{updatedBy}}
+                            <span class="line-break">{{togetherModeUserName}}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </mat-card-content>
+
+    <div class="accordion" >
+        <div class="label-hr" *ngIf="reviewData && reviewData.length > 0">
+            <span>Review details</span>
+        </div>
+        <mat-accordion id='view_user_profile' *ngFor="let element of reviewData">
+            <mat-expansion-panel expanded="false" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="page-title-icon professioanl">
+                        <div class="test">
+                            <span> {{element.reviewType}}</span>
+                            <span class="spacer-date">{{element.reviewCreatedDate |date:'dd MMM yyyy'}}</span>
+                        </div>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="infoSection">
+                    <div class="card-row last">
+                        <div class="card-column">
+                            <div class="card-row">
+                                <div class="info">
+                                    <span class="details_label">Person supported thoughts on progress</span>
+                                    <span>{{element.personSupportedThoughts}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-column">
+                            <div class="card-row">
+                                <p class="info">
+                                    <span class="details_label">Staff's thoughts on progress</span>
+                                    <span>{{element.staffThoughtd}}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+
+    <div class="label-hr" *ngIf="goalsList && goalsList.length > 0">
+        <span>Goals And Action</span>
+    </div>
+    <mat-accordion class="example-headers-align" multi>
+        <mat-expansion-panel  disabled *ngIf="goalsList && goalsList.length > 0">
+            <mat-expansion-panel-header >
+                <mat-panel-title class="header-width">
+                    Goal name
+                </mat-panel-title>
+                <mat-panel-title class="header-width">
+                 Rating 
+                </mat-panel-title>
+                <mat-panel-title class="header-width">
+                    Plan Type
+                    </mat-panel-title>
+            </mat-expansion-panel-header>
+        </mat-expansion-panel>
+        <mat-expansion-panel *ngFor="let element of goalsList"  [disabled]=" element.actionList.length == 0"   >
+            <mat-expansion-panel-header >
+                <mat-panel-title class="width-30 ">
+                    {{element.goal }} 
+                </mat-panel-title>
+                <mat-panel-title class="width-30">
+                    {{&nbsp; element.ratingScale}}
+                </mat-panel-title>
+                <mat-panel-title class="width-30">
+                    {{element.assessmentName}}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+                <mat-card-content>
+                    <mat-table [dataSource]="element.actionList" multiTemplateDataRows>
+                        <ng-container matColumnDef="action">
+                            <mat-header-cell *matHeaderCellDef id="workerName_button" class="align-mat-header-cell">
+                                 Action
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                {{element.action}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="comment">
+                            <mat-header-cell *matHeaderCellDef id="workerName_button"> Comment
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                {{element.comment}}
+                            </mat-cell>
+                        </ng-container>
+                      
+                        <ng-container matColumnDef="personResponsible">
+                            <mat-header-cell *matHeaderCellDef id="workerName_button"> Person
+                                Responsible
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                {{element.byWho}}
+                            </mat-cell>
+                        </ng-container>
+    
+                        <ng-container matColumnDef="goalActivityType">
+                            <mat-header-cell *matHeaderCellDef id="workerName_button"> Goal activity
+                                type
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                {{element.goalActivity}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="status">
+                            <mat-header-cell *matHeaderCellDef id="workerName_button"> Status
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                {{element.status}}
+                            </mat-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="coursesColumns"></mat-header-row>
+                        <mat-row *matRowDef="let element; columns: coursesColumns;"
+                            class="example-element-row">
+                        </mat-row>
+                    </mat-table>
+                </mat-card-content>
+        </mat-expansion-panel>
+    </mat-accordion>
+</mat-card>

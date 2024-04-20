@@ -1,0 +1,243 @@
+@import "~src/styles/helpers/mixins/grid";
+.entry-panel {
+  display: flex;
+  padding: 0px 20px 0px 20px;
+  flex-direction: row;
+  justify-content: space-between;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    padding: 0px;
+  }
+}
+
+
+
+.left-container {
+  width: 80%;
+  @media (max-width: 900px) {
+    margin-right: 0px;
+    width: 100%;
+  }
+}
+
+.right-container {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #f1f1f1;
+  margin-bottom: 20px;
+
+  @media (max-width: 900px) {
+    margin-top: -21px;
+    margin-left: 15px;
+    width: calc(100% - 15px);
+  }
+}
+
+.entry-title {
+  margin-top: 0px;
+  font-weight: 400;
+  margin-bottom: 0px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  font-weight: 400;
+}
+
+.entry-date-container {
+  display: flex;
+
+  @media (max-width: 650px) {
+    flex-direction: column;
+
+    pre.entry-subtitle {
+      margin-top: 0px;
+      margin-bottom: -5px;
+    }
+  }
+}
+
+.entry-subtitle {
+  margin-top: 10px;
+  margin-bottom: 0px;
+  font-size: 16px;
+}
+
+.entry-pathway-container {
+  display: flex;
+  margin-top: 15px;
+  flex-direction: row;
+}
+.entry-pathway-container2 {
+  display: flex;
+  margin-top: 15px;
+  flex-direction: column;
+}
+
+.entry-actions-container {
+  visibility: visible;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 15px;
+
+  @media (max-width: 900px) {
+    justify-content: flex-end;
+  }
+
+  button {
+    margin-top: 5px;
+    margin-bottom: -6px;
+  }
+}
+
+.entry-pathway-label {
+  color: white;
+  padding: 7px 8px 4px 8px;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 0.025em;
+}
+
+.entry-pathway-label2 {
+  width: fit-content;
+  color: white;
+  padding: 2px 8px 3px 8px;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 0.025em;
+  margin-bottom: 10px;
+}
+
+.entry-tag {
+  width: 110px;
+  padding: 3px 3px 2px 3px;
+  text-align: center;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.status-completed {
+  border: 3px solid #cce2d8;
+  background-color: #cce2d8;
+  color: #005a30;
+}
+
+.status-withdrawn {
+  border: 3px solid #fff7bf;
+  color: #594d00;
+  background: #fff7bf;
+}
+
+.withdrawl-entry-tag {
+  width: auto;
+  display: inline-block;
+  padding: 2px 3px 2px 3px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  @media all and (max-width: 900px) {
+    text-align: left;
+  }
+}
+.status-withdrawl-reason {
+  border: 3px solid #fff7bf;
+  background-color: #fff7bf;
+  color: #594d00;
+  margin: 5px 0 0 0;
+  text-align: center;
+  min-width: 100px;
+}
+.withdraw-flexbox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  @media all and (max-width: 900px) {
+    align-items: flex-end;
+  }
+}
+
+.outcome-achieved {
+  border: 3px solid #CCE2D8;
+  background-color: #CCE2D8;
+  color: #005a30;
+  margin-top: 5px;
+  float: right;
+ 
+}
+
+.outcome-not-achieved {
+  border: 3px solid #dbd5e9;
+  background-color: #dbd5e9;
+  color: #3d2375;
+  margin-top: 5px;
+  float: right;
+}
+.intervention-contact-info {
+  padding: 5px 0 5px 0;
+  display: flex;
+  p {
+    // display: flex;
+    justify-content: space-between;
+    margin: 10px 0 0 0;
+    align-items: baseline;
+  }
+  .intervention-label {
+    display: block;
+    font-weight: 400;
+    margin-right: 12px;
+  }
+  .intervention-value {
+    width: auto;
+    display: block;
+    margin-top: 5px;
+  }
+  .emailDelimiter {
+    border-right: 3px solid #BFC1C3;
+    margin: 0 10px;
+  }
+}
+.intervention-description {
+  padding: 5px 0 5px 0;
+  .intervention-label {
+    font-weight: 400;
+  }
+  p {
+    margin: 5px 0 0 0;
+    width: 85%;
+    @include media(mobile) {
+     width: 65%;
+    }
+  }
+}
+@media all and (max-width: 767px) {
+  .intervention-contact-info {
+    p {
+      display: block;
+    }
+    .intervention-label,
+    .intervention-value {
+      display: block;
+      width: 100%;
+      .fullWidthInMob {
+        display: block;
+        width: 100%;
+        word-break: break-all;
+      }
+    }
+    .emailDelimiter {
+      display: none;
+    }
+  }
+}
+
+.entry-tags-container {
+  float: right;
+  padding: 15px;
+}

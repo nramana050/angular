@@ -1,0 +1,113 @@
+<mat-card id='content-image-info-edit'>
+  <mat-card-header>
+    <span class="spacer"></span>
+    <span>
+      <button id="exit" class="icon-button" mat-stroked-button color="primary" (click)="navigateHome()">
+        Exit
+      </button>
+    </span>
+  </mat-card-header>
+
+  <!-- <div class="info-text">
+    <p class="mt0">Resource categories provide the navigation for users when looking through content, 
+      and categories are automatically added as keywords when uploading resource 
+    </p>
+    <p> When wanting to change the name to something new, don't forget that resource may already be linked to that
+      category.</p>
+  </div> -->
+
+  <form [formGroup]="contentCategoryeditForm" (ngSubmit)="onSubmit(contentCategoryeditForm.getRawValue())" validate
+    autocomplete="off">
+    <div class="label-hr">
+      <span>Category</span>
+    </div>
+    <div class="card-row">
+      <div class="card-column">
+        <mat-form-field appearance="fill">
+          <mat-label>Category Name</mat-label>
+          <input matInput formControlName="categoryName" id="Category" required>
+          <mat-hint align="start">Maximum 50 characters are allowed</mat-hint>
+          <mat-error
+            *ngIf="contentCategoryeditForm.controls.categoryName.errors?.pattern">
+            Category name invalid, unable to save</mat-error>
+          <mat-error *ngIf="contentCategoryeditForm.controls.categoryName.errors?.maxlength && !contentCategoryeditForm.controls.categoryName.errors?.pattern">Category
+            name exceeds max
+            length, unable to save</mat-error>
+          <mat-error *ngIf="!contentCategoryeditForm.controls.categoryName.errors?.pattern && !contentCategoryeditForm.controls.categoryName.valid && !contentCategoryeditForm.controls.categoryName.errors?.maxlength">Required
+            Field</mat-error>
+        </mat-form-field>
+      </div>
+      <br>
+      <div class="card-column">
+        <mat-form-field appearance="fill">
+          <mat-label>Category Type</mat-label>
+          <mat-select formControlName="levelId" required >
+            <mat-option *ngFor="let category of categoryNameList"  [value]="category.id">{{category.menuName}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="!contentCategoryeditForm.controls.levelId.valid">
+            Required Field</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="card-column" *ngIf="contentCategoryeditForm.contains('parentCategoryId')" >
+        <mat-form-field appearance="fill">
+          <mat-label>Link to Main Category</mat-label>
+          <mat-select placeholder="Select" formControlName="parentCategoryId" required>
+            <mat-option *ngFor="let subCategory of subCategoryNameList" [value]="subCategory.id">
+              {{subCategory.categoryName}} </mat-option>
+          </mat-select>
+          <mat-error *ngIf="!contentCategoryeditForm.controls.parentCategoryId.valid">
+            Required Field</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="label-hr">
+      <span>Images</span>
+    </div>
+    <div>
+        <mat-card-header>
+          <span class="search-container example-form">
+            <mat-form-field id="search_image_form" appearance="fill" style="width: 50%;">
+              <mat-label>Search by</mat-label>
+              <input id="search_image_input" (keydown.enter)="onFilter(search_image_input.value);$event.preventDefault()" matInput
+                 #search_image_input aria-label="Search a image">
+              <button type = "button" id="do_search_button" mat-button matSuffix mat-icon-button aria-label="Search"
+                (click)="onFilter(search_image_input.value);$event.preventDefault()">
+                <mat-icon>search</mat-icon>
+              </button>
+              <button type = "button" id="clear_search_button" *ngIf="search_image_input.value" mat-button matSuffix mat-icon-button
+                aria-label="Clear" (click)="onFilter('');$event.preventDefault(); search_image_input.value=''">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </span>
+        </mat-card-header>
+      </div>
+
+
+
+    <div class="card-row">
+      <div class="card-row imageBlock">
+        <div *ngFor="let item of contentImageList" class="image-list">
+          <mat-card (click)="selectedItem(item)" [ngClass]="item.id === activeElement ? 'active' : 'none'">
+            <img [src]="getImagePath(item.imageName)" alt="{{item.imageName}}" required>
+            <mat-card-content>
+              <p title="{{item.keywords}}">{{item.keywords}}</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+    <p class="text-center warning-style" *ngIf="contentImageList && contentImageList?.length === 0">No results found.
+    </p>
+    <mat-paginator id="image_pagination" [pageSize]="pageSize" [showFirstLastButtons]='true' [hidePageSize]="true">
+    </mat-paginator>
+    <mat-card-footer>
+      <span class="spacer"></span>
+      <span>
+        <button type="submit" id="save_role_button" mat-flat-button color="primary" [disabled]="!contentImageCtrl.valid || !contentCategoryeditForm.valid">Save</button>
+      </span>
+    </mat-card-footer>
+
+  </form>
+</mat-card>
