@@ -1,4 +1,4 @@
-{
+{"lessonDetails":{
     "id": "662259964df9da38e9cd29b7",
     "courseRequestId": 4860,
     "voiceId": null,
@@ -122,7 +122,7 @@
                     "asset": [
                         {
                             "type": "image",
-                            "path": "/genaie/courses/4860/images/M1/Image_M1_L1.png",
+                            "path": "https://images.app.goo.gl/6ug7sP4sBBpXiSii6",
                             "queryLogEntryId": {
                                 "timestamp": 1713528398,
                                 "counter": 2288007,
@@ -305,7 +305,7 @@
                     "asset": [
                         {
                             "type": "image",
-                            "path": "/genaie/courses/4860/images/M1/Image_M1_L2.png",
+                            "path": "https://images.app.goo.gl/6ug7sP4sBBpXiSii6",
                             "queryLogEntryId": {
                                 "timestamp": 1713528437,
                                 "counter": 2288009,
@@ -2804,4 +2804,4 @@
             "time": 1713528381000
         }
     }
-}
+}}

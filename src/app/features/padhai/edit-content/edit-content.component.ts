@@ -30,6 +30,9 @@ import * as getLesson from '../getLesson.json';
 import * as getLessonStatus from '../getLessonStatus.json';
 import * as getOutline from '../getOutline.json';
 import * as getSelectedLang from '../selectedLanguages.json';
+import * as getH5pList from '../h5pList.json';
+import * as selectedLanguages from '../selectedLanguages.json';
+
 
 interface lessonNode {
   name: string;
@@ -440,12 +443,14 @@ export class EditContentComponent implements OnInit, OnDestroy, CanComponentDeac
 
   getOutlineData(){
     return new Promise(resolve =>{
-      this.padhaiService.getCoursesRequest(this.courseId).subscribe(async res => {        
-        resolve(res);
-      },err=>{
-        this.showCourseContainer = false;
-        resolve(err);
-      })
+      const res = getOutline;
+      resolve(res.outlineData);
+      // this.padhaiService.getCoursesRequest(this.courseId).subscribe(async res => {        
+      //   resolve(res);
+      // },err=>{
+      //   this.showCourseContainer = false;
+      //   resolve(err);
+      // })
     })
   }
 
@@ -471,14 +476,16 @@ export class EditContentComponent implements OnInit, OnDestroy, CanComponentDeac
 
   getLessonDetails(language?, isFirstTimeLoad?, isLanguageChange = false){
     return new Promise(resolve=>{
-      this.padhaiService.getLessonRequest(this.courseId, language ? language : this.defaultLanguage).subscribe(async res=>{
-        if(res && res.modules && res.modules.length > 0) from(res.modules).pipe(map((module : any)=> { module?.lessons?.map(lesson =>{ [1,2,3,4].map( iterator =>{ if(lesson.quiz?.questions?.length < 4) lesson.quiz.questions.push(this.questionFormat)})})})).subscribe()
+      // this.padhaiService.getLessonRequest(this.courseId, language ? language : this.defaultLanguage).subscribe(async res=>{
+        const res = getLesson;
+
+        if(res.lessonDetails && res.lessonDetails.modules && res.lessonDetails.modules.length > 0) from(res.lessonDetails.modules).pipe(map((module : any)=> { module?.lessons?.map(lesson =>{ [1,2,3,4].map( iterator =>{ if(lesson.quiz?.questions?.length < 4) lesson.quiz.questions.push(this.questionFormat)})})})).subscribe()
          
-          this.tempLessonsData = JSON.parse(JSON.stringify(res));
+          this.tempLessonsData = JSON.parse(JSON.stringify(res.lessonDetails));
           if(isFirstTimeLoad && this.tempLessonsData && this.tempLessonsData["modules"] && this.tempLessonsData["modules"][0]["lessons"]) this.__tempLessonData__= this.tempLessonsData["modules"][0]["lessons"][0];
           this.setIndexToModulesAndLessons();
           this.setDefaultStructureForH5p();
-          this.lessonDetails = res;
+          this.lessonDetails = res.lessonDetails;
           if(isLanguageChange){
               this.getLessonStatus(this.courseStage, true,true)
           }
@@ -486,10 +493,10 @@ export class EditContentComponent implements OnInit, OnDestroy, CanComponentDeac
         setTimeout(() => {
           this.isValidLesson(this.tempLessonsData);
         }, 1000);
-      }, err => {
-        this.appInsightsService.logEvent('Error while changing Language', {err: err, courseId: this.courseId});
-        console.log("ERROR =>", err);
-      })
+      // }, err => {
+      //   this.appInsightsService.logEvent('Error while changing Language', {err: err, courseId: this.courseId});
+      //   console.log("ERROR =>", err);
+      // })
     })
   }
 
@@ -998,13 +1005,19 @@ export class EditContentComponent implements OnInit, OnDestroy, CanComponentDeac
         this.enableEditMode = true;
         this.prepareLessonTree(this.tempLessonsData['modules'], this.lastLessonStatusData[0].courseOutLine.modules, stageType,expand)
       }else{
-        this.padhaiService.getCourseLessonStatus(this.courseId, stageType).subscribe(statusData => {
-          this.lastLessonStatusData = statusData;
-          this.checkLessonStatus(statusData[0].courseOutLine.modules, this.courseStage == 'Lesson' ? 'Lesson' : 'Asset', false);
-          this.prepareLessonTree(this.courseDetails.courseOutLine.modules, statusData[0].courseOutLine.modules, stageType,expand)
-        }, err => {
-          console.log("ERROR =>", err);
-        })
+        // this.padhaiService.getCourseLessonStatus(this.courseId, stageType).subscribe(statusData => {
+        //   this.lastLessonStatusData = statusData;
+        //   this.checkLessonStatus(statusData[0].courseOutLine.modules, this.courseStage == 'Lesson' ? 'Lesson' : 'Asset', false);
+        //   this.prepareLessonTree(this.courseDetails.courseOutLine.modules, statusData[0].courseOutLine.modules, stageType,expand)
+        // }, err => {
+        //   console.log("ERROR =>", err);
+        // })
+        const status = getLessonStatus;
+        const statusData = status.lessonStatusData;
+        this.lastLessonStatusData = statusData;
+        this.checkLessonStatus(statusData[0].courseOutLine.modules, this.courseStage == 'Lesson' ? 'Lesson' : 'Asset', false);
+        this.prepareLessonTree(this.courseDetails.courseOutLine.modules, statusData[0].courseOutLine.modules, stageType,expand)
+
         this.getRetryStatus();
       }
     }
@@ -1131,8 +1144,10 @@ export class EditContentComponent implements OnInit, OnDestroy, CanComponentDeac
   getCourseStatusData() {
 
     return new Promise(resolve => {
-      this.padhaiService.getCourseStatus(this.courseId).subscribe(res => {
-
+      // this.padhaiService.getCourseStatus(this.courseId).subscribe(res => {
+        const status = courseStatus;
+        const res = status.courseStatus;
+      
         this.courseStage = res.courseStatus;
         this.currentStage = this.getCurrentStatus(res).toLowerCase().replace(/\s/g, '');
         this.communicationService.courseImageSubject.next({currentStatus : this.currentStage.replace(/\s/g, '')})
@@ -1146,7 +1161,7 @@ export class EditContentComponent implements OnInit, OnDestroy, CanComponentDeac
         }
         let width = this.stage == 'outlinegenerated' ? '20%' : this.stage == 'lessongenerated' ? '40%' : this.stage == 'outcomegenerated' ? '60%' : this.stage == 'assetgenerated' ? '80%' : this.stage == 'publishgenerated' ? '100%' : '0%';  
         this.showBarProgress(width);
-      })
+      // })
     })
   }
 
@@ -1226,12 +1241,13 @@ export class EditContentComponent implements OnInit, OnDestroy, CanComponentDeac
     }
     this.appInsightsService.logEvent('Course Export requested', {exportPayload: payload, courseId: this.courseId});
     if (payload.exportType !== exportTypeEnum.MOODLE) {
-      this.padhaiService.getLessonRequest(this.courseId, this.activeLangauge).subscribe(async res=>{
-        if(res.assetsPath  == null){
+      // this.padhaiService.getLessonRequest(this.courseId, this.activeLangauge).subscribe(async res=>{
+        const res = getLesson;
+        if(res.lessonDetails.assetsPath  == null){
           this.snackBarService.success("Preparing for export");
         } else {
           let isAssetPresent = false
-          res.assetsPath.forEach(asset => {
+          res.lessonDetails.assetsPath.forEach(asset => {
             if (asset.exportType == payload.exportType) {
               isAssetPresent = true
             }
@@ -1240,7 +1256,7 @@ export class EditContentComponent implements OnInit, OnDestroy, CanComponentDeac
             this.snackBarService.success("Preparing for export");
           }
         }
-      })
+      // })
       this.padhaiService.export(payload).subscribe(res => {
         let BlobPath=  this.getBlobPath(res,payload.exportType) ;
         let blobUrl = environment.cdnUrl +'/padhai/'+ BlobPath;
@@ -1304,7 +1320,9 @@ changeLanguage(event:any){
 }
 
 getTransaltedLanguageListForCourse(courseId: any) {
-  this.padhaiService.selectedLanguagesData(courseId).subscribe(res => {
+  const selectedLanguage = selectedLanguages;
+  const res = selectedLanguage.selectedLanguages
+  // this.padhaiService.selectedLanguagesData(courseId).subscribe(res => {
     this.languageList = res;
     this.languageListForRtl = res;
     this.checkLanguageStatus(res);
@@ -1319,9 +1337,9 @@ getTransaltedLanguageListForCourse(courseId: any) {
       this.selectedLanguage = res[0]
     } 
     this.prepareLanguageDataStructure();
-  }, err => {
-    console.log("ERROR=> ",err);
-  })
+  // }, err => {
+  //   console.log("ERROR=> ",err);
+  // })
 }
 
 checkLanguageStatus(languageData){
@@ -1421,7 +1439,9 @@ retryLessonAndAsset() {
 
 getRetryStatus(){
   return new Promise( resolve =>{
-    this.padhaiService.getCourseStatus(this.courseId).subscribe(res => {
+    // this.padhaiService.getCourseStatus(this.courseId).subscribe(res => {
+      const status = courseStatus;
+      const res = status.courseStatus;
       resolve(res);
       if((res.courseStatus == 'Lesson' && (res.lessonStatus == "Failed" || res.assetStatus == "Failed")) || (res.courseStatus == 'Asset' && (res.lessonStatus == "Failed" || res.assetStatus == "Failed")) || (res.courseStatus == 'Outline' && res.outlineStatus == "Failed")){
         if( this.lessonStatusInterval){
@@ -1433,7 +1453,7 @@ getRetryStatus(){
       } else {
         this.disableRetry = false;
       }
-    })
+    // })
   })
 }
 
@@ -1680,9 +1700,11 @@ getSelectedLanguagesData(){
     }
     
   getH5pTypeList() {
-    this.padhaiService.getH5pTypeList().subscribe(data => {
-      this.h5pTypes = data;
-    });
+    // this.padhaiService.getH5pTypeList().subscribe(data => {
+    //   this.h5pTypes = data;
+    // });
+    const data = getH5pList;
+    this.h5pTypes = data.h5pList;
   }
   
   async modifyStructure(checkH5pType, payload) {

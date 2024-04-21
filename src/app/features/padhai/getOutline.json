@@ -1,4 +1,4 @@
-{
+{"outlineData":{
     "id": "6622596f307f99089222e97e",
     "courseRequestId": 4860,
     "isFailed": false,
@@ -359,7 +359,7 @@
     "asset": [
         {
             "type": "image",
-            "path": "/genaie/courses/courseImage/4860/CourseImage_4860.png",
+            "path": "https://images.app.goo.gl/6ug7sP4sBBpXiSii6",
             "queryLogEntryId": {
                 "timestamp": 1713527176,
                 "counter": 2287999,
@@ -375,4 +375,4 @@
             "timestamp": "2024-04-19T11:46:16.479+0000"
         }
     ]
-}
+}}

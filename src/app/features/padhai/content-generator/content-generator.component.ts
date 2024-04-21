@@ -96,7 +96,7 @@ export class ContentGeneratorComponent implements OnInit, AfterViewInit {
      const data = courseCardData
      
       this.dataSource.data = data.courseCardData.content;
-      this.paginator.length = data.courseCardData.totalElements;
+      // this.paginator.length = 20;
       this.getGeneratedStatus(data.courseCardData.content);
 
 
