@@ -4,6 +4,8 @@ import { PadhaiService } from '../padhai.service';
 import { Router } from '@angular/router';
 import { SnackBarService } from '../../../framework/service/snack-bar.service';
 import { AppInsightsService } from '../../../framework/service/app-insights.service';
+import * as keyStage from '../keyStage.json';
+import * as voice from '../voice.json'
 @Component({
   selector: 'app-add-content-course',
   templateUrl: './add-content-course.component.html',
@@ -60,9 +62,11 @@ export class AddContentCourseComponent implements OnInit {
   }
    getvoiceList() {
     const languageId = 1;
-     this.padhaiService.getVoice(languageId).subscribe(data => {
-      this.voiceList = data;
-    })
+    //  this.padhaiService.getVoice(languageId).subscribe(data => {
+    //   this.voiceList = data;
+    // })
+    const data = voice;
+    this.voiceList = data.voices;
   }
 
   createUserForm() {
@@ -88,9 +92,11 @@ export class AddContentCourseComponent implements OnInit {
       }
       
     })
-    this.padhaiService.getReferenceDataByDomain('Key_State').subscribe(data => {
-      this.keyStageList = data;
-    })
+    // this.padhaiService.getReferenceDataByDomain('Key_State').subscribe(data => {
+    //   this.keyStageList = data;
+    // })
+    const level = keyStage;
+    this.keyStageList = level.keyStates;
   }
 
 }

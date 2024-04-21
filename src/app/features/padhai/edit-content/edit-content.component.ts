@@ -23,6 +23,14 @@ import { LearningOutcomesComponent } from '../learning-outcomes/learning-outcome
 // import * as Editor from 'src/app/features/shared/components/ck-editor/ckeditor';
 import {colors} from '../../../../assets/padhaiFontColorConfig/FontColorConfig';
 import { MyUploadAdapter } from './custom-ckeditor';
+import * as refExport from '../refExport.json';
+import * as courseStatus from '../courseStatus.json';
+import * as getApproveStatus from '../getApproveStatus.json';
+import * as getLesson from '../getLesson.json';
+import * as getLessonStatus from '../getLessonStatus.json';
+import * as getOutline from '../getOutline.json';
+import * as getSelectedLang from '../selectedLanguages.json';
+
 interface lessonNode {
   name: string;
   status: string;
@@ -272,12 +280,14 @@ export class EditContentComponent implements OnInit, OnDestroy, CanComponentDeac
     this.getLessonStatus('Asset',false);
   }
   getExportToMenuTypes() {
-    this.padhaiService.getExportType().subscribe(data => {
-      this.exportTypeList = data;
-      if (localStorage.getItem('moodleUrl') === null || localStorage.getItem('moodleUrl') == 'null') {
-        this.exportTypeList = this.exportTypeList.filter(item => item.description != 'Export to LMS');
-      }
-    })
+    // this.padhaiService.getExportType().subscribe(data => {
+    //   this.exportTypeList = data;
+    //   if (localStorage.getItem('moodleUrl') === null || localStorage.getItem('moodleUrl') == 'null') {
+    //     this.exportTypeList = this.exportTypeList.filter(item => item.description != 'Export to LMS');
+    //   }
+    // })
+    const data = refExport;
+    this.exportTypeList = data.export;
   }
 
   isNodeExpanded(node: any): boolean {
@@ -426,50 +436,6 @@ export class EditContentComponent implements OnInit, OnDestroy, CanComponentDeac
     if(statusData['courseStatus'] != 'Outline'){
       this.prepareOutlineDetails();
     }
-
-    // if (this.courseStage == 'Outline') this.showCourseContainer = true;
-    // this.padhaiService.getCoursesRequest(this.courseId).subscribe(async res => {
-    //   this.moduleCount = res.moduleCount;
-    //   this.lessonCount = res.lessonCount;
-      
-    //   if(statusData && statusData['courseStatus'] == 'Outline' && statusData['outlineStatus'] == 'Failed'){
-    //     this.stage = 'outlinefailed';  
-    //     if (res.asset) {
-    //       const courseAssetData= this.getCourseImagePath(res.asset)
-    //       this.courseImage = courseAssetData.path
-    //       this.communicationService.dataServiceSubject.next({ img: this.courseImage, stage: this.stage ,course:courseAssetData});
-    //     }
-    //   }else{
-    //     if (courseStatus == 'outlineinprogress' || res && res.courseOutLine == null && window.location.href.includes('/padhai/edit-content')) {
-    //       setTimeout(() => {
-    //       this.getCourseoutlineDetails();
-    //       }, 2000);
-    //     } else {
-    //       if (res.asset == null && window.location.href.includes('/padhai/edit-content')) {
-    //         setTimeout(() => {
-    //           this.getCourseoutlineDetails();
-    //         }, 2000);
-    //       }
-    //     if (res.asset) {
-    //       const courseAssetData= this.getCourseImagePath(res.asset)
-    //       this.courseImage = courseAssetData.path
-    //       this.communicationService.dataServiceSubject.next({ img: this.courseImage, stage: this.stage ,course:courseAssetData});
-    //     }
-    //       this.getCourseStatusData();
-    //       this.fillCourseDetailsForm(res);
-    //       this.courseDetails = res;
-    //       await this.selectStage();
-    //       if (res && res.courseOutLine && res.courseOutLine.modules && res.courseOutLine.modules.length > 0 && res.asset != null) {
-    //         if (this.courseStage == 'Outline') this.showLoader = false;
-    //       }
-    //       [this.schema.properties.modules.minItems, this.schema.properties.modules.maxItems, this.schema.properties.modules.items.properties.lessons.maxItems, this.schema.properties.modules.items.properties.lessons.minItems] = [res.moduleCount, res.moduleCount, res.lessonCount, res.lessonCount];
-    //       this.validate = this.avjModule.compile(this.schema);
-    //     }
-    //   }
-    // }, err => {
-    //   console.log("ERROR =>", err);
-    //   this.showCourseContainer = false;
-    // })
   }
 
   getOutlineData(){
@@ -1402,7 +1368,9 @@ prepareLanguageDataStructure(){
 }
 
 retryLessonAndAsset() {
-  this.padhaiService.getCourseStatus(this.courseId).subscribe(async res => {
+  const status = courseStatus;
+  const res = status.courseStatus;
+  // this.padhaiService.getCourseStatus(this.courseId).subscribe(async res => {
     if(res.courseStatus == "Outline" && res.outlineStatus == "Failed"){
       //perform retry for outline
       let payload = {
@@ -1412,7 +1380,7 @@ retryLessonAndAsset() {
         this.showFailedStatus = false;
         this.disableRetry = false;
         this.getCourseoutlineDetails();
-        this.snackBarService.success(res.message.applicationMessage);
+        // this.snackBarService.success(res.message.applicationMessage);
       }, error => {
         this.snackBarService.error(`${error.error.applicationMessage}`);
       })    
@@ -1434,7 +1402,7 @@ retryLessonAndAsset() {
       });
     } else if (res.courseStatus == "Asset" && (res.lessonStatus == "Failed" || res.assetStatus == "Failed")) {
       //perform retry for Asset
-      await this.getLicenceDetails('asset');
+      // await this.getLicenceDetails('asset');
       if(!this.licenceExceeded){
         let payload = {
           courseRequestId: res.id,
@@ -1448,7 +1416,7 @@ retryLessonAndAsset() {
         });
       }    
     }
-  })
+  // })
 }
 
 getRetryStatus(){
@@ -1548,14 +1516,17 @@ retryFailedLanguages(){
 }
 
 getSelectedLanguagesData(){
-  this.padhaiService.selectedLanguagesData(this.courseId).subscribe(lang=>{
-    this.languages = lang;  
-  })
+  // this.padhaiService.selectedLanguagesData(this.courseId).subscribe(lang=>{
+  //   this.languages = lang;  
+  // })
+  const lang = getSelectedLang;
+  this.languages = lang.selectedLanguages;
+
 }
 
   async approveCourse(){
   //call api to approve the coourse approve status
-  await this.getLicenceDetails('approve');
+  // await this.getLicenceDetails('approve');
   if(!this.licenceExceeded){
     const approveDialog = this.appConfirmService.confirm({ title: `Publish Course`,message: 'Are you sure you want to publish the course ?' });
     approveDialog.subscribe(result=>{
@@ -1579,9 +1550,12 @@ getSelectedLanguagesData(){
 }
 
   checkCourseApproveStatus() {
-    this.padhaiService.getCourseApproveStatus(this.courseId).subscribe(res => {
-      this.isCourseApproved = res.isCourseApproved;
-    })
+    // this.padhaiService.getCourseApproveStatus(this.courseId).subscribe(res => {
+    //   this.isCourseApproved = res.isCourseApproved;
+    // })
+    const res = getApproveStatus;
+    this.isCourseApproved = res.approveStatus.isCourseApproved;
+
   }
 
   async generateOutcomes(){

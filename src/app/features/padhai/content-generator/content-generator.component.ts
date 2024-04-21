@@ -16,6 +16,8 @@ import { AppConfirmService } from 'src/app/framework/components/app-confirm/app-
 import { PadhaiService } from '../padhai.service';
 import { AppInsightsService } from '../../../framework/service/app-insights.service';
 import { environment } from 'src/environments/environment';
+import * as courseCardData from '../courseCardJson.json';
+
 
 @Component({
   selector: 'app-content-generator',
@@ -23,8 +25,6 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./content-generator.component.scss']
 })
 export class ContentGeneratorComponent implements OnInit, AfterViewInit {
-
-
 
   displayedColumns: string[] = ['topic', 'courseLevel', 'language', 'preferredVoice', 'createdDate', 'createdBy', 'status', 'actions'];
   dataSource = new MatTableDataSource<any>();
@@ -34,6 +34,7 @@ export class ContentGeneratorComponent implements OnInit, AfterViewInit {
   sort = 'createdDate,desc';
   stage = '';
   licenceData = null;
+  
   constructor(
     private readonly courseRequestService: CourseRequestService,
     private readonly snackBarService: SnackBarService,
@@ -82,16 +83,22 @@ export class ContentGeneratorComponent implements OnInit, AfterViewInit {
     } else {
       currentPageIndex = this.paginator.pageIndex;
     }
-    this.courseRequestService.findAllPaginated(this.sort,currentPageIndex,this.pageSize, filterBy).subscribe(data => {
-      this.appInsightsService.logEvent('Courses List pagination', {sort: this.sort,currentPageIndex: currentPageIndex, pageSize: this.pageSize, filterBy: this.filterBy});
-      this.dataSource.data = data.content;
-      this.paginator.length = data.totalElements;
-      this.getGeneratedStatus(data.content);
-    },
-      error => {
-        this.appInsightsService.logEvent('Courses List pagination error', {error: error});
-        this.snackBarService.error(`${error.error.applicationMessage}`);
-      })
+    // this.courseRequestService.findAllPaginated(this.sort,currentPageIndex,this.pageSize, filterBy).subscribe(data => {
+    //   this.appInsightsService.logEvent('Courses List pagination', {sort: this.sort,currentPageIndex: currentPageIndex, pageSize: this.pageSize, filterBy: this.filterBy});
+    //   this.dataSource.data = data.content;
+    //   this.paginator.length = data.totalElements;
+    //   this.getGeneratedStatus(data.content);
+    // },
+    //   error => {
+    //     this.appInsightsService.logEvent('Courses List pagination error', {error: error});
+    //     this.snackBarService.error(`${error.error.applicationMessage}`);
+    //   })
+     const data = courseCardData
+     
+      this.dataSource.data = data.courseCardData.content;
+      this.paginator.length = data.courseCardData.totalElements;
+      this.getGeneratedStatus(data.courseCardData.content);
+
 
   }
 
@@ -138,7 +145,7 @@ export class ContentGeneratorComponent implements OnInit, AfterViewInit {
   }
   getImagePath(course) {
     if (course.asset == null) {
-      return '../../../../assets/images/course.jpg';
+      return '../../../../assets/images/baigan.jpg';
     } else {
       if (course.asset) {
         return environment.cdnUrl + course.asset[0].path +'?d='+ course.asset[0].timestamp

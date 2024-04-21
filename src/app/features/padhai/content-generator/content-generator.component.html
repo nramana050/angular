@@ -1,5 +1,5 @@
 
-   <div class="titleHeaderContainer">
+   <!-- <div class="titleHeaderContainer">
     <div *ngIf="licenceData" class="licenceSection">
        <mat-card class="licenceBlock">
           <h3 class="licenceTitle"><mat-icon>create_new_folder</mat-icon>Courses generated</h3>
@@ -14,7 +14,7 @@
           <span class="licenceCount">{{licenceData.totalDeletedCourses}}</span>
        </mat-card>
     </div>
- </div>
+ </div> -->
 
 <mat-card id='course_list'>
     <mat-card-header>
@@ -56,7 +56,7 @@
             <div *ngFor="let course of dataSource.data;let i = index;" class="padhaiCardSection mat-elevation-z2">
             <div (click)="goToEdit(course)">
                 <div class="heroImageSection">
-                    <img [src]="getImagePath(course)" alt="Course Image" (error)="img.src = '../../../../assets/images/course.jpg'" #img>
+                    <img [src]="getImagePath(course)" alt="Course Image" (error)="img.src = '../../../../assets/images/Padhai.jpg'" #img>
                 </div>
                 <div class="headerSection flexRow">
                     <div class="titleSection flexColumn">
