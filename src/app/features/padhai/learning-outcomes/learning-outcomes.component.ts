@@ -10,8 +10,8 @@ import { CommunicationService } from '../../../framework/service/communication.s
 import { FileUploadService } from '../../shared/components/file-upload/file-upload.service';
 import { HttpClient } from '@angular/common/http';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import * as courseStatus from '../courseStatus.json';
-import * as getLesson from '../getLesson.json';
+// import * as courseStatus from '../courseStatus.json';
+// import * as getLesson from '../getLesson.json';
 
 
 @Component({
@@ -93,15 +93,15 @@ export class LearningOutcomesComponent implements OnInit, OnChanges {
   }
 
   getCourseStatus(){
-    // this.padhaiService.getCourseStatus(this.courseId).subscribe(statusData=>{ 
-      const status = courseStatus;
-      const statusData = status.courseStatus;     
+    this.padhaiService.getCourseStatus(this.courseId).subscribe(statusData=>{ 
+      // const status = courseStatus;
+      // const statusData = status.courseStatus;     
       if(statusData){
         if(statusData.outcomeStatus) this.courseStatus = (statusData?.courseStatus.replace(/\s/g, '') + statusData?.outcomeStatus.replace(/\s/g, '')).toLowerCase();
         this.courseStage = statusData.courseStatus;
         this.performActionOnOutcomeStatus();
       }
-    // })
+    })
   }
 
  async performActionOnOutcomeStatus(){
@@ -136,15 +136,15 @@ export class LearningOutcomesComponent implements OnInit, OnChanges {
 
   getCourseData(){
     return new Promise(resolve=>{
-      // this.padhaiService.getLessonRequest(this.courseId, this.activeLanguage || 'ENGLISH').subscribe(courseData=>{
-        const res = getLesson;
-        const courseData = res.lessonDetails;
+      this.padhaiService.getLessonRequest(this.courseId, this.activeLanguage || 'ENGLISH').subscribe(courseData=>{
+        // const res = getLesson;
+        // const courseData = res.lessonDetails;
         this.courseDetails = courseData;
         this.learningOutcomes = courseData?.outcomeDetails.outcomes || [];
         resolve("");
-      // },err=>{
-      //   resolve("");
-      // })
+      },err=>{
+        resolve("");
+      })
     })
   }
 

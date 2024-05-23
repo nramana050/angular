@@ -5,6 +5,6 @@ export const BaseUrl = {
     APPTITLE: environment.appTitle,
     azureBlobStorage: environment.azureBlobStorage,
     // CLIENT_URL: window.location.host,
-    // PADHAI: environment.apiURL + '/sequation-ai-content-api',
-    PADHAI: 'http://localhost:8099/sequation-ai-content-api',    
+    // PADHAI: environment.apiURL + '/padhai-java-api',
+    PADHAI: 'http://localhost:8080/padhai-java-api',    
 };

@@ -16,7 +16,7 @@ import { AppConfirmService } from 'src/app/framework/components/app-confirm/app-
 import { PadhaiService } from '../padhai.service';
 import { AppInsightsService } from '../../../framework/service/app-insights.service';
 import { environment } from 'src/environments/environment';
-import * as courseCardData from '../courseCardJson.json';
+// import * as courseCardData from '../courseCardJson.json';
 
 
 @Component({
@@ -83,21 +83,21 @@ export class ContentGeneratorComponent implements OnInit, AfterViewInit {
     } else {
       currentPageIndex = this.paginator.pageIndex;
     }
-    // this.courseRequestService.findAllPaginated(this.sort,currentPageIndex,this.pageSize, filterBy).subscribe(data => {
-    //   this.appInsightsService.logEvent('Courses List pagination', {sort: this.sort,currentPageIndex: currentPageIndex, pageSize: this.pageSize, filterBy: this.filterBy});
-    //   this.dataSource.data = data.content;
-    //   this.paginator.length = data.totalElements;
-    //   this.getGeneratedStatus(data.content);
-    // },
-    //   error => {
-    //     this.appInsightsService.logEvent('Courses List pagination error', {error: error});
-    //     this.snackBarService.error(`${error.error.applicationMessage}`);
-    //   })
-     const data = courseCardData
+    this.courseRequestService.findAllPaginated(this.sort,currentPageIndex,this.pageSize, filterBy).subscribe(data => {
+      this.appInsightsService.logEvent('Courses List pagination', {sort: this.sort,currentPageIndex: currentPageIndex, pageSize: this.pageSize, filterBy: this.filterBy});
+      this.dataSource.data = data.content;
+      this.paginator.length = data.totalElements;
+      this.getGeneratedStatus(data.content);
+    },
+      error => {
+        this.appInsightsService.logEvent('Courses List pagination error', {error: error});
+        this.snackBarService.error(`${error.error.applicationMessage}`);
+      })
+    //  const data = courseCardData
      
-      this.dataSource.data = data.courseCardData.content;
+      // this.dataSource.data = data.courseCardData.content;
       // this.paginator.length = 20;
-      this.getGeneratedStatus(data.courseCardData.content);
+      // this.getGeneratedStatus(data.courseCardData.content);
 
 
   }
