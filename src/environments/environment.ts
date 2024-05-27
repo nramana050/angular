@@ -2,7 +2,7 @@ import { ApplicationConstant } from "src/app/framework/constants/app-constant";
 
 export const environment = {
   production: false,
-  apiURL: 'https://devservices.sequation.net',
+  apiURL: 'http://13.232.226.7:8080',
   logo: `./assets/logo/Captr_Logo_kw.png`,
   appTitle: window.location.host.split('-')[0].toUpperCase(),
   appInsights: {

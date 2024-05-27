@@ -34,8 +34,10 @@ export class NewPreviewComponent implements OnInit, OnChanges {
   lessonData : any;
 
   assetH5p = '';
-  h5pLibrariesPath = `${environment.cdnUrl}/padhai/h5p_libraries`;
-  frameBundlePath = `${environment.cdnUrl}/padhai/h5p_libraries/main/frame.bundle.min.js`;
+  // h5pLibrariesPath = `${environment.cdnUrl}/padhai/h5p_libraries`;
+  // frameBundlePath = `${environment.cdnUrl}/padhai/h5p_libraries/main/frame.bundle.min.js`;
+  h5pLibrariesPath = `https://baigandev.blob.core.windows.net/padhai/h5p_libraries`;
+  frameBundlePath = `https://baigandev.blob.core.windows.net/padhai/h5p_libraries/main/frame.bundle.min.js`;
 
   imageAsset : any;
   isFailedForSafety:boolean = false;
