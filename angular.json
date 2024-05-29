@@ -157,7 +157,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "bw-workshop-mis-ui:build"
+            "browserTarget": "bw-workshop-mis-ui:build",
+            "host": "0.0.0.0",
+            "disableHostCheck": true
           },
           "configurations": {
             "production": {
