@@ -22,9 +22,9 @@ FROM nginx:alpine
 # Copy the built Angular app from the build stage to NGINX html directory
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose port 80
+# Expose port 4200
 EXPOSE 4200
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+
+CMD ng serve --host 0.0.0.0
 
